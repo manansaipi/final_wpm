@@ -8,7 +8,7 @@ class SecondPage extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text("Second Page"),
+          title: Text("Settings"),
         ),
         body: Center(
             child: ElevatedButton(

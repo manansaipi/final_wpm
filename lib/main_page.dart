@@ -26,13 +26,13 @@ class MainPage extends StatelessWidget {
                 IconButton(
                     // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     onPressed: () {
-                      //go to secondpage
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (context) {
-                      //   return SecondPage();
-                      // }));
+                      // go to secondpage
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return SecondPage();
+                      }));
                     },
-                    icon: Icon(Icons.notifications_none_rounded)),
+                    icon: Icon(Icons.settings)),
                 // IconButton(
                 //   onPressed: () {},
                 //   icon: Icon(Icons.settings),
@@ -56,16 +56,16 @@ class MainPage extends StatelessWidget {
                     text: "Home",
                   ),
                   Tab(
-                    icon: Icon(Icons.access_alarm_outlined),
+                    icon: Icon(Icons.alarm),
                     text: "Alarm",
+                  ),
+                  Tab(
+                    icon: Icon(Icons.map),
+                    text: "Map",
                   ),
                   Tab(
                     icon: Icon(Icons.star),
                     text: "Favorite",
-                  ),
-                  Tab(
-                    icon: Icon(Icons.settings),
-                    text: "Settings",
                   )
                 ],
               ),
