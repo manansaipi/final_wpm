@@ -1,4 +1,4 @@
-import 'package:final_wpm/second_page.dart';
+import 'package:final_wpm/ui/setting_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatelessWidget {
@@ -23,13 +23,15 @@ class MainPage extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               actions: [
+                //Profile Image
+                // CircleAvatar(backgroundImage: AssetImage("image/profile.png"),),
                 IconButton(
                     // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     onPressed: () {
                       // go to secondpage
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return SecondPage();
+                        return SettingPage();
                       }));
                     },
                     icon: Icon(Icons.settings)),

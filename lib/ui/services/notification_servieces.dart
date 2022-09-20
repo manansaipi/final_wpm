@@ -38,7 +38,7 @@ class NotifyHelper {
       title,
       body,
       platformChannelSpecifics,
-      payload: 'Default_Sound',
+      payload: 'default',
     );
   }
 
