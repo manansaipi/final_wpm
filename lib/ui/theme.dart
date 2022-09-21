@@ -32,16 +32,25 @@ TextStyle get subHeadingStyle {
 TextStyle get titleStyle {
   return GoogleFonts.lato(
     textStyle: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.normal,
+        fontSize: 13,
+        fontWeight: FontWeight.bold,
         color: Get.isDarkMode ? Colors.white : Colors.black),
+  );
+}
+
+TextStyle get subTitleStyle {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.normal,
+        color: Get.isDarkMode ? Colors.grey[100] : Colors.grey[600]),
   );
 }
 
 TextStyle get headingStyle {
   return GoogleFonts.lato(
     textStyle: TextStyle(
-      fontSize: 20,
+      fontSize: 22,
       fontWeight: FontWeight.bold,
       color: Get.isDarkMode ? Colors.white : Colors.black,
     ),

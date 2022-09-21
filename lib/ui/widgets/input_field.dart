@@ -8,14 +8,14 @@ import 'package:get/get.dart';
 class MyInputField extends StatelessWidget {
   final String title;
   final String hint;
-  // final TextEditingController controller;
-  // final Widget widget;
+  final TextEditingController? controller;
+  final Widget? widget;
   const MyInputField({
     super.key,
     required this.title,
     required this.hint,
-    // required this.controller,
-    // required this.widget,
+    this.controller,
+    this.widget,
   });
 
   @override
@@ -30,8 +30,9 @@ class MyInputField extends StatelessWidget {
             style: titleStyle,
           ),
           Container(
-            height: 35,
+            height: 40,
             margin: EdgeInsetsDirectional.only(top: 8),
+            padding: EdgeInsets.only(left: 15, bottom: 3),
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.grey,
@@ -42,11 +43,33 @@ class MyInputField extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                    child: TextFormField(
-                  autofocus: false,
-                  cursorColor:
-                      Get.isDarkMode ? Colors.grey[100] : Colors.grey[700],
-                ))
+                  child: TextFormField(
+                    readOnly: widget == null ? false : true,
+                    autofocus: false,
+                    cursorColor:
+                        Get.isDarkMode ? Colors.grey[100] : Colors.grey[700],
+                    controller: controller,
+                    style: subTitleStyle,
+                    decoration: InputDecoration(
+                        hintText: hint,
+                        hintStyle: subTitleStyle,
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                          color: context.theme.backgroundColor,
+                          width: 0,
+                        )),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                          color: context.theme.backgroundColor,
+                          width: 0,
+                        ))),
+                  ),
+                ),
+                widget == null
+                    ? Container()
+                    : Container(
+                        child: widget,
+                      )
               ],
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:final_wpm/ui/add_task_bar.dart';
+import 'package:final_wpm/ui/home_page.dart';
 import 'package:final_wpm/ui/map_page.dart';
 import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/notification_servieces.dart';
@@ -14,25 +15,25 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class MapPage extends StatefulWidget {
+  const MapPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MapPage> createState() => _MapPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MapPageState extends State<MapPage> {
   DateTime _selectedDate = DateTime.now();
   var notifyHelper;
   int currentTab = 0;
   final List<Widget> screens = [
-    HomePage(),
+    MapPage(),
     AddTaskPage(),
     MapPage(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = HomePage();
+  Widget currentScreen = MapPage();
 
   @override
   void initState() {
@@ -59,7 +60,6 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           _addTaskBar(),
-          _addDateBar(),
         ],
       ),
     );
@@ -131,35 +131,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _addDateBar() {
-    return Container(
-      margin: const EdgeInsets.only(top: 15, left: 15),
-      child: DatePicker(
-        DateTime.now(),
-        height: 80,
-        width: 60,
-        initialSelectedDate: DateTime.now(),
-        selectionColor: primaryClr,
-        selectedTextColor: Colors.white,
-        monthTextStyle: GoogleFonts.lato(
-          textStyle: TextStyle(
-              fontSize: 10, fontWeight: FontWeight.w700, color: Colors.grey),
-        ),
-        dateTextStyle: GoogleFonts.lato(
-          textStyle: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.w700, color: Colors.grey),
-        ),
-        dayTextStyle: GoogleFonts.lato(
-          textStyle: TextStyle(
-              fontSize: 10, fontWeight: FontWeight.w700, color: Colors.grey),
-        ),
-        onDateChange: (date) {
-          _selectedDate = date;
-        },
-      ),
-    );
-  }
-
   _addBottomNavBar() {
     return BottomAppBar(
       color: Get.isDarkMode ? Colors.grey[900] : Colors.white70,
@@ -173,9 +144,10 @@ class _HomePageState extends State<HomePage> {
           //   iconSize: 0,
           // ),
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.house_rounded),
-            color: Colors.blue[300],
+            onPressed: () {
+              Get.to(HomePage());
+            },
+            icon: Icon(Icons.house_outlined),
             iconSize: 30,
           ),
           IconButton(
@@ -184,11 +156,10 @@ class _HomePageState extends State<HomePage> {
             iconSize: 0,
           ),
           IconButton(
-            onPressed: () {
-              Get.to(MapPage());
-            },
-            icon: Icon(Icons.map_outlined),
+            onPressed: () {},
+            icon: Icon(Icons.map_sharp),
             iconSize: 30,
+            color: Colors.blue[300],
           ),
           // IconButton(
           //   onPressed: () {},
