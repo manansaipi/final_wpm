@@ -157,9 +157,9 @@ class _MapPageState extends State<MapPage> {
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.map_sharp),
+            icon: Icon(Icons.map),
             iconSize: 30,
-            color: Colors.blue[300],
+            color: primaryClr,
           ),
           // IconButton(
           //   onPressed: () {},

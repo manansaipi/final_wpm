@@ -12,6 +12,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,14 +49,49 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
-      bottomNavigationBar: _addBottomNavBar(),
-      floatingActionButton: MyCircleButton(
-        label: "+",
-        onTap: () {
-          Get.to(AddTaskPage());
-        },
+      bottomNavigationBar: Container(
+        color: context.theme.backgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15.0,
+            vertical: 2,
+          ),
+          child: GNav(
+            padding: EdgeInsets.all(16),
+            tabBackgroundColor: primaryClr,
+            color: Colors.grey,
+            activeColor: Colors.white,
+            backgroundColor: context.theme.backgroundColor,
+            gap: 8,
+            onTabChange: (index) {},
+            tabs: [
+              GButton(
+                icon: Icons.home,
+                text: "Home",
+              ),
+              GButton(
+                icon: Icons.map_sharp,
+                text: "Maps",
+              ),
+              GButton(
+                icon: Icons.favorite_border,
+                text: "Likes",
+              ),
+              GButton(
+                icon: Icons.settings,
+                text: "Settings",
+              ),
+            ],
+          ),
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: MyCircleButton(
+      //   label: "+",
+      //   onTap: () {
+      //     Get.to(AddTaskPage());
+      //   },
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Column(
         children: [
           _addTaskBar(),
@@ -68,7 +104,7 @@ class _HomePageState extends State<HomePage> {
   _appBar() {
     return AppBar(
       elevation: 0,
-      backgroundColor: context.theme.backgroundColor,
+      backgroundColor: Get.isDarkMode ? darkBGColor : Colors.white10,
       leading: GestureDetector(
         onTap: () {
           ThemeService().switchTheme();
@@ -175,7 +211,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () {},
             icon: Icon(Icons.house_rounded),
-            color: Colors.blue[300],
+            color: primaryClr,
             iconSize: 30,
           ),
           IconButton(

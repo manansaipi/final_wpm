@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const Color primaryClr = Color(0xFF4e5ae8);
+const Color darkBGColor = Color(0xFF303030);
 
 class Themes {
   // ignore: non_constant_identifier_names
@@ -14,7 +15,7 @@ class Themes {
   );
 
   static final dark = ThemeData(
-    backgroundColor: Colors.grey[850],
+    backgroundColor: Colors.grey[800],
     // primaryColor: Colors.grey,
     brightness: Brightness.dark,
   );

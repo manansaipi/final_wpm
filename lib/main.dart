@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:math';
 
+import 'package:final_wpm/db/db_helper.dart';
 import 'package:final_wpm/login_page.dart';
 import 'package:final_wpm/main_page.dart';
 import 'package:final_wpm/ui/home_page.dart';
@@ -12,6 +13,7 @@ import 'package:get_storage/get_storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DBHelper.initDb();
   await GetStorage.init();
   runApp(const MyApp());
 }
