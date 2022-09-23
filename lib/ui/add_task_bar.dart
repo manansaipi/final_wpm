@@ -76,42 +76,44 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   title: "Date",
                   hint: DateFormat.yMd().format(_selectedDate),
                   widget: IconButton(
-                      onPressed: () {
-                        _getDateFromUsers();
-                      },
-                      icon: Icon(
-                        Icons.calendar_today_outlined,
-                        size: 20,
-                        color: Colors.grey,
-                      )),
+                    onPressed: () {
+                      _getDateFromUsers();
+                    },
+                    icon: Icon(
+                      Icons.calendar_today_outlined,
+                      size: 20,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
               ),
               Row(
                 children: [
                   Expanded(
-                      child: Container(
-                    margin: EdgeInsets.only(top: 5),
-                    child: MyInputField(
-                      title: "Start Date",
-                      hint: _startTime,
-                      widget: IconButton(
-                          onPressed: () {
-                            _getTimeFromUsers(isStartTime: true);
-                          },
-                          icon: Icon(
-                            Icons.access_time_rounded,
-                            color: Colors.grey,
-                            size: 20,
-                          )),
+                    child: Container(
+                      margin: EdgeInsets.only(top: 5),
+                      child: MyInputField(
+                        title: "Start Date",
+                        hint: _startTime,
+                        widget: IconButton(
+                            onPressed: () {
+                              _getTimeFromUsers(isStartTime: true);
+                            },
+                            icon: Icon(
+                              Icons.access_time_rounded,
+                              color: Colors.grey,
+                              size: 20,
+                            )),
+                      ),
                     ),
-                  )),
+                  ),
                   Expanded(
-                      child: Container(
-                    margin: EdgeInsets.only(top: 5),
-                    child: MyInputField(
-                      title: "End Time",
-                      hint: _endTime,
-                      widget: IconButton(
+                    child: Container(
+                      margin: EdgeInsets.only(top: 5),
+                      child: MyInputField(
+                        title: "End Time",
+                        hint: _endTime,
+                        widget: IconButton(
                           onPressed: () {
                             _getTimeFromUsers(isStartTime: false);
                           },
@@ -119,9 +121,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             Icons.access_time_rounded,
                             color: Colors.grey,
                             size: 20,
-                          )),
+                          ),
+                        ),
+                      ),
                     ),
-                  ))
+                  )
                 ],
               ),
               Container(
@@ -130,30 +134,36 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   title: "Remind",
                   hint: "$_selectedRemind minutes early",
                   widget: DropdownButton(
-                      icon: Container(
-                        margin: EdgeInsets.only(right: 5, top: 4),
-                        child: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.grey,
-                          size: 30,
-                        ),
+                    icon: Container(
+                      margin: EdgeInsets.only(right: 5, top: 4),
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.grey,
+                        size: 30,
                       ),
-                      // iconSize: 20,
-                      underline: Container(height: 0),
-                      elevation: 4,
-                      style: subTitleStyle,
-                      items:
-                          remindList.map<DropdownMenuItem<String>>((int value) {
+                    ),
+                    // iconSize: 20,
+                    underline: Container(height: 0),
+                    elevation: 4,
+                    style: subTitleStyle,
+                    items: remindList.map<DropdownMenuItem<String>>(
+                      (int value) {
                         return DropdownMenuItem<String>(
-                          child: Text(value.toString()),
+                          child: Text(
+                            value.toString(),
+                          ),
                           value: value.toString(),
                         );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
+                      },
+                    ).toList(),
+                    onChanged: (String? newValue) {
+                      setState(
+                        () {
                           _selectedRemind = int.parse(newValue!);
-                        });
-                      }),
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
               Container(
@@ -162,31 +172,35 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   title: "Repeat",
                   hint: "$_selectedRepeat",
                   widget: DropdownButton(
-                      icon: Container(
-                        margin: EdgeInsets.only(right: 5, top: 5),
-                        child: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.grey,
-                        ),
+                    icon: Container(
+                      margin: EdgeInsets.only(right: 5, top: 5),
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.grey,
                       ),
-                      iconSize: 30,
-                      underline: Container(height: 0),
-                      elevation: 4,
-                      style: subTitleStyle,
-                      items: repeatList
-                          .map<DropdownMenuItem<String>>((String value) {
+                    ),
+                    iconSize: 30,
+                    underline: Container(height: 0),
+                    elevation: 4,
+                    style: subTitleStyle,
+                    items: repeatList.map<DropdownMenuItem<String>>(
+                      (String value) {
                         return DropdownMenuItem<String>(
                           child: Text(
                             value,
                           ),
                           value: value,
                         );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
+                      },
+                    ).toList(),
+                    onChanged: (String? newValue) {
+                      setState(
+                        () {
                           _selectedRepeat = newValue!;
-                        });
-                      }),
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
               Container(
@@ -230,6 +244,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         ),
       ),
       actions: [
+        //move to another page not using Get
         // IconButton(
         //     onPressed: () {
         //       Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -251,9 +266,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
         firstDate: DateTime(2015),
         lastDate: DateTime(2030));
     if (_pickerDate != null) {
-      setState(() {
-        _selectedDate = _pickerDate;
-      });
+      setState(
+        () {
+          _selectedDate = _pickerDate;
+        },
+      );
     } else {}
   }
 
@@ -265,15 +282,19 @@ class _AddTaskPageState extends State<AddTaskPage> {
       if (pickedTime == null) {
         print("tTime canceled");
       } else if (isStartTime == true) {
-        setState(() {
-          _startTime = _formatedTime;
-          print(_startTime);
-        });
+        setState(
+          () {
+            _startTime = _formatedTime;
+            print(_startTime);
+          },
+        );
       } else if (isStartTime == false) {
-        setState(() {
-          _endTime = _formatedTime;
-          print(_endTime);
-        });
+        setState(
+          () {
+            _endTime = _formatedTime;
+            print(_endTime);
+          },
+        );
       }
     }
   }
@@ -300,33 +321,38 @@ class _AddTaskPageState extends State<AddTaskPage> {
           height: 10,
         ),
         Wrap(
-          children: List<Widget>.generate(3, (int index) {
-            return GestureDetector(
-              onTap: (() {
-                setState(() {
-                  _selectedColor = index;
-                });
-              }),
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: CircleAvatar(
-                  radius: 13,
-                  backgroundColor: index == 0
-                      ? primaryClr
-                      : index == 1
-                          ? Colors.yellow
-                          : Colors.pink,
-                  child: _selectedColor == index
-                      ? Icon(
-                          Icons.done,
-                          color: Colors.white,
-                          size: 16,
-                        )
-                      : Container(),
+          children: List<Widget>.generate(
+            3,
+            (int index) {
+              return GestureDetector(
+                onTap: (() {
+                  setState(
+                    () {
+                      _selectedColor = index;
+                    },
+                  );
+                }),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: CircleAvatar(
+                    radius: 13,
+                    backgroundColor: index == 0
+                        ? primaryClr
+                        : index == 1
+                            ? Colors.yellow
+                            : Colors.pink,
+                    child: _selectedColor == index
+                        ? Icon(
+                            Icons.done,
+                            color: Colors.white,
+                            size: 16,
+                          )
+                        : Container(),
+                  ),
                 ),
-              ),
-            );
-          }),
+              );
+            },
+          ),
         )
       ],
     );
@@ -356,17 +382,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   _addTaskToDb() async {
     int value = await _taskController.addTask(
-        task: Task(
-      note: _noteController.text,
-      title: _titleController.text,
-      date: DateFormat.yMd().format(_selectedDate),
-      startTime: _startTime,
-      endTime: _endTime,
-      remind: _selectedRemind,
-      repeat: _selectedRepeat,
-      color: _selectedColor,
-      isCompleted: 0,
-    ));
-    print("My id is " + "$value");
+      task: Task(
+        note: _noteController.text,
+        title: _titleController.text,
+        date: DateFormat.yMd().format(_selectedDate),
+        startTime: _startTime,
+        endTime: _endTime,
+        remind: _selectedRemind,
+        repeat: _selectedRepeat,
+        color: _selectedColor,
+        isCompleted: 0,
+      ),
+    );
+    print("button is working and My id is " + "$value");
   }
 }
