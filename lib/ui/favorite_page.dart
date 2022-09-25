@@ -15,18 +15,19 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+class FavoritePage extends StatefulWidget {
+  const FavoritePage({super.key});
 
   @override
-  State<MapPage> createState() => _MapPageState();
+  State<FavoritePage> createState() => _FavoritePageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _FavoritePageState extends State<FavoritePage> {
   DateTime _selectedDate = DateTime.now();
   var notifyHelper;
 
   final PageStorageBucket bucket = PageStorageBucket();
+  
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("MAP PAGE"),
+      child: Text("Likes Pages"),
       // body: Column(
       //   children: [
       //     _addTaskBar(),

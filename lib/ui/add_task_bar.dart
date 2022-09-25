@@ -339,7 +339,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     backgroundColor: index == 0
                         ? primaryClr
                         : index == 1
-                            ? Colors.yellow
+                            ? Colors.yellow.shade900
                             : Colors.pink,
                     child: _selectedColor == index
                         ? Icon(

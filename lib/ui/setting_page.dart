@@ -19,12 +19,13 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBar(context),
+    return Center(
+      child: Text("setting page"),
+      //   // appBar: _appBar(context),
     );
   }
 
-  _appBar(BuildContext context) {
+  _settingAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
       backgroundColor: Get.isDarkMode ? Colors.grey[800] : Colors.white,

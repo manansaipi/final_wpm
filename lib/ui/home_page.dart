@@ -19,6 +19,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 
 import '../models/task.dart';
+import 'favorite_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,15 +32,22 @@ class _HomePageState extends State<HomePage> {
   final _taskController = Get.put(TaskController());
   DateTime _selectedDate = DateTime.now();
   var notifyHelper;
-  int currentTab = 0;
+  int _selectedIndex = 0;
+
+  void _navigateBottomBar(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   final List<Widget> screens = [
     HomePage(),
-    AddTaskPage(),
     MapPage(),
+    FavoritePage(),
+    SettingPage(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = HomePage();
 
   @override
   void initState() {
@@ -54,7 +62,56 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBar(),
+      appBar:
+          // _selectedIndex == 3 ? _settingAppBar() :
+          _appBar(),
+
+      // floatingActionButton: MyCircleButton(
+      //   label: "+",
+      //   onTap: () {
+      //     Get.to(AddTaskPage());
+      //   },
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      body: _selectedIndex == 0
+          ? Column(
+              children: [
+                _addTaskBar(),
+                _addDateBar(),
+                SizedBox(
+                  height: 10,
+                ),
+                // screens[_selectedIndex],
+                _showTasks(),
+              ],
+            )
+          : _selectedIndex == 1
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    screens[_selectedIndex],
+                  ],
+                )
+              : _selectedIndex == 2
+                  ? Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        screens[_selectedIndex],
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        screens[_selectedIndex],
+                      ],
+                    ),
       bottomNavigationBar: Container(
         color: context.theme.backgroundColor,
         child: Padding(
@@ -69,7 +126,7 @@ class _HomePageState extends State<HomePage> {
             activeColor: Colors.white,
             backgroundColor: context.theme.backgroundColor,
             gap: 8,
-            onTabChange: (index) {},
+            onTabChange: _navigateBottomBar,
             tabs: [
               GButton(
                 icon: Icons.home,
@@ -91,22 +148,28 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      // floatingActionButton: MyCircleButton(
-      //   label: "+",
-      //   onTap: () {
-      //     Get.to(AddTaskPage());
-      //   },
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: Column(
-        children: [
-          _addTaskBar(),
-          _addDateBar(),
-          SizedBox(
-            height: 10,
-          ),
-          _showTasks(),
-        ],
+    );
+  }
+
+  _settingAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Get.isDarkMode ? Colors.grey[800] : Colors.white,
+      leading: GestureDetector(
+        onTap: () {
+          Get.back();
+        },
+        child: Icon(
+          Icons.arrow_back_ios_new,
+          size: 20,
+          color: Get.isDarkMode ? Colors.white : Colors.black,
+        ),
+      ),
+      title: Text(
+        "Settings",
+        style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 20),
+            color: Get.isDarkMode ? Colors.white : Colors.black),
       ),
     );
   }
@@ -124,6 +187,8 @@ class _HomePageState extends State<HomePage> {
                 ? "Activated Light Theme"
                 : "Activatd Dark Theme",
           );
+
+          // notifyHelper.scheduledNotification();
         },
         child: Icon(
           Get.isDarkMode ? Icons.sunny : Icons.nightlight_round_outlined,
@@ -224,7 +289,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         onDateChange: (date) {
-          _selectedDate = date;
+          setState(() {
+            _selectedDate = date;
+          });
         },
       ),
     );
@@ -284,29 +351,66 @@ class _HomePageState extends State<HomePage> {
             itemCount: _taskController.taskList.length,
             itemBuilder: (_, index) {
               print(_taskController.taskList.length);
-
-              child:
-              return AnimationConfiguration.staggeredList(
-                position: index,
-                child: SlideAnimation(
-                  child: FadeInAnimation(
+              Task task = _taskController.taskList[index];
+              // print(task.toJson());
+              if (task.repeat == 'Daily') {
+                DateTime date =
+                    DateFormat.jm().parse(task.startTime.toString());
+                var myTime = DateFormat("HH:mm").format(date);
+                // print(myTime);
+                notifyHelper.scheduledNotification(
+                  int.parse(myTime.toString().split(":")[0]),
+                  int.parse(myTime.toString().split(":")[1]),
+                  task,
+                );
+                return AnimationConfiguration.staggeredList(
+                  position: index,
+                  child: SlideAnimation(
+                    child: FadeInAnimation(
                       child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          _showBottomSheet(
-                            context,
-                            _taskController.taskList[index],
-                          );
-                        },
-                        child: TaskTile(
-                          _taskController.taskList[index],
-                        ),
-                      )
-                    ],
-                  )),
-                ),
-              );
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _showBottomSheet(
+                                context,
+                                task,
+                              );
+                            },
+                            child: TaskTile(
+                              task,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else if (task.date == DateFormat.yMd().format(_selectedDate)) {
+                return AnimationConfiguration.staggeredList(
+                  position: index,
+                  child: SlideAnimation(
+                    child: FadeInAnimation(
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _showBottomSheet(
+                                context,
+                                task,
+                              );
+                            },
+                            child: TaskTile(
+                              task,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Container();
+              }
             },
           );
         },
