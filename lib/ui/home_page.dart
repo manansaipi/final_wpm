@@ -44,7 +44,9 @@ class _HomePageState extends State<HomePage> {
     HomePage(),
     MapPage(),
     FavoritePage(),
-    SettingPage(),
+    Container(
+      child: Text(""),
+    )
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -62,93 +64,153 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          // _selectedIndex == 3 ? _settingAppBar() :
-          _appBar(),
+        // appBar:
+        //     // _selectedIndex == 3 ? _settingAppBar() :
+        //     _appBar(),
 
-      // floatingActionButton: MyCircleButton(
-      //   label: "+",
-      //   onTap: () {
-      //     Get.to(AddTaskPage());
-      //   },
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // floatingActionButton: MyCircleButton(
+        //   label: "+",
+        //   onTap: () {
+        //     Get.to(AddTaskPage());
+        //   },
+        // ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-      body: _selectedIndex == 0
-          ? Column(
-              children: [
-                _addTaskBar(),
-                _addDateBar(),
-                SizedBox(
-                  height: 10,
+        body: CustomScrollView(
+      slivers: [
+        //sliver app bar
+        SliverAppBar(
+          leading: Icon(Icons.menu),
+          title: Text("SliveAppbar"),
+          expandedHeight: 230,
+          // floating: true,
+          pinned: true,
+          flexibleSpace: FlexibleSpaceBar(
+            background: Container(
+              color: Colors.pink,
+              child: Container(
+                padding: EdgeInsets.only(top: 80),
+                child: Column(
+                  children: [_addTaskBar(), _addDateBar()],
                 ),
-                // screens[_selectedIndex],
-                _showTasks(),
-              ],
-            )
-          : _selectedIndex == 1
-              ? Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    screens[_selectedIndex],
-                  ],
-                )
-              : _selectedIndex == 2
-                  ? Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        screens[_selectedIndex],
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        screens[_selectedIndex],
-                      ],
-                    ),
-      bottomNavigationBar: Container(
-        color: context.theme.backgroundColor,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15.0,
-            vertical: 2,
-          ),
-          child: GNav(
-            padding: EdgeInsets.all(16),
-            tabBackgroundColor: primaryClr,
-            color: Colors.grey,
-            activeColor: Colors.white,
-            backgroundColor: context.theme.backgroundColor,
-            gap: 8,
-            onTabChange: _navigateBottomBar,
-            tabs: [
-              GButton(
-                icon: Icons.home,
-                text: "Home",
               ),
-              GButton(
-                icon: Icons.map_sharp,
-                text: "Maps",
-              ),
-              GButton(
-                icon: Icons.favorite_border,
-                text: "Likes",
-              ),
-              GButton(
-                icon: Icons.settings,
-                text: "Settings",
-              ),
-            ],
+            ),
+            title: Text("SliverAppbar"),
           ),
         ),
-      ),
-    );
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (_, index) {
+              Task task = _taskController.taskList[index];
+              print(_taskController.taskList.length);
+              return GestureDetector(
+                onTap: () {
+                  _showBottomSheet(
+                    context,
+                    task,
+                  );
+                  _taskController.getTask();
+                },
+                child: TaskTile(
+                  task,
+                ),
+              );
+            },
+            childCount: _taskController.taskList.length,
+          ),
+        ),
+        // SliverToBoxAdapter(
+        //     child: Text()),
+
+        //sliver items
+        // SliverToBoxAdapter(
+        //   child: Padding(
+        //     padding: const EdgeInsets.all(0),
+        //     child: ClipRect(
+        //       child: Container(
+        //         height: 500,
+        //         color: Colors.deepPurple.shade100,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+      ],
+    )
+        // _selectedIndex == 0
+        //     ? Column(
+        //         children: [
+        //           _addTaskBar(),
+        //           _addDateBar(),
+        //           SizedBox(
+        //             height: 10,
+        //           ),
+        //           // screens[_selectedIndex],
+        //           _showTasks(),
+        //         ],
+        //       )
+        //     : _selectedIndex == 1
+        //         ? Column(
+        //             children: [
+        //               SizedBox(
+        //                 height: 10,
+        //               ),
+        //               screens[_selectedIndex],
+        //             ],
+        //           )
+        //         : _selectedIndex == 2
+        //             ? Column(
+        //                 children: [
+        //                   SizedBox(
+        //                     height: 10,
+        //                   ),
+        //                   screens[_selectedIndex],
+        //                 ],
+        //               )
+        //             : Column(
+        //                 children: [
+        //                   SizedBox(
+        //                     height: 10,
+        //                   ),
+        //                   screens[_selectedIndex],
+        //                 ],
+        //               ),
+        // bottomNavigationBar: Container(
+        //   color: context.theme.backgroundColor,
+        //   child: Padding(
+        //     padding: const EdgeInsets.symmetric(
+        //       horizontal: 15.0,
+        //       vertical: 2,
+        //     ),
+        //     child: GNav(
+        //       padding: EdgeInsets.all(16),
+        //       tabBackgroundColor: primaryClr,
+        //       color: Colors.grey,
+        //       activeColor: Colors.white,
+        //       backgroundColor: context.theme.backgroundColor,
+        //       gap: 8,
+        //       onTabChange: _navigateBottomBar,
+        //       tabs: [
+        //         GButton(
+        //           icon: Icons.home,
+        //           text: "Home",
+        //         ),
+        //         GButton(
+        //           icon: Icons.map_sharp,
+        //           text: "Maps",
+        //         ),
+        //         GButton(
+        //           icon: Icons.favorite_border,
+        //           text: "Favorite",
+        //         ),
+        //         GButton(
+        //           icon: Icons.question_mark,
+        //           text: "??",
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        );
   }
 
   _settingAppBar() {
@@ -176,6 +238,15 @@ class _HomePageState extends State<HomePage> {
 
   _appBar() {
     return AppBar(
+      title: _selectedIndex == 0
+          ? Text("Home")
+          : _selectedIndex == 1
+              ? Text("Maps")
+              : _selectedIndex == 2
+                  ? Text("Favorite")
+                  : Text("?"),
+      centerTitle: true,
+      titleTextStyle: headingStyle,
       elevation: 0,
       backgroundColor: Get.isDarkMode ? darkBGColor : Colors.white10,
       leading: GestureDetector(
@@ -244,7 +315,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           MyButton(
-            label: "Add Task",
+            label: "Create Task",
             onTap: () async {
               await Get.to(
                 AddTaskPage(),
@@ -399,9 +470,9 @@ class _HomePageState extends State<HomePage> {
                                 task,
                               );
                             },
-                            child: TaskTile(
-                              task,
-                            ),
+                            // child: TaskTile(
+                            //   task,
+                            // ),
                           )
                         ],
                       ),

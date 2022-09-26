@@ -6,6 +6,7 @@ import 'package:final_wpm/login_page.dart';
 import 'package:final_wpm/main_page.dart';
 import 'package:final_wpm/ui/home_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
+import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       darkTheme: Themes.dark,
       themeMode: ThemeService().theme,
       home: HomePage(),
+      // home: HomePage(),
     );
   }
 }

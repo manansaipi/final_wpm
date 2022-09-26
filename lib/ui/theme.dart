@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color primaryClr = Color(0xFF4e5ae8);
+Color primaryClr = Color.fromARGB(255, 255, 148, 183);
+const Color primaryClr2 = Color(0XFFF78E86);
+const Color primaryClr3 = Color(0xFF4e5ae8);
 const Color darkBGColor = Color(0xFF303030);
 
 class Themes {

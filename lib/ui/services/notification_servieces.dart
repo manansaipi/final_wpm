@@ -25,7 +25,7 @@ class NotifyHelper {
     );
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      // onSelectNotification: selectNotification,
+      onSelectNotification: selectNotification,
     );
   }
 
