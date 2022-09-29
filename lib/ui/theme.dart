@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 const Color primaryClr2 = Color(0xFF4e5ae8);
 const Color primaryClr = Color.fromARGB(255, 105, 173, 252);
-
 const Color darkBGColor = Color(0xFF303030);
 
 class Themes {
