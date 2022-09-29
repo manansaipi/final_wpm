@@ -54,7 +54,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _settingAppBar(context),
+      appBar: _appBar(context),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,7 +63,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  _settingAppBar(BuildContext context) {
+  _appBar(BuildContext context) {
     return AppBar(
       elevation: 3,
       backgroundColor: val1 ? Colors.grey[800] : Colors.white,
