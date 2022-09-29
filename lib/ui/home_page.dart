@@ -1,4 +1,6 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:date_picker_timeline/extra/color.dart';
+import 'package:date_picker_timeline/extra/style.dart';
 import 'package:final_wpm/controllers/task_controller.dart';
 import 'package:final_wpm/ui/add_task_bar.dart';
 import 'package:final_wpm/ui/map_page.dart';
@@ -31,6 +33,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _taskController = Get.put(TaskController());
   DateTime _selectedDate = DateTime.now();
+  String dateNow = DateTime.now().toString().split(" ")[0];
+  String datePick = DateTime.now().toString().split(" ")[0];
   var notifyHelper;
   int _selectedIndex = 0;
 
@@ -44,9 +48,6 @@ class _HomePageState extends State<HomePage> {
     HomePage(),
     MapPage(),
     FavoritePage(),
-    Container(
-      child: Text(""),
-    )
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -64,153 +65,88 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar:
-        //     // _selectedIndex == 3 ? _settingAppBar() :
-        //     _appBar(),
+      appBar:
+          // _selectedIndex == 3 ? _settingAppBar() :
+          _appBar(),
+      floatingActionButton: MyCircleButton(
+        label: "+",
+        onTap: () {
+          Get.to(AddTaskPage());
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: _selectedIndex == 0
+          ? Column(
+              children: [
+                // _addTaskBar(),
+                _addDateBar(),
 
-        // floatingActionButton: MyCircleButton(
-        //   label: "+",
-        //   onTap: () {
-        //     Get.to(AddTaskPage());
-        //   },
-        // ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-        body: CustomScrollView(
-      slivers: [
-        //sliver app bar
-        SliverAppBar(
-          leading: Icon(Icons.menu),
-          title: Text("SliveAppbar"),
-          expandedHeight: 230,
-          // floating: true,
-          pinned: true,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Container(
-              color: Colors.pink,
-              child: Container(
-                padding: EdgeInsets.only(top: 80),
-                child: Column(
-                  children: [_addTaskBar(), _addDateBar()],
+                SizedBox(
+                  height: 10,
                 ),
+                // screens[_selectedIndex],
+                _showTasks(),
+              ],
+            )
+          : _selectedIndex == 1
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    screens[_selectedIndex],
+                  ],
+                )
+              : _selectedIndex == 2
+                  ? Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        screens[_selectedIndex],
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        screens[_selectedIndex],
+                      ],
+                    ),
+      bottomNavigationBar: Container(
+        color: context.theme.backgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15.0,
+            vertical: 2,
+          ),
+          child: GNav(
+            padding: EdgeInsets.all(16),
+            tabBackgroundColor: primaryClr,
+            color: Colors.grey,
+            activeColor: Colors.white,
+            backgroundColor: context.theme.backgroundColor,
+            gap: 8,
+            onTabChange: _navigateBottomBar,
+            tabs: [
+              GButton(
+                icon: Icons.home,
+                text: "Home",
               ),
-            ),
-            title: Text("SliverAppbar"),
+              GButton(
+                icon: Icons.map_sharp,
+                text: "Maps",
+              ),
+              GButton(
+                icon: Icons.favorite_border,
+                text: "Favorites",
+              ),
+            ],
           ),
         ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (_, index) {
-              Task task = _taskController.taskList[index];
-              print(_taskController.taskList.length);
-              return GestureDetector(
-                onTap: () {
-                  _showBottomSheet(
-                    context,
-                    task,
-                  );
-                  _taskController.getTask();
-                },
-                child: TaskTile(
-                  task,
-                ),
-              );
-            },
-            childCount: _taskController.taskList.length,
-          ),
-        ),
-        // SliverToBoxAdapter(
-        //     child: Text()),
-
-        //sliver items
-        // SliverToBoxAdapter(
-        //   child: Padding(
-        //     padding: const EdgeInsets.all(0),
-        //     child: ClipRect(
-        //       child: Container(
-        //         height: 500,
-        //         color: Colors.deepPurple.shade100,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-      ],
-    )
-        // _selectedIndex == 0
-        //     ? Column(
-        //         children: [
-        //           _addTaskBar(),
-        //           _addDateBar(),
-        //           SizedBox(
-        //             height: 10,
-        //           ),
-        //           // screens[_selectedIndex],
-        //           _showTasks(),
-        //         ],
-        //       )
-        //     : _selectedIndex == 1
-        //         ? Column(
-        //             children: [
-        //               SizedBox(
-        //                 height: 10,
-        //               ),
-        //               screens[_selectedIndex],
-        //             ],
-        //           )
-        //         : _selectedIndex == 2
-        //             ? Column(
-        //                 children: [
-        //                   SizedBox(
-        //                     height: 10,
-        //                   ),
-        //                   screens[_selectedIndex],
-        //                 ],
-        //               )
-        //             : Column(
-        //                 children: [
-        //                   SizedBox(
-        //                     height: 10,
-        //                   ),
-        //                   screens[_selectedIndex],
-        //                 ],
-        //               ),
-        // bottomNavigationBar: Container(
-        //   color: context.theme.backgroundColor,
-        //   child: Padding(
-        //     padding: const EdgeInsets.symmetric(
-        //       horizontal: 15.0,
-        //       vertical: 2,
-        //     ),
-        //     child: GNav(
-        //       padding: EdgeInsets.all(16),
-        //       tabBackgroundColor: primaryClr,
-        //       color: Colors.grey,
-        //       activeColor: Colors.white,
-        //       backgroundColor: context.theme.backgroundColor,
-        //       gap: 8,
-        //       onTabChange: _navigateBottomBar,
-        //       tabs: [
-        //         GButton(
-        //           icon: Icons.home,
-        //           text: "Home",
-        //         ),
-        //         GButton(
-        //           icon: Icons.map_sharp,
-        //           text: "Maps",
-        //         ),
-        //         GButton(
-        //           icon: Icons.favorite_border,
-        //           text: "Favorite",
-        //         ),
-        //         GButton(
-        //           icon: Icons.question_mark,
-        //           text: "??",
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        );
+      ),
+    );
   }
 
   _settingAppBar() {
@@ -238,51 +174,78 @@ class _HomePageState extends State<HomePage> {
 
   _appBar() {
     return AppBar(
-      title: _selectedIndex == 0
-          ? Text("Home")
-          : _selectedIndex == 1
-              ? Text("Maps")
-              : _selectedIndex == 2
-                  ? Text("Favorite")
-                  : Text("?"),
-      centerTitle: true,
-      titleTextStyle: headingStyle,
+      title: Row(
+        children: [
+          Text(
+            DateFormat.MMMM().format(
+              DateTime.now(),
+            ),
+            style: titleHeadingStyle,
+          ),
+          Text(" "),
+          Text(
+            DateFormat.y().format(
+              DateTime.now(),
+            ),
+            style: titleBiggerHeadingStyle,
+          ),
+        ],
+      ),
       elevation: 0,
       backgroundColor: Get.isDarkMode ? darkBGColor : Colors.white10,
-      leading: GestureDetector(
-        onTap: () {
-          ThemeService().switchTheme();
-          notifyHelper.displayNotification(
-            title: "Theme Changed",
-            body: Get.isDarkMode
-                ? "Activated Light Theme"
-                : "Activatd Dark Theme",
-          );
+      // leading: GestureDetector(
+      //   onTap: () {
+      //     ThemeService().switchTheme();
+      //     notifyHelper.displayNotification(
+      //       title: "Theme Changed",
+      //       body: Get.isDarkMode
+      //           ? "Activated Light Theme"
+      //           : "Activatd Dark Theme",
+      //     );
+      //   },
+      // ),
 
-          // notifyHelper.scheduledNotification();
-        },
-        child: Icon(
-          Get.isDarkMode ? Icons.sunny : Icons.nightlight_round_outlined,
-          size: 20,
-          color: Get.isDarkMode ? Colors.white : Colors.black,
-        ),
-      ),
+      //     // notifyHelper.scheduledNotification();
+      //   },
+      //   child: Icon(
+      //     Get.isDarkMode ? Icons.sunny : Icons.nightlight_round_outlined,
+      //     size: 20,
+      //     color: Get.isDarkMode ? Colors.white : Colors.black,
+      //   ),
+      // ),
       actions: [
         IconButton(
-            onPressed: () {
-              print("settings");
-              Get.to(
-                SettingPage(),
-              );
-              //Move to another page using NAVIGATOR
-              // Navigator.push(context, MaterialPageRoute(builder: (context) {
-              //   return SettingPage();
-              // }));
-            },
-            icon: Icon(
-              Icons.settings,
-              color: Get.isDarkMode ? Colors.white : Colors.black,
-            )),
+          onPressed: () {
+            print("calender");
+
+            //Move to another page using NAVIGATOR
+            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //   return SettingPage();
+            // }));
+          },
+          icon: Icon(
+            Icons.calendar_month,
+            color: primaryClr,
+            size: 27,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            print("settings");
+            Get.to(
+              SettingPage(),
+            );
+            //Move to another page using NAVIGATOR
+            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //   return SettingPage();
+            // }));
+          },
+          icon: Icon(
+            Icons.settings,
+            color: primaryClr,
+            size: 27,
+          ),
+        ),
       ],
     );
   }
@@ -302,7 +265,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  DateFormat.yMMMMd().format(
+                  DateFormat.yMEd().format(
                     DateTime.now(),
                   ),
                   style: subHeadingStyle,
@@ -315,7 +278,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           MyButton(
-            label: "Create Task",
+            label: "Add Task",
             onTap: () async {
               await Get.to(
                 AddTaskPage(),
@@ -330,13 +293,19 @@ class _HomePageState extends State<HomePage> {
 
   _addDateBar() {
     return Container(
-      margin: const EdgeInsets.only(top: 15, left: 15),
+      margin: const EdgeInsets.only(left: 15),
       child: DatePicker(
         DateTime.now(),
         height: 80,
         width: 60,
         initialSelectedDate: DateTime.now(),
         selectionColor: primaryClr,
+
+        // dateNow == datePick
+        //     ? primaryClr
+        //     : Get.isDarkMode
+        //         ? Colors.white
+        //         : Colors.grey.shade700,
         selectedTextColor: Colors.white,
         monthTextStyle: GoogleFonts.lato(
           textStyle: TextStyle(
@@ -362,8 +331,11 @@ class _HomePageState extends State<HomePage> {
         onDateChange: (date) {
           setState(() {
             _selectedDate = date;
+            datePick = _selectedDate.toString().split(" ")[0];
+            _taskController.getTask();
           });
         },
+        daysCount: 30,
       ),
     );
   }
@@ -421,9 +393,12 @@ class _HomePageState extends State<HomePage> {
           return ListView.builder(
             itemCount: _taskController.taskList.length,
             itemBuilder: (_, index) {
-              print(_taskController.taskList.length);
+              // print(_taskController.taskList.length);
               Task task = _taskController.taskList[index];
               // print(task.toJson());
+              // print(dateNow);
+              // print(datePick);
+              // print(dateNow == datePick);
               if (task.repeat == 'Daily') {
                 DateTime date =
                     DateFormat.jm().parse(task.startTime.toString());
@@ -470,9 +445,9 @@ class _HomePageState extends State<HomePage> {
                                 task,
                               );
                             },
-                            // child: TaskTile(
-                            //   task,
-                            // ),
+                            child: TaskTile(
+                              task,
+                            ),
                           )
                         ],
                       ),
@@ -491,59 +466,112 @@ class _HomePageState extends State<HomePage> {
 
   _showBottomSheet(BuildContext context, Task task) {
     Get.bottomSheet(
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       Container(
-        padding: const EdgeInsets.only(top: 4),
-        height: task.isCompleted == 1
-            ? MediaQuery.of(context).size.width * 0.34
-            : MediaQuery.of(context).size.width * 0.42,
-        color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
-        child: Column(
-          children: [
-            Container(
-              height: 6,
-              width: 120,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300],
-              ),
-            ),
-            Spacer(),
-            task.isCompleted == 1
-                ? Container()
-                : bottomSheetButton(
-                    label: "Task Completed",
-                    onTap: () {
-                      _taskController.markTaskCompleted(task.id!);
-                      Get.back();
-                    },
-                    clr: primaryClr,
-                    context: context),
-            bottomSheetButton(
-              label: "Delete Task",
-              onTap: () {
-                _taskController.delete(task);
+        height: 240,
+        color: Colors.transparent,
+        child: Container(
+          margin: EdgeInsets.all(20),
 
-                Get.back();
-              },
-              clr: Colors.red,
-              context: context,
+          // padding: const EdgeInsets.only(top: 4),
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 1,
+              color:
+                  Get.isDarkMode ? Colors.grey.shade500 : Colors.grey.shade800,
             ),
-            SizedBox(
-              height: 20,
+            color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(40),
             ),
-            bottomSheetButton(
-              label: "Cancel",
-              onTap: () {
-                Get.back();
-              },
-              clr: Colors.white10,
-              isClose: true,
-              context: context,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-          ],
+          ),
+          // height: task.isCompleted == 1
+          //     ? MediaQuery.of(context).size.width * 0.24
+          //     : MediaQuery.of(context).size.width * 0.32,
+          // color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 30,
+              ),
+              // Container(
+              //   height: 6,
+              //   width: 120,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(12),
+              //     color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300],
+              //   ),
+              // ),
+              // Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  bottomSheetDbButton(
+                      icon: Icons.delete,
+                      label: "Delete",
+                      onTap: () {
+                        _taskController.delete(task);
+                        Get.back();
+                      },
+                      clr: Get.isDarkMode
+                          ? Colors.grey.shade300
+                          : Colors.grey.shade300,
+                      isDelete: true,
+                      context: context),
+                  bottomSheetDbButton(
+                      color: task.isCompleted == 0
+                          ? Color.fromARGB(255, 0, 255, 8)
+                          : Colors.grey.shade100,
+                      icon: Icons.task_alt,
+                      label: task.isCompleted == 0 ? "Complete" : "Incomplete",
+                      onTap: () {
+                        Get.back();
+
+                        task.isCompleted == 0
+                            ? _taskController.markTaskCompleted(task.id!)
+                            : _taskController.markTaskUnCompleted(task.id!);
+                      },
+                      clr: Colors.grey.shade300,
+                      context: context)
+                ],
+              ),
+              // task.isCompleted == 1
+              //     ? Container()
+              //     : bottomSheetButton(
+              //         label: "Task Completed",
+              //         onTap: () {
+              //           _taskController.markTaskCompleted(task.id!);
+              //           Get.back();
+              //         },
+              //         clr: primaryClr,
+              //         context: context),
+              // bottomSheetButton(
+              //   label: "Delete Task",
+              //   onTap: () {
+              // _taskController.delete(task);
+
+              //     Get.back();
+              //   },
+              //   clr: Colors.red,
+              //   context: context,
+              // ),
+              SizedBox(
+                height: 20,
+              ),
+              bottomSheetButton(
+                label: "Cancel",
+                onTap: () {
+                  Get.back();
+                },
+                clr: Colors.white10,
+                isClose: true,
+                context: context,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -559,26 +587,63 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
-        height: 35,
+        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 25),
+        height: 40,
         width: MediaQuery.of(context).size.width * 0.9,
         decoration: BoxDecoration(
-          color: isClose == true ? Colors.transparent : clr,
-          border: Border.all(
-            width: 1,
-            color: isClose == true
-                ? Get.isDarkMode
-                    ? Colors.grey[600]!
-                    : Colors.grey[300]!
-                : clr,
-          ),
-          borderRadius: BorderRadius.circular(20),
+          color: Get.isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300,
+          // border: Border.all(
+          //   width: 1,
+          //   color: isClose == true
+          //       ? Get.isDarkMode
+          //           ? Colors.grey[600]!
+          //           : Colors.grey[300]!
+          //       : clr,
+          // ),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
           child: Text(
             label,
             style:
                 isClose ? titleStyle : titleStyle.copyWith(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  bottomSheetDbButton({
+    Color? color,
+    required String label,
+    required Function()? onTap,
+    required Color clr,
+    bool isDelete = false,
+    required BuildContext context,
+    required IconData icon,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+        height: 70,
+        width: 105,
+        decoration: BoxDecoration(
+          color: Get.isDarkMode ? Colors.grey.shade700 : Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon,
+                  color: isDelete ? Color.fromARGB(255, 255, 17, 0) : color),
+              Text(label,
+                  style: isDelete
+                      ? deleteTitleStyle
+                      : deleteTitleStyle.copyWith(color: color)),
+            ],
           ),
         ),
       ),

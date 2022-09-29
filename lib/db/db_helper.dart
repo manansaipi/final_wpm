@@ -45,11 +45,19 @@ class DBHelper {
     return await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
   }
 
-  static updae(int id) async {
+  static updateCompleted(int id) async {
     return await _db!.rawUpdate('''
     UPDATE tasks
     SET isCompleted = ?
     WHERE id =?
 ''', [1, id]);
+  }
+
+  static updateUncopleted(int id) async {
+    return await _db!.rawUpdate('''
+    UPDATE tasks
+    SET isCompleted = ?
+    WHERE id =?
+''', [0, id]);
   }
 }

@@ -2,6 +2,10 @@ import 'package:final_wpm/ui/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:ui';
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../models/task.dart';
 
@@ -12,18 +16,26 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 25),
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 30),
       child: Container(
         padding: EdgeInsets.all(16),
         //  width: SizeConfig.screenWidth * 0.78,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: task!.isCompleted == 1
-              ? Colors.grey.shade800
-              : _getBGClr(task?.color ?? 0),
-        ),
+            borderRadius: BorderRadius.circular(16),
+            color: task!.isCompleted == 1
+                ? Colors.grey.shade800
+                : _getBGClr(task?.color ?? 0),
+            boxShadow: [
+              BoxShadow(
+                color: task!.isCompleted == 1
+                    ? Colors.grey.shade800
+                    : _getBGClr(task?.color ?? 0),
+                blurRadius: 12,
+                offset: Offset(0, 6),
+              )
+            ]),
         child: Row(children: [
           Expanded(
             child: Column(
@@ -72,7 +84,7 @@ class TaskTile extends StatelessWidget {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 10),
             height: 60,
-            width: 0.5,
+            width: 1.5,
             color: Colors.grey[200]!.withOpacity(0.7),
           ),
           RotatedBox(
