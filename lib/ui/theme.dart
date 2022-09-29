@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color primaryClr = Color(0xFF4e5ae8);
+const Color primaryClr2 = Color(0xFF4e5ae8);
+const Color primaryClr = Color.fromARGB(255, 105, 173, 252);
 const Color darkBGColor = Color(0xFF303030);
 
 class Themes {
@@ -39,6 +40,15 @@ TextStyle get titleStyle {
   );
 }
 
+TextStyle get deleteTitleStyle {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: Color.fromARGB(255, 255, 0, 0)),
+  );
+}
+
 TextStyle get subTitleStyle {
   return GoogleFonts.lato(
     textStyle: TextStyle(
@@ -54,6 +64,36 @@ TextStyle get headingStyle {
       fontSize: 22,
       fontWeight: FontWeight.bold,
       color: Get.isDarkMode ? Colors.white : Colors.black,
+    ),
+  );
+}
+
+TextStyle get biggerHeadingStyle {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+      fontSize: 25,
+      fontWeight: FontWeight.bold,
+      color: primaryClr,
+    ),
+  );
+}
+
+TextStyle get titleHeadingStyle {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+      fontSize: 27,
+      fontWeight: FontWeight.bold,
+      color: Get.isDarkMode ? Colors.white : Colors.grey.shade700,
+    ),
+  );
+}
+
+TextStyle get titleBiggerHeadingStyle {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+      fontSize: 30,
+      fontWeight: FontWeight.bold,
+      color: primaryClr,
     ),
   );
 }

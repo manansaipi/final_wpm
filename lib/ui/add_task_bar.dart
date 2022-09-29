@@ -23,8 +23,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
   DateTime _selectedDate = DateTime.now();
   String _endTime = "9.30 PM";
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
-  int _selectedRemind = 5;
+  int _selectedRemind = 0;
   List<int> remindList = [
+    0,
     5,
     10,
     15,
@@ -132,7 +133,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 margin: EdgeInsets.only(top: 5),
                 child: MyInputField(
                   title: "Remind",
-                  hint: "$_selectedRemind minutes early",
+                  hint: _selectedRemind != 0
+                      ? "$_selectedRemind minutes early"
+                      : "At that time ($_selectedRemind minutes )",
                   widget: DropdownButton(
                     icon: Container(
                       margin: EdgeInsets.only(right: 5, top: 4),
@@ -361,6 +364,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _validateDate() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
       _addTaskToDb();
+
+      _taskController.getTask();
       Get.back();
     } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
       Get.snackbar(

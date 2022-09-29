@@ -27,7 +27,12 @@ class TaskController extends GetxController {
   }
 
   void markTaskCompleted(int id) async {
-    await DBHelper.updae(id);
+    await DBHelper.updateCompleted(id);
+    getTask();
+  }
+
+  void markTaskUnCompleted(int id) async {
+    await DBHelper.updateUncopleted(id);
     getTask();
   }
 }

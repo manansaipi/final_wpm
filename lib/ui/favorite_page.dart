@@ -27,7 +27,6 @@ class _FavoritePageState extends State<FavoritePage> {
   var notifyHelper;
 
   final PageStorageBucket bucket = PageStorageBucket();
-  
 
   @override
   void initState() {
@@ -42,7 +41,7 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("Likes Pages"),
+      child: Text("Favorites Pages"),
       // body: Column(
       //   children: [
       //     _addTaskBar(),

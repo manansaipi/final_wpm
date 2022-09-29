@@ -25,7 +25,7 @@ class NotifyHelper {
     );
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      // onSelectNotification: selectNotification,
+      onSelectNotification: selectNotification,
     );
   }
 
@@ -59,7 +59,7 @@ class NotifyHelper {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
-        payload: "${task.title}" + "${task.note}|");
+        payload: "${task.title}|" + "${task.note}|");
   }
 
   tz.TZDateTime _convertTime(int hour, int minute) {
