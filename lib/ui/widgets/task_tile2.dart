@@ -9,9 +9,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../models/task.dart';
 
-class TaskTile2 extends StatelessWidget {
+class TaskTile extends StatelessWidget {
   final Task? task;
-  TaskTile2(this.task);
+  TaskTile(this.task);
 
   @override
   Widget build(BuildContext context) {

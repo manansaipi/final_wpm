@@ -12,6 +12,7 @@ import 'package:final_wpm/ui/theme.dart';
 import 'package:final_wpm/ui/widgets/button.dart';
 import 'package:final_wpm/ui/widgets/task_tile.dart';
 import 'package:final_wpm/ui/widgets/task_tile2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -22,6 +23,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 
 import '../models/task.dart';
+import 'add_task_bar copy.dart';
 import 'favorite_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -72,13 +74,13 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: MyCircleButton(
         label: "+",
         onTap: () {
-          Get.to(AddTaskPage());
+          Get.to(AddTaskPage2());
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: _selectedIndex == 0
           ? Column(
-              children: [
+              children: <Widget>[
                 // _addTaskBar(),
                 _addDateBar(),
                 SizedBox(
@@ -422,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                                 task,
                               );
                             },
-                            child: TaskTile(
+                            child: TaskTile2(
                               task,
                             ),
                           )
