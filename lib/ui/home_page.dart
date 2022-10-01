@@ -11,6 +11,7 @@ import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:final_wpm/ui/widgets/button.dart';
 import 'package:final_wpm/ui/widgets/task_tile.dart';
+import 'package:final_wpm/ui/widgets/task_tile2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -144,29 +145,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  _settingAppBar() {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: Get.isDarkMode ? Colors.grey[800] : Colors.white,
-      leading: GestureDetector(
-        onTap: () {
-          Get.back();
-        },
-        child: Icon(
-          Icons.arrow_back_ios_new,
-          size: 20,
-          color: Get.isDarkMode ? Colors.white : Colors.black,
-        ),
-      ),
-      title: Text(
-        "Settings",
-        style: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 20),
-            color: Get.isDarkMode ? Colors.white : Colors.black),
       ),
     );
   }
@@ -421,7 +399,7 @@ class _HomePageState extends State<HomePage> {
                                 task,
                               );
                             },
-                            child: TaskTile(
+                            child: TaskTile2(
                               task,
                             ),
                           )
@@ -520,7 +498,7 @@ class _HomePageState extends State<HomePage> {
                   bottomSheetDbButton(
                       color: task.isCompleted == 0
                           ? Color.fromARGB(255, 0, 255, 8)
-                          : Colors.grey.shade100,
+                          : Colors.grey.shade900,
                       icon: Icons.task_alt,
                       label: task.isCompleted == 0 ? "Complete" : "Incomplete",
                       onTap: () {
