@@ -2,7 +2,7 @@ import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:date_picker_timeline/extra/color.dart';
 import 'package:date_picker_timeline/extra/style.dart';
 import 'package:final_wpm/controllers/task_controller.dart';
-import 'package:final_wpm/ui/add_task_bar.dart';
+
 import 'package:final_wpm/ui/map_page.dart';
 import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/notification_servieces.dart';
@@ -11,7 +11,7 @@ import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:final_wpm/ui/widgets/button.dart';
 import 'package:final_wpm/ui/widgets/task_tile.dart';
-import 'package:final_wpm/ui/widgets/task_tile2.dart';
+import 'package:final_wpm/ui/widgets/task_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -23,7 +23,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 
 import '../models/task.dart';
-import 'add_task_bar copy.dart';
+import 'add_task_bar.dart';
 import 'favorite_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: MyCircleButton(
         label: "+",
         onTap: () {
-          Get.to(AddTaskPage2());
+          Get.to(AddTaskPage());
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -401,7 +401,7 @@ class _HomePageState extends State<HomePage> {
                                 task,
                               );
                             },
-                            child: TaskTile2(
+                            child: TaskTile(
                               task,
                             ),
                           )
@@ -424,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                                 task,
                               );
                             },
-                            child: TaskTile2(
+                            child: TaskTile(
                               task,
                             ),
                           )

@@ -1,5 +1,5 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
-import 'package:final_wpm/ui/add_task_bar.dart';
+
 import 'package:final_wpm/ui/home_page.dart';
 import 'package:final_wpm/ui/map_page.dart';
 import 'package:final_wpm/ui/setting_page.dart';
@@ -84,35 +84,6 @@ class _MapPageState extends State<MapPage> {
               color: Get.isDarkMode ? Colors.white : Colors.black,
             )),
       ],
-    );
-  }
-
-  _addTaskBar() {
-    return Container(
-      margin: const EdgeInsets.only(left: 20, right: 20, top: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  DateFormat.yMMMMd().format(
-                    DateTime.now(),
-                  ),
-                  style: subHeadingStyle,
-                ),
-                Text(
-                  "Today",
-                  style: headingStyle,
-                ),
-              ],
-            ),
-          ),
-          MyButton(label: "Add Task", onTap: () => Get.to(AddTaskPage()))
-        ],
-      ),
     );
   }
 }
