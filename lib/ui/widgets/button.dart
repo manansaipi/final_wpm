@@ -35,6 +35,44 @@ class MyButton extends StatelessWidget {
   }
 }
 
+class MyAddTaskButton extends StatelessWidget {
+  final String label;
+  final Function()? onTap;
+
+  final Color myColor;
+
+  const MyAddTaskButton({
+    super.key,
+    required this.label,
+    required this.onTap,
+    required this.myColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: myColor,
+        ),
+        child: Center(
+            child: Text(
+          label,
+          style: TextStyle(color: Colors.white, fontSize: 25),
+        )),
+        // child: Text(
+        //   label,
+        // style: TextStyle(color: Colors.white),
+        // ),
+      ),
+    );
+  }
+}
+
 class MyCircleButton extends StatelessWidget {
   final String label;
   final Function()? onTap;

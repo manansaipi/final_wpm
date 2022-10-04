@@ -88,6 +88,36 @@ TextStyle get titleHeadingStyle {
   );
 }
 
+TextStyle get titleStyle2 {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Get.isDarkMode ? Colors.grey.shade300 : Colors.grey.shade700,
+    ),
+  );
+}
+
+TextStyle get hintStyle {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Get.isDarkMode ? Colors.grey.shade500 : Colors.grey.shade500,
+    ),
+  );
+}
+
+TextStyle get inputFieldStyle {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+      fontSize: 17,
+      fontWeight: FontWeight.bold,
+      color: Get.isDarkMode ? Colors.white : Colors.grey.shade900,
+    ),
+  );
+}
+
 TextStyle get titleBiggerHeadingStyle {
   return GoogleFonts.lato(
     textStyle: TextStyle(
