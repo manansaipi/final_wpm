@@ -24,6 +24,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   DateTime _selectedDate = DateTime.now();
   String _endTime = "9:30 PM";
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
+  var _sortTime;
   int _selectedRemind = 0;
   List<int> remindList = [
     0,
@@ -328,16 +329,19 @@ class _AddTaskPageState extends State<AddTaskPage> {
             "Create",
             style: headingStyle,
           ),
-          Text(" Task",
-              style: GoogleFonts.lato(
-                textStyle: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: _getBGClr(_selectedColor),
-                ),
-              )),
+          Text(
+            " Task",
+            style: GoogleFonts.lato(
+              textStyle: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: _getBGClr(_selectedColor),
+              ),
+            ),
+          ),
         ],
       ),
+
       // actions: [
       //   //move to another page not using Get
       //   Container(
@@ -386,14 +390,36 @@ class _AddTaskPageState extends State<AddTaskPage> {
     var pickedTime = await _showTimePicker();
     if (pickedTime != null) {
       String _formatedTime = pickedTime.format(context);
+      String _checkAMorPM = _formatedTime.split(" ")[1];
+      String _splitTimeFromPM = _formatedTime.split(" ")[0];
+      String _splitTime0 = _splitTimeFromPM.split(":")[0];
+      String _splitTime1 = _splitTimeFromPM.split(":")[1];
       print(_formatedTime);
       if (pickedTime == null) {
         print("tTime canceled");
       } else if (isStartTime == true) {
+        if (_checkAMorPM == "PM") {
+          if (_splitTime0 == "12") {
+            _sortTime = _splitTime0 + "." + _splitTime1;
+          } else {
+            int _addSplitTime = 12 + int.parse(_splitTime0);
+            _sortTime = _addSplitTime.toString() + "." + _splitTime1;
+          }
+
+          print(_sortTime);
+        } else {
+          if (_splitTime0 == "12") {
+            String combine = "0" + "." + _splitTime1;
+            _sortTime = combine;
+            print(_sortTime);
+          } else {
+            _sortTime = _splitTime0.toString() + "." + _splitTime1;
+            print(_sortTime);
+          }
+        }
         setState(
           () {
             _startTime = _formatedTime;
-            print(_startTime);
           },
         );
       } else if (isStartTime == false) {
@@ -494,6 +520,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         date: DateFormat.yMd().format(_selectedDate),
         startTime: _startTime,
         endTime: _endTime,
+        sortTime: _sortTime,
         remind: _selectedRemind,
         repeat: _fixSelectedRepeat,
         color: _selectedColor,

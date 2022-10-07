@@ -69,9 +69,13 @@ class _HomePageState extends State<HomePage> {
     _taskController.getTask();
 
     return Scaffold(
-      // appBar:
-      //     // _selectedIndex == 3 ? _settingAppBar() :
-      //     _appBar(),
+      appBar: _selectedIndex == 1 || _selectedIndex == 2
+          ? _appBar()
+          : AppBar(
+              toolbarHeight: 0,
+              elevation: 0,
+            ),
+
       floatingActionButton: MyCircleButton(
         label: "+",
         onTap: () {
@@ -79,49 +83,14 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(),
-          SliverToBoxAdapter(
-            child: _addDateBar(),
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              height: 19,
-              decoration: BoxDecoration(
-                  color: Get.isDarkMode
-                      ? context.theme.backgroundColor
-                      : Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20))),
-            ),
-          ),
+      body: _selectedIndex == 0
+          ? _buildCustomScrollView(context)
+          : _selectedIndex == 1
+              ? screens[_selectedIndex]
+              : _selectedIndex == 2
+                  ? screens[_selectedIndex]
+                  : Container(),
 
-          // _taskController.taskList == null
-          //     ? SliverFillRemaining(
-          //         child: Container(
-          //           height: 20,
-          //           color: Get.isDarkMode
-          //               ? context.theme.backgroundColor
-          //               : Colors.white,
-          //           child: Center(child: Text("No Task for Today !")),
-          //         ),
-          //       )
-          Obx(
-            () => _buildSliverList(context),
-          ),
-
-          SliverFillRemaining(
-            child: Container(
-              color:
-                  Get.isDarkMode ? context.theme.backgroundColor : Colors.white,
-            ),
-          )
-        ],
-      ),
-
-      // _selectedIndex == 0
       //     ? Column(
       //         children: <Widget>[
       //           // _addTaskBar(),
@@ -192,6 +161,50 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  CustomScrollView _buildCustomScrollView(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        _buildAppBar(),
+        SliverToBoxAdapter(
+          child: _addDateBar(),
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            height: 19,
+            decoration: BoxDecoration(
+                color: Get.isDarkMode
+                    ? context.theme.backgroundColor
+                    : Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
+          ),
+        ),
+
+        // _taskController.taskList == null
+        //     ? SliverFillRemaining(
+        //         child: Container(
+        //           height: 20,
+        //           color: Get.isDarkMode
+        //               ? context.theme.backgroundColor
+        //               : Colors.white,
+        //           child: Center(child: Text("No Task for Today !")),
+        //         ),
+        //       )
+        Obx(
+          () => _buildSliverList(context),
+        ),
+
+        SliverFillRemaining(
+          child: Container(
+            color:
+                Get.isDarkMode ? context.theme.backgroundColor : Colors.white,
+          ),
+        )
+      ],
     );
   }
 

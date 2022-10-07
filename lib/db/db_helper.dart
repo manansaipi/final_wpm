@@ -7,11 +7,12 @@ import '../models/task.dart';
 class DBHelper {
   static Database? _db;
   static final int _version = 1;
-  static final String _tableName = "tasks";
-  static final String _startTime = "startTime";
+  static const String _tableName = "tasks";
+  static const String _sortTime = "sortTime";
 
   static Future<void> initDb() async {
     if (_db != null) {
+      // "DROP TABLE $_tableName";
       return;
     }
     try {
@@ -23,7 +24,7 @@ class DBHelper {
           "CREATE TABLE $_tableName("
           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
           "title STRING, note TEXT, date STRING,  "
-          "$_startTime STRING, endTime STRING, "
+          "startTime STRING, endTime STRING, $_sortTime STRING,"
           "remind INTEGER, repeat STRING, "
           "color INTEGER, "
           "isCompleted INTEGER) ",
@@ -41,7 +42,7 @@ class DBHelper {
 
   static Future<List<Map<String, dynamic>>> query() async {
     print("query function called");
-    return await _db!.query(_tableName, orderBy: _startTime);
+    return await _db!.query(_tableName, orderBy: _sortTime);
   }
 
   static delete(Task task) async {

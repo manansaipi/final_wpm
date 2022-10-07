@@ -20,25 +20,42 @@ class TaskTile extends StatelessWidget {
     final _taskController = Get.put(TaskController());
     String startTime = task!.startTime.toString().split(" ")[1];
     String endTime = task!.endTime.toString().split(" ")[1];
-    var fixStartNumber;
-    var fixEndNumber;
+    String firstStartNumber = task!.startTime.toString().split(":")[0];
+    String splitForPMST = task!.startTime.toString().split(":")[1];
+    String secondSplitForPMST = splitForPMST.split(" ")[0];
+    String firstEndNumber = task!.endTime.toString().split(":")[0];
+    int additionStartTime = 12 + int.parse(firstStartNumber);
+    String splitForPMET = task!.endTime.toString().split(":")[1];
+    String firstNumberET = task!.endTime.toString().split(":")[0];
+
+    String secondSplitForPMET = splitForPMET.split(" ")[0];
+    late var fixStartNumber;
+    late var fixEndNumber;
     if (startTime == "PM") {
-      String firstStartNumber = task!.startTime.toString().split(":")[0];
-      String splitForPM = task!.startTime.toString().split(":")[1];
-      String secondSplitForPM = splitForPM.split(" ")[0];
-      int additionStartTime = 12 + int.parse(firstStartNumber);
-      fixStartNumber = additionStartTime.toString() + "." + secondSplitForPM;
+      if (firstStartNumber == "12") {
+        fixStartNumber = firstStartNumber + "." + secondSplitForPMST;
+      } else {
+        fixStartNumber =
+            additionStartTime.toString() + "." + secondSplitForPMST;
+      }
     } else {
-      fixStartNumber = task!.startTime.toString().split(" ")[0];
+      String split0 = task!.startTime.toString().split(":")[0];
+      if (split0 == "12") {
+        fixStartNumber = "0" + "." + secondSplitForPMST;
+      } else {
+        fixStartNumber = firstStartNumber + "." + secondSplitForPMST;
+      }
     }
     if (endTime == "PM") {
-      String firstEndNumber = task!.endTime.toString().split(":")[0];
-      String splitForPM = task!.startTime.toString().split(":")[1];
-      String secondSplitForPM = splitForPM.split(" ")[0];
-      int additionendTime = 12 + int.parse(firstEndNumber);
-      fixEndNumber = additionendTime.toString() + "." + secondSplitForPM;
+      if (firstEndNumber == "12") {
+        fixEndNumber = firstEndNumber + "." + splitForPMET;
+        print("object");
+      } else {
+        int additionendTime = 12 + int.parse(firstEndNumber);
+        fixEndNumber = additionendTime.toString() + "." + secondSplitForPMET;
+      }
     } else {
-      fixEndNumber = task!.endTime.toString().split(" ")[0];
+      fixEndNumber = firstNumberET + "." + secondSplitForPMET;
     }
 
     return Container(
@@ -46,6 +63,10 @@ class TaskTile extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
+            height: 250,
+            // height: (int.parse(fixEndNumber.split(".")[0]) -
+            //         int.parse(fixStartNumber.split(".")[0])) *
+            //     19,
             width: MediaQuery.of(context).size.width * 1,
             child: TimelineTile(
               startChild: Container(
@@ -105,7 +126,7 @@ class TaskTile extends StatelessWidget {
                     // ),
                     Expanded(
                       child: Container(
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           left: 15,
                           bottom: 15,
                         ),
@@ -115,13 +136,13 @@ class TaskTile extends StatelessWidget {
                             Text(
                               task?.title ?? "",
                               style: GoogleFonts.lato(
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 12,
                             ),
                             Row(
@@ -218,7 +239,9 @@ class TaskTile extends StatelessWidget {
               alignment: TimelineAlign.manual,
               lineXY: 0.15,
               indicatorStyle: IndicatorStyle(
-                height: 100,
+                height: (int.parse(fixEndNumber.split(".")[0]) -
+                        int.parse(fixStartNumber.split(".")[0])) *
+                    10,
                 width: 50,
                 indicator: Container(
                   decoration: BoxDecoration(
