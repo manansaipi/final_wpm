@@ -22,7 +22,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
-  String _endTime = "9.30 PM";
+  String _endTime = "9:30 PM";
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   int _selectedRemind = 0;
   List<int> remindList = [
@@ -318,7 +318,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
         child: Icon(
           Icons.arrow_back_ios_new,
           size: 20,
-          color: Get.isDarkMode ? Colors.white : Colors.black,
+          // color: Get.isDarkMode ? Colors.white : Colors.black,
+          color: _getBGClr(_selectedColor),
         ),
       ),
       title: Row(

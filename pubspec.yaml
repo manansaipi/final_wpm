@@ -45,6 +45,7 @@ dependencies:
   sqflite:
   google_nav_bar:
   flutter_staggered_animations:
+  timeline_tile: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

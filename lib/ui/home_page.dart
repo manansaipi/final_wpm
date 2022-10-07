@@ -2,7 +2,6 @@ import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:date_picker_timeline/extra/color.dart';
 import 'package:date_picker_timeline/extra/style.dart';
 import 'package:final_wpm/controllers/task_controller.dart';
-
 import 'package:final_wpm/ui/map_page.dart';
 import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/notification_servieces.dart';
@@ -10,7 +9,7 @@ import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:final_wpm/ui/widgets/button.dart';
-import 'package:final_wpm/ui/widgets/task_tile.dart';
+import 'package:final_wpm/ui/widgets/task_tileOriginal.dart';
 import 'package:final_wpm/ui/widgets/task_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +20,14 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
-
+import 'package:timeline_tile/timeline_tile.dart';
 import '../models/task.dart';
 import 'add_task_bar.dart';
 import 'favorite_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final Task? task;
+  const HomePage({super.key, this.task});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -54,7 +54,6 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
-
   @override
   void initState() {
     //TODO: implement initstate
@@ -67,10 +66,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    _taskController.getTask();
+
     return Scaffold(
-      appBar:
-          // _selectedIndex == 3 ? _settingAppBar() :
-          _appBar(),
+      // appBar:
+      //     // _selectedIndex == 3 ? _settingAppBar() :
+      //     _appBar(),
       floatingActionButton: MyCircleButton(
         label: "+",
         onTap: () {
@@ -78,46 +79,88 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: _selectedIndex == 0
-          ? Column(
-              children: <Widget>[
-                // _addTaskBar(),
-                _addDateBar(),
-                SizedBox(
-                  height: 10,
-                ),
-                // screens[_selectedIndex],
-                _showTasks(),
-              ],
-            )
-          : _selectedIndex == 1
-              ? Column(
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    screens[_selectedIndex],
-                  ],
-                )
-              : _selectedIndex == 2
-                  ? Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        screens[_selectedIndex],
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        screens[_selectedIndex],
-                      ],
-                    ),
+      body: CustomScrollView(
+        slivers: [
+          _buildAppBar(),
+          SliverToBoxAdapter(
+            child: _addDateBar(),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              height: 19,
+              decoration: BoxDecoration(
+                  color: Get.isDarkMode
+                      ? context.theme.backgroundColor
+                      : Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
+            ),
+          ),
+
+          // _taskController.taskList == null
+          //     ? SliverFillRemaining(
+          //         child: Container(
+          //           height: 20,
+          //           color: Get.isDarkMode
+          //               ? context.theme.backgroundColor
+          //               : Colors.white,
+          //           child: Center(child: Text("No Task for Today !")),
+          //         ),
+          //       )
+          Obx(
+            () => _buildSliverList(context),
+          ),
+
+          SliverFillRemaining(
+            child: Container(
+              color:
+                  Get.isDarkMode ? context.theme.backgroundColor : Colors.white,
+            ),
+          )
+        ],
+      ),
+
+      // _selectedIndex == 0
+      //     ? Column(
+      //         children: <Widget>[
+      //           // _addTaskBar(),
+      //           _addDateBar(),
+      //           SizedBox(
+      //             height: 20,
+      //           ),
+      //           // screens[_selectedIndex],
+      //           _showTasks(),
+      //         ],
+      //       )
+      //     : _selectedIndex == 1
+      //         ? Column(
+      //             children: [
+      //               SizedBox(
+      //                 height: 10,
+      //               ),
+      //               screens[_selectedIndex],
+      //             ],
+      //           )
+      //         : _selectedIndex == 2
+      //             ? Column(
+      //                 children: [
+      //                   SizedBox(
+      //                     height: 10,
+      //                   ),
+      //                   screens[_selectedIndex],
+      //                 ],
+      //               )
+      //             : Column(
+      //                 children: [
+      //                   SizedBox(
+      //                     height: 10,
+      //                   ),
+      //                   screens[_selectedIndex],
+      //                 ],
+      //               ),
       bottomNavigationBar: Container(
-        color: context.theme.backgroundColor,
+        color: Get.isDarkMode ? darkBGColor : Colors.grey.shade200,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 15.0,
@@ -128,10 +171,11 @@ class _HomePageState extends State<HomePage> {
             tabBackgroundColor: primaryClr,
             color: Colors.grey,
             activeColor: Colors.white,
-            backgroundColor: context.theme.backgroundColor,
+            backgroundColor:
+                Get.isDarkMode ? darkBGColor : Colors.grey.shade200,
             gap: 8,
             onTabChange: _navigateBottomBar,
-            tabs: [
+            tabs: const [
               GButton(
                 icon: Icons.home,
                 text: "Home",
@@ -148,6 +192,59 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  SliverList _buildSliverList(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((_, index) {
+        Task task = _taskController.taskList[index];
+
+        // var json = task.toJson();
+        // print(task.toJson());
+        // print(_taskController.taskList);
+
+        if (task.repeat == 'Daily') {
+          DateTime date = DateFormat.jm().parse(task.startTime.toString());
+          var myTime = DateFormat("HH:mm").format(date);
+          // print(myTime);
+          notifyHelper.scheduledNotification(
+            int.parse(myTime.toString().split(":")[0]),
+            int.parse(myTime.toString().split(":")[1]),
+            task,
+          );
+
+          return GestureDetector(
+            onTap: () {
+              _showBottomSheet(
+                context,
+                task,
+              );
+            },
+            child: Container(
+                color: Get.isDarkMode
+                    ? context.theme.backgroundColor
+                    : Colors.white,
+                child: TaskTile(task)),
+          );
+        } else if (task.date == DateFormat.yMd().format(_selectedDate)) {
+          return GestureDetector(
+            onTap: () {
+              _showBottomSheet(
+                context,
+                task,
+              );
+            },
+            child: Container(
+                color: Get.isDarkMode
+                    ? context.theme.backgroundColor
+                    : Colors.white,
+                child: TaskTile(task)),
+          );
+        } else {
+          return Container();
+        }
+      }, childCount: _taskController.taskList.length),
     );
   }
 
@@ -171,7 +268,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       elevation: 0,
-      backgroundColor: Get.isDarkMode ? darkBGColor : Colors.white10,
+      backgroundColor: Get.isDarkMode ? darkBGColor : Colors.grey.shade200,
       // leading: GestureDetector(
       //   onTap: () {
       //     ThemeService().switchTheme();
@@ -229,6 +326,71 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  _buildAppBar() {
+    return SliverAppBar(
+      elevation: 2,
+      pinned: true,
+      backgroundColor: context.theme.backgroundColor,
+      title: Row(
+        children: [
+          Text(
+            DateFormat.MMMM().format(
+              DateTime.now(),
+            ),
+            style: titleHeadingStyle,
+          ),
+          Text(" "),
+          Text(
+            DateFormat.y().format(
+              DateTime.now(),
+            ),
+            style: titleBiggerHeadingStyle,
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            print("calender");
+
+            //Move to another page using NAVIGATOR
+            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //   return SettingPage();
+            // }));
+          },
+          icon: Icon(
+            Icons.calendar_month,
+            color: primaryClr,
+            size: 27,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            print("settings");
+            Get.to(
+              SettingPage(),
+            );
+            //Move to another page using NAVIGATOR
+            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //   return SettingPage();
+            // }));
+          },
+          icon: Icon(
+            Icons.settings,
+            color: primaryClr,
+            size: 27,
+          ),
+        ),
+      ],
+      expandedHeight: 65,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Container(
+          color: Get.isDarkMode ? darkBGColor : Colors.grey.shade200,
+        ),
+      ),
+    );
+  }
+
   _addTaskBar() {
     return Container(
       margin: const EdgeInsets.only(
@@ -272,49 +434,56 @@ class _HomePageState extends State<HomePage> {
 
   _addDateBar() {
     return Container(
-      margin: const EdgeInsets.only(left: 15),
-      child: DatePicker(
-        DateTime.now(),
-        height: 80,
-        width: 60,
-        initialSelectedDate: DateTime.now(),
-        selectionColor: primaryClr,
+      decoration: BoxDecoration(
+        color: Get.isDarkMode ? darkBGColor : Colors.grey.shade200,
+      ),
+      // margin: const EdgeInsets.only(left: 15),
+      child: Container(
+        margin: EdgeInsets.only(left: 10, right: 15, bottom: 10),
+        child: DatePicker(
+          DateTime.now(),
+          height: 80,
+          width: 60,
+          initialSelectedDate: DateTime.now(),
+          selectionColor: primaryClr,
 
-        // dateNow == datePick
-        //     ? primaryClr
-        //     : Get.isDarkMode
-        //         ? Colors.white
-        //         : Colors.grey.shade700,
-        selectedTextColor: Colors.white,
-        monthTextStyle: GoogleFonts.lato(
-          textStyle: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            color: Colors.grey,
+          // dateNow == datePick
+          //     ? primaryClr
+          //     : Get.isDarkMode
+          //         ? Colors.white
+          //         : Colors.grey.shade700,
+          selectedTextColor: Colors.white,
+          monthTextStyle: GoogleFonts.lato(
+            textStyle: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey,
+            ),
           ),
-        ),
-        dateTextStyle: GoogleFonts.lato(
-          textStyle: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: Colors.grey,
+          dateTextStyle: GoogleFonts.lato(
+            textStyle: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey,
+            ),
           ),
-        ),
-        dayTextStyle: GoogleFonts.lato(
-          textStyle: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            color: Colors.grey,
+          dayTextStyle: GoogleFonts.lato(
+            textStyle: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey,
+            ),
           ),
+          onDateChange: (date) {
+            setState(() {
+              _selectedDate = date;
+              datePick = _selectedDate.toString().split(" ")[0];
+              _taskController.getTask();
+              print(_taskController.taskList.length);
+            });
+          },
+          daysCount: 30,
         ),
-        onDateChange: (date) {
-          setState(() {
-            _selectedDate = date;
-            datePick = _selectedDate.toString().split(" ")[0];
-            _taskController.getTask();
-          });
-        },
-        daysCount: 30,
       ),
     );
   }
@@ -367,87 +536,139 @@ class _HomePageState extends State<HomePage> {
 
   _showTasks() {
     return Expanded(
-      child: Obx(
-        () {
-          return ListView.builder(
-            itemCount: _taskController.taskList.length,
-            itemBuilder: (_, index) {
-              // print(_taskController.taskList.length);
-              Task task = _taskController.taskList[index];
-              // print(task.toJson());
-              // print(dateNow);
-              // print(datePick);
-              // print(dateNow == datePick);
-              if (task.repeat == 'Daily') {
-                DateTime date =
-                    DateFormat.jm().parse(task.startTime.toString());
-                var myTime = DateFormat("HH:mm").format(date);
-                // print(myTime);
-                notifyHelper.scheduledNotification(
-                  int.parse(myTime.toString().split(":")[0]),
-                  int.parse(myTime.toString().split(":")[1]),
-                  task,
-                );
-                return AnimationConfiguration.staggeredList(
-                  position: index,
-                  child: SlideAnimation(
-                    child: FadeInAnimation(
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              _showBottomSheet(
-                                context,
-                                task,
-                              );
-                            },
-                            child: TaskTile(
-                              task,
-                            ),
-                          )
-                        ],
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            color: context.theme.backgroundColor),
+        child: Obx(
+          () {
+            return Container(
+              margin: EdgeInsets.only(top: 15),
+              child: ListView.builder(
+                itemCount: _taskController.taskList.length,
+                itemBuilder: (_, index) {
+                  // print(_taskController.taskList.length);
+                  Task task = _taskController.taskList[index];
+                  // print(task.toJson());
+                  // print(dateNow);
+                  // print(datePick);
+                  // print(dateNow == datePick);
+                  if (task.repeat == 'Daily') {
+                    DateTime date =
+                        DateFormat.jm().parse(task.startTime.toString());
+                    var myTime = DateFormat("HH:mm").format(date);
+                    // print(myTime);
+                    notifyHelper.scheduledNotification(
+                      int.parse(myTime.toString().split(":")[0]),
+                      int.parse(myTime.toString().split(":")[1]),
+                      task,
+                    );
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      child: SlideAnimation(
+                        child: FadeInAnimation(
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  _showBottomSheet(
+                                    context,
+                                    task,
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    // _buildTimeLine(
+                                    //   _getBGClr(task.color ?? 0),
+                                    // ),
+                                    TaskTile(
+                                      task,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              } else if (task.date == DateFormat.yMd().format(_selectedDate)) {
-                return AnimationConfiguration.staggeredList(
-                  position: index,
-                  child: SlideAnimation(
-                    child: FadeInAnimation(
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              _showBottomSheet(
-                                context,
-                                task,
-                              );
-                            },
-                            child: TaskTile(
-                              task,
-                            ),
-                          )
-                        ],
+                    );
+                  } else if (task.date ==
+                      DateFormat.yMd().format(_selectedDate)) {
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      child: SlideAnimation(
+                        child: FadeInAnimation(
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  _showBottomSheet(
+                                    context,
+                                    task,
+                                  );
+                                },
+                                child: TaskTile(
+                                  task,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              } else {
-                return Container();
-              }
-            },
-          );
-        },
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
+  }
+
+  Widget _buildTimeLine(Color color) {
+    return Container(
+      child: TimelineTile(
+        alignment: TimelineAlign.manual,
+        lineXY: 0,
+        isFirst: true,
+        indicatorStyle: IndicatorStyle(
+          indicatorXY: 0,
+          width: 15,
+          indicator: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(width: 5, color: color),
+            ),
+          ),
+        ),
+        afterLineStyle: LineStyle(thickness: 2, color: color),
+      ),
+    );
+  }
+
+  _getBGClr(int no) {
+    switch (no) {
+      case 0:
+        return primaryClr;
+      case 1:
+        return Colors.yellow.shade900;
+      case 2:
+        return Colors.pink;
+      default:
+        return primaryClr;
+    }
   }
 
   _showBottomSheet(BuildContext context, Task task) {
     Get.bottomSheet(
       // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       Container(
-        height: 240,
+        height: 280,
         color: Colors.transparent,
         child: Container(
           margin: EdgeInsets.all(20),
@@ -461,7 +682,7 @@ class _HomePageState extends State<HomePage> {
             ),
             color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
             borderRadius: BorderRadius.all(
-              Radius.circular(40),
+              Radius.circular(30),
             ),
           ),
           // height: task.isCompleted == 1
@@ -471,7 +692,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               SizedBox(
-                height: 30,
+                height: 80,
               ),
               // Container(
               //   height: 6,
@@ -487,7 +708,18 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   bottomSheetDbButton(
                       icon: Icons.delete,
+                      color: task.isCompleted == 0
+                          ? _getBGClr(task.color ?? 0)
+                          : _getBGClr(task.color ?? 0) == primaryClr
+                              ? Colors.blue.shade100
+                              : _getBGClr(task.color ?? 0) ==
+                                      Colors.yellow.shade900
+                                  ? Colors.yellow.shade100
+                                  : _getBGClr(task.color ?? 0) == Colors.pink
+                                      ? Colors.pink.shade100
+                                      : Colors.black,
                       label: "Delete",
+                      isDelete: true,
                       onTap: () {
                         _taskController.delete(task);
                         Get.back();
@@ -495,13 +727,21 @@ class _HomePageState extends State<HomePage> {
                       clr: Get.isDarkMode
                           ? Colors.grey.shade300
                           : Colors.grey.shade300,
-                      isDelete: true,
                       context: context),
                   bottomSheetDbButton(
-                      color: task.isCompleted == 0
-                          ? Color.fromARGB(255, 0, 255, 8)
-                          : Colors.grey.shade900,
-                      icon: Icons.task_alt,
+                      icon: Icons.edit,
+                      color: _getBGClr(task.color ?? 0),
+                      label: "Edit",
+                      onTap: () {},
+                      clr: Get.isDarkMode
+                          ? Colors.grey.shade300
+                          : Colors.grey.shade300,
+                      context: context),
+                  bottomSheetDbButton(
+                      color: Colors.green,
+                      icon: task.isCompleted == 0
+                          ? Icons.circle_outlined
+                          : Icons.task_alt,
                       label: task.isCompleted == 0 ? "Complete" : "Incomplete",
                       onTap: () {
                         Get.back();
@@ -535,7 +775,7 @@ class _HomePageState extends State<HomePage> {
               //   context: context,
               // ),
               SizedBox(
-                height: 20,
+                height: 15,
               ),
               bottomSheetButton(
                 label: "Cancel",
@@ -616,8 +856,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon,
-                  color: isDelete ? Color.fromARGB(255, 255, 17, 0) : color),
+              Icon(icon, color: isDelete ? Colors.red : color),
               Text(label,
                   style: isDelete
                       ? deleteTitleStyle

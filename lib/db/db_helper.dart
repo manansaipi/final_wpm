@@ -1,3 +1,5 @@
+import 'package:final_wpm/ui/widgets/task_tile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/task.dart';
@@ -6,6 +8,7 @@ class DBHelper {
   static Database? _db;
   static final int _version = 1;
   static final String _tableName = "tasks";
+  static final String _startTime = "startTime";
 
   static Future<void> initDb() async {
     if (_db != null) {
@@ -20,7 +23,7 @@ class DBHelper {
           "CREATE TABLE $_tableName("
           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
           "title STRING, note TEXT, date STRING,  "
-          "startTime STRING, endTime STRING, "
+          "$_startTime STRING, endTime STRING, "
           "remind INTEGER, repeat STRING, "
           "color INTEGER, "
           "isCompleted INTEGER) ",
@@ -38,7 +41,7 @@ class DBHelper {
 
   static Future<List<Map<String, dynamic>>> query() async {
     print("query function called");
-    return await _db!.query(_tableName);
+    return await _db!.query(_tableName, orderBy: _startTime);
   }
 
   static delete(Task task) async {
