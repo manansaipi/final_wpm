@@ -80,6 +80,101 @@ class MyInputField extends StatelessWidget {
   }
 }
 
+class MyTitleInputField extends StatelessWidget {
+  final String title;
+  final String hint;
+  final TextEditingController? controller;
+  final Widget? widget;
+  final Color cursorCulor;
+  final Icon icon;
+  final Function()? onTap;
+
+  const MyTitleInputField({
+    super.key,
+    required this.title,
+    required this.hint,
+    required this.cursorCulor,
+    this.controller,
+    this.widget,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 15, right: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: titleStyle2,
+          ),
+          Container(
+            height: 40,
+            margin: EdgeInsetsDirectional.only(top: 8),
+            padding: EdgeInsets.only(left: 10, bottom: 3),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: onTap,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Get.isDarkMode
+                          ? Colors.grey.shade700
+                          : Colors.grey.shade300,
+                    ),
+                    height: 40,
+                    width: 40,
+                    child: icon,
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: TextFormField(
+                    readOnly: widget == null ? false : true,
+                    autofocus: false,
+                    cursorColor: cursorCulor,
+
+                    // Get.isDarkMode ? Colors.grey[100] : Colors.grey[700],
+                    controller: controller,
+                    style: inputFieldStyle,
+                    decoration: InputDecoration(
+                      hintText: hint,
+                      hintStyle: hintStyle,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                          width: 1,
+                        ),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: cursorCulor),
+                      ),
+                    ),
+                  ),
+                ),
+                widget == null
+                    ? Container()
+                    : Container(
+                        child: widget,
+                      )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class MyAnotherInputField extends StatelessWidget {
   final String title;
   final String hint;

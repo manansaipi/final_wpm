@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
@@ -51,6 +52,15 @@ class _AddTaskPageState extends State<AddTaskPage> {
   ];
   int _selectedColor = 0;
 
+  Icon? _icon;
+  List<Map<String, IconData>> icon = [
+    {
+      "icon": Icons.abc,
+    },
+    {
+      "icon": Icons.access_alarms,
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,13 +82,22 @@ class _AddTaskPageState extends State<AddTaskPage> {
             children: [
               Container(
                 margin: EdgeInsets.only(top: 5),
-                child: MyAnotherInputField(
+                child: MyTitleInputField(
                   cursorCulor: _getBGClr(_selectedColor),
                   title: "What ?",
                   hint: "Answer Emails",
+                  icon: _icon ??
+                      Icon(
+                        Icons.mail_outline,
+                        color: _getBGClr(_selectedColor),
+                      ),
                   controller: _titleController,
+                  onTap: () {
+                    _openIconPicker();
+                  },
                 ),
               ),
+
               Container(
                 margin: EdgeInsets.only(top: 5),
                 child: MyInputField(
@@ -357,6 +376,27 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
+  _openIconPicker() async {
+    IconData? icon = await FlutterIconPicker.showIconPicker(
+      context,
+      iconPackModes: [IconPack.fontAwesomeIcons],
+      iconPickerShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    );
+    if (icon != null) {
+      print(icon);
+      setState(
+        () {
+          _icon = Icon(
+            icon,
+            color: _getBGClr(_selectedColor),
+          );
+        },
+      );
+    }
+  }
+
   _getBGClr(int no) {
     switch (no) {
       case 0:
@@ -489,7 +529,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _validateDate() {
-    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+    if (_titleController.text.isNotEmpty) {
       _addTaskToDb();
 
       _taskController.getTask();

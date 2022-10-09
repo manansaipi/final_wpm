@@ -127,3 +127,21 @@ TextStyle get titleBiggerHeadingStyle {
     ),
   );
 }
+
+TextStyle get taskTileNote {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+      fontSize: 15,
+      color: Get.isDarkMode ? Colors.white : Colors.black,
+    ),
+  );
+}
+
+TextStyle get taskTileTime {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+      fontSize: 13,
+      color: Get.isDarkMode ? Colors.grey.shade300 : Colors.grey.shade600,
+    ),
+  );
+}

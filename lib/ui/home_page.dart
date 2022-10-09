@@ -9,9 +9,9 @@ import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:final_wpm/ui/widgets/button.dart';
-import 'package:final_wpm/ui/widgets/task_tileOriginal.dart';
 import 'package:final_wpm/ui/widgets/task_tile.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -27,6 +27,9 @@ import 'favorite_page.dart';
 
 class HomePage extends StatefulWidget {
   final Task? task;
+
+  static var s;
+
   const HomePage({super.key, this.task});
 
   @override
@@ -34,13 +37,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // late int s;
   final _taskController = Get.put(TaskController());
   DateTime _selectedDate = DateTime.now();
   String dateNow = DateTime.now().toString().split(" ")[0];
   String datePick = DateTime.now().toString().split(" ")[0];
   var notifyHelper;
   int _selectedIndex = 0;
-
   void _navigateBottomBar(int index) {
     setState(() {
       _selectedIndex = index;
@@ -211,8 +214,13 @@ class _HomePageState extends State<HomePage> {
   SliverList _buildSliverList(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((_, index) {
-        Task task = _taskController.taskList[index];
+        HomePage.s = index;
+        print(HomePage.s);
+        Task task = _taskController.taskList[HomePage.s];
 
+        // print(_taskController.taskList[].toJson());
+
+        // print(_taskController.taskList.length);
         // var json = task.toJson();
         // print(task.toJson());
         // print(_taskController.taskList);
@@ -220,7 +228,7 @@ class _HomePageState extends State<HomePage> {
         if (task.repeat == 'Daily') {
           DateTime date = DateFormat.jm().parse(task.startTime.toString());
           var myTime = DateFormat("HH:mm").format(date);
-          // print(myTime);
+          // print(myTim\);
           notifyHelper.scheduledNotification(
             int.parse(myTime.toString().split(":")[0]),
             int.parse(myTime.toString().split(":")[1]),
@@ -685,7 +693,7 @@ class _HomePageState extends State<HomePage> {
         color: Colors.transparent,
         child: Container(
           margin: EdgeInsets.all(20),
-
+          padding: EdgeInsets.symmetric(horizontal: 10),
           // padding: const EdgeInsets.only(top: 4),
           decoration: BoxDecoration(
             border: Border.all(
@@ -819,7 +827,7 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 25),
+        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
         height: 40,
         width: MediaQuery.of(context).size.width * 0.9,
         decoration: BoxDecoration(

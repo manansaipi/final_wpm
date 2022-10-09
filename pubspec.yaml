@@ -46,6 +46,8 @@ dependencies:
   google_nav_bar:
   flutter_staggered_animations:
   timeline_tile: ^2.0.0
+  flutter_iconpicker:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
