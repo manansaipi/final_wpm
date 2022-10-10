@@ -14,7 +14,7 @@ import '../../models/task.dart';
 
 class TaskTile extends StatelessWidget {
   final Task? task;
-
+  static var timeDistance;
   TaskTile(this.task);
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class TaskTile extends StatelessWidget {
     String secondSplitForPMET = splitForPMET.split(" ")[0];
     late var fixStartNumber;
     late var fixEndNumber;
-    var timeDistance = "";
+
     if (startTime == "PM") {
       if (firstStartNumber == "12") {
         fixStartNumber = firstStartNumber + "." + secondSplitForPMST;
@@ -479,10 +479,15 @@ class TaskTile extends StatelessWidget {
                                       size: 18,
                                     ),
                                     SizedBox(width: 4),
-                                    Text(
-                                      "${task!.startTime} - ${task!.endTime}",
-                                      style: taskTileTime,
-                                    ),
+                                    timeDistance != 0
+                                        ? Text(
+                                            "${task!.startTime} - ${task!.endTime}",
+                                            style: taskTileTime,
+                                          )
+                                        : Text(
+                                            "${task!.startTime}",
+                                            style: taskTileTime,
+                                          ),
                                     Text(
                                       timeDistance,
                                       style: taskTileTime,
@@ -580,12 +585,19 @@ class TaskTile extends StatelessWidget {
                 height: hei >= 200 ? 200 : hei.toDouble() * 1.5 + 3,
                 width: 55,
                 indicator: Container(
-                  child: Icon(
-                    Icons.mail_outline,
-                    color: task!.isCompleted == 1
-                        ? _getBGClr(task?.color ?? 0)
-                        : Colors.white,
-                  ),
+                  child: task?.title == "Wake Up"
+                      ? Icon(
+                          Icons.alarm,
+                          color: task!.isCompleted == 1
+                              ? _getBGClr(task?.color ?? 0)
+                              : Colors.white,
+                        )
+                      : Icon(
+                          Icons.mail_outline,
+                          color: task!.isCompleted == 1
+                              ? _getBGClr(task?.color ?? 0)
+                              : Colors.white,
+                        ),
                   decoration: BoxDecoration(
                     color: task!.isCompleted == 0
                         ? _getBGClr(task?.color ?? 0)

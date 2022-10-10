@@ -47,7 +47,9 @@ dependencies:
   flutter_staggered_animations:
   timeline_tile: ^2.0.0
   flutter_iconpicker:
-
+  geo:
+  flutter_polyline_points:
+  google_maps_flutter:
 dev_dependencies:
   flutter_test:
     sdk: flutter

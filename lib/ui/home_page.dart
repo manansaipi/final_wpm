@@ -79,12 +79,14 @@ class _HomePageState extends State<HomePage> {
               elevation: 0,
             ),
 
-      floatingActionButton: MyCircleButton(
-        label: "+",
-        onTap: () {
-          Get.to(AddTaskPage());
-        },
-      ),
+      floatingActionButton: _selectedIndex == 0
+          ? MyCircleButton(
+              label: "+",
+              onTap: () {
+                Get.to(AddTaskPage());
+              },
+            )
+          : Container(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: _selectedIndex == 0
           ? _buildCustomScrollView(context)
@@ -243,10 +245,10 @@ class _HomePageState extends State<HomePage> {
               );
             },
             child: Container(
-                color: Get.isDarkMode
-                    ? context.theme.backgroundColor
-                    : Colors.white,
-                child: TaskTile(task)),
+              color:
+                  Get.isDarkMode ? context.theme.backgroundColor : Colors.white,
+              child: TaskTile(task),
+            ),
           );
         } else if (task.date == DateFormat.yMd().format(_selectedDate)) {
           return GestureDetector(
@@ -712,9 +714,77 @@ class _HomePageState extends State<HomePage> {
           // color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
           child: Column(
             children: [
-              SizedBox(
+              Container(
+                margin: EdgeInsets.only(left: 10),
                 height: 80,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    task.title == "Wake Up"
+                        ? Icon(
+                            Icons.alarm,
+                            color: task.isCompleted == 1
+                                ? _getBGClr(task.color ?? 0)
+                                : Colors.white,
+                          )
+                        : Icon(
+                            Icons.mail_outline,
+                            color: task.isCompleted == 1
+                                ? _getBGClr(task.color ?? 0)
+                                : Colors.white,
+                          ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              task.date ?? "",
+                              style: taskTileTime,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "${task.startTime} - ${task.endTime}",
+                              style: taskTileTime,
+                            ),
+                            SizedBox(
+                              width: 7,
+                            ),
+                            Icon(
+                              Icons.replay,
+                              color: Get.isDarkMode
+                                  ? Colors.grey.shade300
+                                  : Colors.grey.shade600,
+                              size: task.repeat == "Daily" ? 15 : 0,
+                            ),
+                          ],
+                        ),
+                        Text(
+                          task.title ?? "",
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontSize: 20,
+                              color:
+                                  Get.isDarkMode ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.bold,
+                              decoration: task.isCompleted == 1
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
+
               // Container(
               //   height: 6,
               //   width: 120,

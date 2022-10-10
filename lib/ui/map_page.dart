@@ -13,6 +13,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 class MapPage extends StatefulWidget {
@@ -23,6 +24,8 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  static const _initialCameraPosition = CameraPosition(
+      target: LatLng(-6.28440763988385, 107.16877268350883), zoom: 15.5);
   DateTime _selectedDate = DateTime.now();
   var notifyHelper;
 
@@ -41,7 +44,11 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("MAP PAGE"),
+      child: GoogleMap(
+        initialCameraPosition: _initialCameraPosition,
+        myLocationButtonEnabled: true,
+        zoomControlsEnabled: true,
+      ),
       // body: Column(
       //   children: [
       //     _addTaskBar(),
