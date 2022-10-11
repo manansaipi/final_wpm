@@ -479,7 +479,7 @@ class TaskTile extends StatelessWidget {
                                       size: 18,
                                     ),
                                     SizedBox(width: 4),
-                                    timeDistance != 0
+                                    findTimeDistance != 0
                                         ? Text(
                                             "${task!.startTime} - ${task!.endTime}",
                                             style: taskTileTime,
@@ -516,11 +516,29 @@ class TaskTile extends StatelessWidget {
                         GestureDetector(
                           onTap: (() {
                             print("object");
-
+                            task?.isCompleted == 0
+                                ? Get.snackbar(
+                                    "Updated !",
+                                    "Task Complate",
+                                    colorText: Colors.white,
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    backgroundColor: task?.isCompleted == 0
+                                        ? Colors.green
+                                        : Colors.grey,
+                                    icon: Container(
+                                      margin: EdgeInsets.only(left: 7),
+                                      child: const Icon(
+                                        Icons.task_alt_sharp,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox();
                             task?.isCompleted == 0
                                 ? _taskController.markTaskCompleted(task!.id!)
                                 : _taskController
                                     .markTaskUnCompleted(task!.id!);
+
                             _taskController.getTask();
                           }),
                           child: Container(

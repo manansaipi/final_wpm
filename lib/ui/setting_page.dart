@@ -42,11 +42,31 @@ class _SettingPageState extends State<SettingPage> {
       () {
         ThemeService().switchTheme();
         val1 = newValue1;
-        notifyHelper.displayNotification(
-          title: "Theme Changed",
-          body:
-              Get.isDarkMode ? "Activated Light Theme" : "Activatd Dark Theme",
+        Get.snackbar(
+          "Theme Changed !",
+          Get.isDarkMode ? "Activated Light Theme" : "Activatd Dark Theme",
+          colorText: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+          snackPosition: SnackPosition.TOP,
+          backgroundColor:
+              Get.isDarkMode ? Colors.grey.shade300 : Colors.grey.shade700,
+          icon: Container(
+            margin: EdgeInsets.only(left: 7),
+            child: Get.isDarkMode
+                ? const Icon(
+                    Icons.sunny,
+                    color: Colors.black,
+                  )
+                : Icon(
+                    Icons.nightlight_round_outlined,
+                    color: Colors.white,
+                  ),
+          ),
         );
+        // notifyHelper.displayNotification(
+        //   title: "Theme Changed",
+        //   body:
+        //       Get.isDarkMode ? "Activated Light Theme" : "Activatd Dark Theme",
+        // );
       },
     );
   }

@@ -721,18 +721,9 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     task.title == "Wake Up"
-                        ? Icon(
-                            Icons.alarm,
-                            color: task.isCompleted == 1
-                                ? _getBGClr(task.color ?? 0)
-                                : Colors.white,
-                          )
-                        : Icon(
-                            Icons.mail_outline,
-                            color: task.isCompleted == 1
-                                ? _getBGClr(task.color ?? 0)
-                                : Colors.white,
-                          ),
+                        ? Icon(Icons.alarm, color: _getBGClr(task.color ?? 0))
+                        : Icon(Icons.mail_outline,
+                            color: _getBGClr(task.color ?? 0)),
                     SizedBox(
                       width: 20,
                     ),
@@ -814,6 +805,20 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         _taskController.delete(task);
                         Get.back();
+                        Get.snackbar(
+                          "Deleted !",
+                          "Task Deleted",
+                          colorText: Colors.white,
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          icon: Container(
+                            margin: EdgeInsets.only(left: 7),
+                            child: const Icon(
+                              Icons.delete_forever_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
                       },
                       clr: Get.isDarkMode
                           ? Colors.grey.shade300
@@ -833,10 +838,27 @@ class _HomePageState extends State<HomePage> {
                       icon: task.isCompleted == 0
                           ? Icons.circle_outlined
                           : Icons.task_alt,
-                      label: task.isCompleted == 0 ? "Complete" : "Incomplete",
+                      label: task.isCompleted == 0 ? "Complete" : "Uncomplete",
                       onTap: () {
                         Get.back();
-
+                        task.isCompleted == 0
+                            ? Get.snackbar(
+                                "Updated !",
+                                "Task Complate",
+                                colorText: Colors.white,
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: task.isCompleted == 0
+                                    ? Colors.green
+                                    : Colors.grey,
+                                icon: Container(
+                                  margin: EdgeInsets.only(left: 7),
+                                  child: const Icon(
+                                    Icons.task_alt_sharp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            : SizedBox();
                         task.isCompleted == 0
                             ? _taskController.markTaskCompleted(task.id!)
                             : _taskController.markTaskUnCompleted(task.id!);

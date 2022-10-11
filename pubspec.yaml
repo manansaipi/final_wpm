@@ -50,6 +50,8 @@ dependencies:
   geo:
   flutter_polyline_points:
   google_maps_flutter:
+  flutter_svg:
+  location:
 dev_dependencies:
   flutter_test:
     sdk: flutter
