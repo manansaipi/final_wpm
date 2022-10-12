@@ -1,23 +1,14 @@
-import 'package:date_picker_timeline/date_picker_timeline.dart';
-import 'package:final_wpm/models/location_service.dart';
-import 'package:final_wpm/models/user_location.dart';
-
 import 'package:final_wpm/ui/home_page.dart';
-import 'package:final_wpm/ui/map_page.dart';
-import 'package:final_wpm/ui/setting_page.dart';
-import 'package:final_wpm/ui/services/notification_servieces.dart';
+
 import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
-import 'package:final_wpm/ui/theme.dart';
-import 'package:final_wpm/ui/widgets/button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
+
+import '../controllers/task_controller.dart';
+import '../models/task.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -45,12 +36,14 @@ class _MapPageState extends State<MapPage> {
     icon: BitmapDescriptor.defaultMarker,
     position: presidentUniversity,
   );
-  static final Marker _myPositionMarker = Marker(
-    markerId: MarkerId("_myPosition"),
-    infoWindow: InfoWindow(title: "You"),
-    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-    position: myLocation,
-  );
+
+  // static final Marker _myPositionMarker = Marker(
+  //   markerId: MarkerId("_myPosition"),
+  //   infoWindow: InfoWindow(title: "You"),
+  //   icon: userMarker,
+  //   position: myLocation,
+  // );
+  Marker? userMarker;
   // static final _polyLine = Polyline(
   //   polylineId: PolylineId('route'),
   //   points: polyLineCoordinate,
@@ -87,8 +80,6 @@ class _MapPageState extends State<MapPage> {
   //   }
   // }
 
-  double latitude = 0;
-  double longtitude = 0;
 // static const LatLng myRealTimeLocation =
 //       LatLng(latitude, longtitude);
   DateTime _selectedDate = DateTime.now();
@@ -96,33 +87,77 @@ class _MapPageState extends State<MapPage> {
   var notifyHelper;
 
   final PageStorageBucket bucket = PageStorageBucket();
-  LocationService locationService = LocationService();
-  @override
+
+  // @override
   void initState() {
     //TODO: implement initstate
 
     // getPolyPoints();
     super.initState();
-    notifyHelper = NotifyHelper();
-    notifyHelper.initializeNotification();
-    locationService.locationStream.listen((userLocation) {
-      setState(() {
-        latitude = userLocation.latitude;
-        longtitude = userLocation.longtitude;
-      });
-    });
+
+    // HomePage.locationService.locationStream.listen((userLocation) {
+    //   setState(() {
+    //     HomePage.latitude;
+    //     HomePage.longtitude;
+    //   });
+    // });
+    // notifyHelper = NotifyHelper();
+    // notifyHelper.initializeNotification();
 
     // notifyHelper.requestIOSPermissions();
   }
 
   // @override
   // void dispose() {
-  //   locationService.dispose();
+  //   HomePage.locationService.dispose();
   //   super.dispose();
   // }
 
+  _buildMarker(Task task) {
+    String splitLatLng = task.mapCoor;
+    String splitLatLngFI = splitLatLng.split(",")[0];
+    String splitLatLngSI = splitLatLng.split(",")[1];
+    double latitude1 = double.parse(splitLatLngFI.split("(")[1]);
+    double longtitude1 = double.parse(splitLatLngSI.split(")")[0]);
+    return Marker(
+        markerId: MarkerId(task.id.toString()),
+        position: LatLng(latitude1, longtitude1),
+        infoWindow: InfoWindow(title: task.title));
+  }
+
+  final _taskController = Get.put(TaskController());
   @override
   Widget build(BuildContext context) {
+    BitmapDescriptor? userLiveLocation;
+    createMarker(context) {
+      ImageConfiguration configuration = createLocalImageConfiguration(context);
+      BitmapDescriptor.fromAssetImage(configuration, 'assets/a.png')
+          .then((icon) {
+        setState(() {
+          userLiveLocation = icon;
+        });
+      });
+    }
+
+    createMarker(context);
+    List<Marker> markers = [];
+    Task? task;
+    int index = _taskController.taskList.length - 1;
+    for (int i = 0; i <= index; i++) {
+      task = _taskController.taskList[i];
+      markers.add(_buildMarker(task));
+      markers.add(
+        Marker(
+            markerId: MarkerId('myLocation'),
+            position: LatLng(HomePage.latitude, HomePage.longtitude),
+            infoWindow: InfoWindow(title: "You"),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueBlue)),
+      );
+      // print(task.toJson());
+      // print(i);
+    }
+
     return Center(
       child:
           //     Row(
@@ -133,35 +168,57 @@ class _MapPageState extends State<MapPage> {
           // )
           Column(
         children: [
-          // Text('$latitude'),
-          // Text('$longtitude'),
+          // Text(HomePage.latitude.toString()),
+          // Text(HomePage.longtitude.toString()),
           Expanded(
             child: GoogleMap(
-              // polylines: {
-              //   Polyline(
-              //       polylineId: PolylineId('route'),
-              //       points: polyLineCoordinates)
+              onCameraMoveStarted: (() {
+                setState(() {});
+              }),
+
+              // onTap: (LatLng latLng) {
+              //   Marker newMarker = Marker(
+              //     markerId: MarkerId('userMarker'),
+              //     position: LatLng(latLng.latitude, latLng.longitude),
+              //     infoWindow: InfoWindow(title: "Your Marker"),
+              //     icon: BitmapDescriptor.defaultMarkerWithHue(
+              //         BitmapDescriptor.hueRed),
+              //   );
+              //   userMarker = newMarker;
+              //   setState(() {});
+              //   print(latLng);
               // },
-              // polygons: {_polygon},
+              // polylines: {
+              //   Polyline(polylineId: PolylineId('route'), points: [
+              //     LatLng(HomePage.latitude, HomePage.longtitude),
+              //     myLocation
+              //   ])
+              // },
+              // polygons: {
+              //   Polygon(
+              //     polygonId: PolygonId('_polygonId'),
+              //     points: [
+              //       LatLng(HomePage.latitude, HomePage.longtitude),
+              //       myLocation,
+              //       LatLng(-6.28497565689798, 107.17053839620769),
+              //       LatLng(-6.284975656, 107.1705383962)
+              //     ],
+              //     strokeWidth: 5,
+              //     fillColor: Colors.transparent,
+              //   )
+              // },
               // myLocationEnabled: true,
               // trafficEnabled: true,
               initialCameraPosition: _initialCameraPosition,
               myLocationButtonEnabled: true,
               zoomControlsEnabled: true,
-              markers: {
-                Marker(
-                  markerId: MarkerId('myLocation'),
-                  position: LatLng(
-                    latitude,
-                    longtitude,
-                  ),
-                  infoWindow: InfoWindow(title: "You"),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueBlue),
-                ),
-                // _presUnivMarker,
-                // _myPositionMarker,
-              },
+              markers: markers.map((e) => e).toSet(),
+
+              // {
+
+              //   // userMarker ?? _presUnivMarker,
+              //   // _presUnivMarker,
+              // },
             ),
           ),
         ],

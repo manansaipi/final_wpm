@@ -21,6 +21,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+import '../models/location_service.dart';
 import '../models/task.dart';
 import 'add_task_bar.dart';
 import 'favorite_page.dart';
@@ -29,7 +30,9 @@ class HomePage extends StatefulWidget {
   final Task? task;
 
   static var s;
-
+  static double latitude = 0;
+  static double longtitude = 0;
+  static LocationService locationService = LocationService();
   const HomePage({super.key, this.task});
 
   @override
@@ -57,14 +60,28 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
+
   @override
   void initState() {
     //TODO: implement initstate
 
     super.initState();
+    HomePage.locationService.locationStream.listen((userLocation) {
+      setState(() {
+        HomePage.latitude = userLocation.latitude;
+        HomePage.longtitude = userLocation.longtitude;
+      });
+    });
     notifyHelper = NotifyHelper();
     notifyHelper.initializeNotification();
+
     // notifyHelper.requestIOSPermissions();
+  }
+
+  @override
+  void dispose() {
+    HomePage.locationService.dispose();
+    super.dispose();
   }
 
   @override
@@ -188,6 +205,14 @@ class _HomePageState extends State<HomePage> {
                     topRight: Radius.circular(20))),
           ),
         ),
+        // SliverToBoxAdapter(
+        //   child: Column(
+        //     children: [
+        //       Text(HomePage.latitude.toString()),
+        //       Text(HomePage.longtitude.toString()),
+        //     ],
+        //   ),
+        // ),
 
         // _taskController.taskList == null
         //     ? SliverFillRemaining(
@@ -217,7 +242,7 @@ class _HomePageState extends State<HomePage> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((_, index) {
         HomePage.s = index;
-        print(HomePage.s);
+        // print(HomePage.s);
         Task task = _taskController.taskList[HomePage.s];
 
         // print(_taskController.taskList[].toJson());
@@ -758,6 +783,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Text(
                           task.title ?? "",
+                          softWrap: false,
                           style: GoogleFonts.lato(
                             textStyle: TextStyle(
                               fontSize: 20,

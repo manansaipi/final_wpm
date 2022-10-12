@@ -450,8 +450,8 @@ class TaskTile extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  task?.title ?? "",
+                                AnimatedDefaultTextStyle(
+                                  duration: const Duration(milliseconds: 300),
                                   style: GoogleFonts.lato(
                                     textStyle: TextStyle(
                                       fontSize: 18,
@@ -463,6 +463,10 @@ class TaskTile extends StatelessWidget {
                                           ? TextDecoration.lineThrough
                                           : TextDecoration.none,
                                     ),
+                                  ),
+                                  child: Text(
+                                    task?.title ?? "",
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 const SizedBox(
@@ -508,6 +512,7 @@ class TaskTile extends StatelessWidget {
                                 Text(
                                   task?.note ?? "",
                                   style: taskTileNote,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
@@ -603,6 +608,7 @@ class TaskTile extends StatelessWidget {
                 height: hei >= 200 ? 200 : hei.toDouble() * 1.5 + 3,
                 width: 55,
                 indicator: Container(
+                  // ignore: sort_child_properties_last
                   child: task?.title == "Wake Up"
                       ? Icon(
                           Icons.alarm,
@@ -610,12 +616,19 @@ class TaskTile extends StatelessWidget {
                               ? _getBGClr(task?.color ?? 0)
                               : Colors.white,
                         )
-                      : Icon(
-                          Icons.mail_outline,
-                          color: task!.isCompleted == 1
-                              ? _getBGClr(task?.color ?? 0)
-                              : Colors.white,
-                        ),
+                      : task?.title == "Sleep"
+                          ? Icon(
+                              Icons.nightlight_round_outlined,
+                              color: task!.isCompleted == 1
+                                  ? _getBGClr(task?.color ?? 0)
+                                  : Colors.white,
+                            )
+                          : Icon(
+                              Icons.mail_outline,
+                              color: task!.isCompleted == 1
+                                  ? _getBGClr(task?.color ?? 0)
+                                  : Colors.white,
+                            ),
                   decoration: BoxDecoration(
                     color: task!.isCompleted == 0
                         ? _getBGClr(task?.color ?? 0)

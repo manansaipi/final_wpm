@@ -5,6 +5,7 @@ import 'package:final_wpm/db/db_helper.dart';
 import 'package:final_wpm/login_page.dart';
 import 'package:final_wpm/main_page.dart';
 import 'package:final_wpm/ui/home_page.dart';
+import 'package:final_wpm/ui/map_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/theme.dart';
@@ -18,8 +19,6 @@ Future<void> main() async {
   await GetStorage.init();
   runApp(const MyApp());
 }
-
-
 
 // #include <iostream>
 // using namespace std;
@@ -62,8 +61,6 @@ Future<void> main() async {
 
 //     return 0;
 // }
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

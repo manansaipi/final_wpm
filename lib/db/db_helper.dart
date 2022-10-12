@@ -26,7 +26,7 @@ class DBHelper {
           "title STRING, note TEXT, date STRING,  "
           "startTime STRING, endTime STRING, $_sortTime STRING,"
           "remind INTEGER, repeat STRING, "
-          "color INTEGER, "
+          "color INTEGER, mapCoor STRING,"
           "isCompleted INTEGER) ",
         );
       });

@@ -1,3 +1,5 @@
+import 'package:final_wpm/models/user_location.dart';
+import 'package:final_wpm/ui/home_page.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -8,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../controllers/task_controller.dart';
 import '../models/task.dart';
+import 'map_page.dart';
 
 class NotifiedPage extends StatefulWidget {
   final String? label;
@@ -22,10 +25,40 @@ class NotifiedPage extends StatefulWidget {
 class _NotifiedPageState extends State<NotifiedPage> {
   static const _initialCameraPosition = CameraPosition(
       target: LatLng(-6.28440763988385, 107.16877268350883), zoom: 15.5);
+
+  double? latitude1;
+  double? longtitude1;
+  String? userMarker;
+
+  @override
+  void initState() {
+    //TODO: implement initstate
+
+    super.initState();
+    setState(() {
+      userMarker = this.widget.label.toString().split("|")[1];
+    });
+
+    // MapPage.locationService.locationStream.listen((userLocation) {
+    //   setState(() {
+    //     MapPage.latitude = userLocation.latitude;
+    //     MapPage.longtitude = userLocation.longtitude;
+    //   });
+    // });
+
+    // notifyHelper.requestIOSPermissions();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // const LatLng userLocation = LatLng(latitude, longitude);
     final _taskController = Get.put(TaskController());
-
+    String splitLatLng = this.widget.label.toString().split("|")[1];
+    String splitLatLngFI = splitLatLng.split(",")[0];
+    String splitLatLngSI = splitLatLng.split(",")[1];
+    latitude1 = double.parse(splitLatLngFI.split("(")[1]);
+    longtitude1 = double.parse(splitLatLngSI.split(")")[0]);
+    print(userMarker);
     return Scaffold(
       appBar: AppBar(
         elevation: 3,
@@ -53,10 +86,48 @@ class _NotifiedPageState extends State<NotifiedPage> {
         title: Text(this.widget.label.toString().split("|")[0],
             style: headingStyle),
       ),
-      body: GoogleMap(
-        initialCameraPosition: _initialCameraPosition,
-        myLocationButtonEnabled: false,
-        zoomControlsEnabled: false,
+      body: Column(
+        children: [
+          // Text(userMarker!),
+          // Text(splitLatLng!),
+          // Text(latitude.toString()),
+          // Text(longtitude.toString()),
+          // Text(MapPage.latitude.toString()),
+          // Text(MapPage.longtitude.toString()),
+          Expanded(
+            child: GoogleMap(
+              // polylines: {
+              //   Polyline(
+              //       polylineId: PolylineId('route'),
+              //       points: polyLineCoordinates)
+              // },
+              // polygons: {_polygon},
+              // myLocationEnabled: true,
+              // trafficEnabled: true,
+              initialCameraPosition: _initialCameraPosition,
+              myLocationButtonEnabled: true,
+              zoomControlsEnabled: true,
+              markers: {
+                Marker(
+                  markerId: MarkerId('myLocation'),
+                  position: LatLng(HomePage.latitude, HomePage.longtitude),
+                  infoWindow: InfoWindow(title: "You"),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueBlue),
+                ),
+                Marker(
+                  markerId: MarkerId('userMarker'),
+                  position: LatLng(latitude1!, longtitude1!),
+                  infoWindow: InfoWindow(
+                      title: this.widget.label.toString().split("|")[0]),
+                )
+
+                //   // _presUnivMarker,
+                //   // _myPositionMarker,
+              },
+            ),
+          ),
+        ],
       ),
 
       // Center(

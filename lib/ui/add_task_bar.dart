@@ -7,13 +7,17 @@ import 'package:final_wpm/ui/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
+import 'home_page.dart';
+
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
-
+  static Marker? userMarker;
+  static var latlng;
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
 }
@@ -61,6 +65,30 @@ class _AddTaskPageState extends State<AddTaskPage> {
       "icon": Icons.access_alarms,
     },
   ];
+
+  static const _initialCameraPosition = CameraPosition(
+      target: LatLng(-6.28497565689798, 107.17053839620769), zoom: 15.5);
+// ignore: const_set_element_type_implements_equals
+  static const LatLng presidentUniversity =
+      LatLng(-6.28497565689798, 107.17053839620769);
+
+// ignore: const_set_element_type_implements_equals
+  static const LatLng myLocation =
+      LatLng(-6.283387245518924, 107.1671712797256);
+
+  static const Marker _presUnivMarker = Marker(
+    markerId: MarkerId("_presUniv"),
+    infoWindow: InfoWindow(title: "President University"),
+    icon: BitmapDescriptor.defaultMarker,
+    position: presidentUniversity,
+  );
+  static final Marker _myPositionMarker = Marker(
+    markerId: MarkerId("_myPosition"),
+    infoWindow: InfoWindow(title: "You"),
+    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+    position: myLocation,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,9 +104,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Container(
         padding: const EdgeInsets.only(left: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: Expanded(
+          child: ListView(
             children: [
               Container(
                 margin: EdgeInsets.only(top: 5),
@@ -199,7 +226,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.87,
                 height: 60,
-                margin: EdgeInsets.only(top: 30, left: 8),
+                margin: EdgeInsets.only(top: 30, left: 8, right: 30),
                 decoration: BoxDecoration(
                   color: Get.isDarkMode
                       ? Colors.grey.shade700
@@ -303,7 +330,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width * 0.87,
-                margin: EdgeInsets.only(top: 30, left: 8),
+                margin: EdgeInsets.only(top: 30, left: 8, right: 30),
                 decoration: BoxDecoration(
                   color: Get.isDarkMode
                       ? Colors.grey.shade700
@@ -316,6 +343,29 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     _colorPallet(),
                   ],
                 ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print('helo');
+                  _showBottomSheet(
+                    context,
+                  );
+                },
+                child: Container(
+                  margin:
+                      EdgeInsets.only(right: 20, top: 20, left: 10, bottom: 10),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  height: 200,
+                  width: 20,
+                  child: SizedBox(
+                    height: 80,
+                    child: Icon(Icons.map),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 500,
               ),
             ],
           ),
@@ -533,8 +583,23 @@ class _AddTaskPageState extends State<AddTaskPage> {
       _addTaskToDb();
 
       _taskController.getTask();
+
       Get.back();
-    } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
+      Get.snackbar(
+        "Succeed !",
+        "Task Added",
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green,
+        icon: Container(
+          margin: EdgeInsets.only(left: 7),
+          child: const Icon(
+            Icons.add_task_rounded,
+            color: Colors.white,
+          ),
+        ),
+      );
+    } else if (_titleController.text.isEmpty) {
       Get.snackbar(
         "Required",
         "All fields are required !",
@@ -564,9 +629,145 @@ class _AddTaskPageState extends State<AddTaskPage> {
         remind: _selectedRemind,
         repeat: _fixSelectedRepeat,
         color: _selectedColor,
+        mapCoor: AddTaskPage.latlng,
         isCompleted: 0,
       ),
     );
     print("button is working and My id is " + "$value");
   }
+}
+
+_showBottomSheet(BuildContext context) {
+  const _initialCameraPosition = CameraPosition(
+      target: LatLng(-6.28497565689798, 107.17053839620769), zoom: 15.5);
+  Get.bottomSheet(
+    // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+    Container(
+      height: 500,
+      color: Colors.transparent,
+      child: Container(
+        // padding: EdgeInsets.symmetric(horizontal: 10),
+        // padding: const EdgeInsets.only(top: 4),
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 1,
+            color: Get.isDarkMode ? Colors.grey.shade500 : Colors.grey.shade800,
+          ),
+          color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        // height: task.isCompleted == 1
+        //     ? MediaQuery.of(context).size.width * 0.24
+        //     : MediaQuery.of(context).size.width * 0.32,
+        // color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+        child: Column(
+          children: [
+            Container(
+              // margin: EdgeInsets.only(left: 10),
+              height: 455,
+              child: SizedBox(
+                child: GoogleMap(
+                  onTap: (LatLng latLng) {
+                    Marker newMarker = Marker(
+                      markerId: MarkerId('userMarker'),
+                      position: LatLng(latLng.latitude, latLng.longitude),
+                      infoWindow: InfoWindow(title: "Your Marker"),
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueRed),
+                    );
+                    AddTaskPage.userMarker = newMarker;
+                    AddTaskPage.latlng = latLng.toString();
+                    print(latLng);
+
+                    Get.back();
+                    Get.snackbar(
+                      "Succeed !",
+                      "Locations Saved",
+                      colorText: Colors.white,
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.green,
+                      icon: Container(
+                        margin: EdgeInsets.only(left: 7),
+                        child: const Icon(
+                          Icons.map,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  },
+                  // polylines: {
+                  //   Polyline(polylineId: PolylineId('route'), points: [
+                  //     LatLng(HomePage.latitude, HomePage.longtitude),
+                  //     myLocation
+                  //   ])
+                  // },
+                  // polygons: {
+                  //   Polygon(
+                  //     polygonId: PolygonId('_polygonId'),
+                  //     points: [
+                  //       LatLng(HomePage.latitude, HomePage.longtitude),
+                  //       myLocation,
+                  //       LatLng(-6.28497565689798, 107.17053839620769),
+                  //       LatLng(-6.284975656, 107.1705383962)
+                  //     ],
+                  //     strokeWidth: 5,
+                  //     fillColor: Colors.transparent,
+                  //   )
+                  // },
+                  // myLocationEnabled: true,
+                  // trafficEnabled: true,
+                  initialCameraPosition: _initialCameraPosition,
+
+                  markers: {
+                    Marker(
+                      markerId: MarkerId('myLocation'),
+                      position: LatLng(HomePage.latitude, HomePage.longtitude),
+                      infoWindow: InfoWindow(title: "You"),
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                          BitmapDescriptor.hueBlue),
+                    ),
+                    AddTaskPage.userMarker ??
+                        Marker(markerId: MarkerId('value')),
+                    // _presUnivMarker,
+                  },
+                ),
+              ),
+            ),
+
+            // Container(
+            //   height: 6,
+            //   width: 120,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(12),
+            //     color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300],
+            //   ),
+            // ),
+            // Spacer(),
+
+            // task.isCompleted == 1
+            //     ? Container()
+            //     : bottomSheetButton(
+            //         label: "Task Completed",
+            //         onTap: () {
+            //           _taskController.markTaskCompleted(task.id!);
+            //           Get.back();
+            //         },
+            //         clr: primaryClr,
+            //         context: context),
+            // bottomSheetButton(
+            //   label: "Delete Task",
+            //   onTap: () {
+            // _taskController.delete(task);
+
+            //     Get.back();
+            //   },
+            //   clr: Colors.red,
+            //   context: context,
+            // ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
