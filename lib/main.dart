@@ -1,13 +1,6 @@
-import 'dart:developer';
-import 'dart:math';
-
 import 'package:final_wpm/db/db_helper.dart';
-import 'package:final_wpm/login_page.dart';
-import 'package:final_wpm/main_page.dart';
 import 'package:final_wpm/ui/home_page.dart';
-import 'package:final_wpm/ui/map_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
-import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -20,48 +13,6 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-// #include <iostream>
-// using namespace std;
-
-// struct student
-// {
-//     char name[50];
-//     int roll;
-//     float marks;
-// } s[10];
-
-// int main()
-// {
-//     cout << "Enter information of students: " << endl;
-
-//     // storing information
-//     for(int i = 0; i < 3; ++i)
-//     {
-//         s[i].roll = i+1;
-//         cout << "For roll number" << s[i].roll << "," << endl;
-
-//         cout << "Enter name: ";
-//         cin >> s[i].name;
-
-//         cout << "Enter marks: ";
-//         cin >> s[i].marks;
-
-//         cout << endl;
-//     }
-
-//     cout << "Displaying Information: " << endl;
-
-//     // Displaying information
-//     for(int i = 0; i < 3; ++i)
-//     {
-//         cout << "\nRoll number: " << i+1 << endl;
-//         cout << "Name: " << s[i].name << endl;
-//         cout << "Marks: " << s[i].marks << endl;
-//     }
-
-//     return 0;
-// }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -72,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: Themes.light,
       darkTheme: Themes.dark,
       themeMode: ThemeService().theme,
-      home: HomePage(),
+      home: const HomePage(),
       // home: HomePage(),
     );
   }
@@ -769,4 +720,95 @@ class MyApp extends StatelessWidget {
 //       ),
 //     ));
 //   }
+// }
+
+
+
+
+// #include <iostream>
+// using namespace std;
+
+// struct student
+// {
+//     char name[50];
+//     int roll;
+//     float marks;
+// } s[10];
+
+// int main()
+// {
+//     cout << "Enter information of students: " << endl;
+
+//     // storing information
+//     for(int i = 0; i < 3; ++i)
+//     {
+//         s[i].roll = i+1;
+//         cout << "For roll number" << s[i].roll << "," << endl;
+
+//         cout << "Enter name: ";
+//         cin >> s[i].name;
+
+//         cout << "Enter marks: ";
+//         cin >> s[i].marks;
+
+//         cout << endl;
+//     }
+
+//     cout << "Displaying Information: " << endl;
+
+//     // Displaying information
+//     for(int i = 0; i < 3; ++i)
+//     {
+//         cout << "\nRoll number: " << i+1 << endl;
+//         cout << "Name: " << s[i].name << endl;
+//         cout << "Marks: " << s[i].marks << endl;
+//     }
+
+//     return 0;
+// }
+
+
+
+// #include <iostream>
+// using namespace std;
+
+// struct student
+// {
+//     char name[50];
+//     int roll;
+//     char role;
+// } s[10];
+
+// int main()
+// {
+//     cout << "Enter information of family: " << endl;
+
+//     // storing information
+    
+    
+//     for(int i = 0; i < 3; ++i)
+//     {
+//         s[i].roll = i+1;
+//         cout << "Family number " << s[i].roll << "," << endl;
+
+//         cout << "Enter name: ";
+//         cin >> s[i].name;
+
+//         cout << "Enter Role: ";
+//         cin >> s[i].role;
+
+//         cout << endl;
+//     }
+
+//     cout << "Displaying Information: " << endl;
+
+//     // Displaying information
+//     for(int i = 0; i < 3; ++i)
+//     {
+//         cout << "\nRoll number: " << i+1 << endl;
+//         cout << "Name: " << s[i].name << endl;
+//         cout << "Marks: " << s[i].role << endl;
+//     }
+
+//     return 0;
 // }

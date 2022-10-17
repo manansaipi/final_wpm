@@ -104,6 +104,13 @@ class _NotifiedPageState extends State<NotifiedPage> {
               // polygons: {_polygon},
               // myLocationEnabled: true,
               // trafficEnabled: true,
+              onCameraMoveStarted: (() {
+                setState(() {});
+              }),
+
+              onCameraIdle: () {
+                setState(() {});
+              },
               initialCameraPosition: _initialCameraPosition,
               myLocationButtonEnabled: true,
               zoomControlsEnabled: true,

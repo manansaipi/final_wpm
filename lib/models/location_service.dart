@@ -5,7 +5,7 @@ import 'package:location/location.dart';
 
 class LocationService {
   Location location = Location();
-  StreamController<UserLocation> _locationStreamController =
+  final StreamController<UserLocation> _locationStreamController =
       StreamController<UserLocation>.broadcast();
   Stream<UserLocation> get locationStream => _locationStreamController.stream;
 

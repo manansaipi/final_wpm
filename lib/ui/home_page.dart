@@ -1,20 +1,13 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
-import 'package:date_picker_timeline/extra/color.dart';
-import 'package:date_picker_timeline/extra/style.dart';
 import 'package:final_wpm/controllers/task_controller.dart';
 import 'package:final_wpm/ui/map_page.dart';
 import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/notification_servieces.dart';
-import 'package:final_wpm/ui/setting_page.dart';
-import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:final_wpm/ui/widgets/button.dart';
 import 'package:final_wpm/ui/widgets/task_tile.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -190,6 +183,7 @@ class _HomePageState extends State<HomePage> {
     return CustomScrollView(
       slivers: [
         _buildAppBar(),
+
         SliverToBoxAdapter(
           child: _addDateBar(),
         ),
@@ -197,12 +191,13 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             height: 19,
             decoration: BoxDecoration(
-                color: Get.isDarkMode
-                    ? context.theme.backgroundColor
-                    : Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
+              color:
+                  Get.isDarkMode ? context.theme.backgroundColor : Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
           ),
         ),
         // SliverToBoxAdapter(
@@ -261,6 +256,7 @@ class _HomePageState extends State<HomePage> {
             int.parse(myTime.toString().split(":")[1]),
             task,
           );
+          // print(myTime);
 
           return GestureDetector(
             onTap: () {
@@ -297,6 +293,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   _appBar() {
+    String haridantanggal = DateFormat.d().format(
+          DateTime.now(),
+        ) +
+        ",  " +
+        DateFormat.EEEE().format(
+          DateTime.now(),
+        );
     return AppBar(
       title: Row(
         children: [
@@ -306,12 +309,24 @@ class _HomePageState extends State<HomePage> {
             ),
             style: titleHeadingStyle,
           ),
-          Text(" "),
-          Text(
-            DateFormat.y().format(
-              DateTime.now(),
-            ),
-            style: titleBiggerHeadingStyle,
+          Text("  "),
+          AnimatedTextKit(
+            animatedTexts: [
+              TyperAnimatedText(
+                DateFormat.y().format(
+                  DateTime.now(),
+                ),
+                speed: Duration(milliseconds: 800),
+                textStyle: titleBiggerHeadingStyle,
+              ),
+              TyperAnimatedText(
+                haridantanggal,
+                speed: Duration(milliseconds: 200),
+                textStyle: titleBiggerHeadingStyle2,
+              ),
+            ],
+            pause: Duration(milliseconds: 3000),
+            repeatForever: true,
           ),
         ],
       ),
@@ -375,6 +390,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   _buildAppBar() {
+    String haridantanggal = DateFormat.d().format(
+          DateTime.now(),
+        ) +
+        ",  " +
+        DateFormat.EEEE().format(
+          DateTime.now(),
+        );
     return SliverAppBar(
       elevation: 2,
       pinned: true,
@@ -387,12 +409,24 @@ class _HomePageState extends State<HomePage> {
             ),
             style: titleHeadingStyle,
           ),
-          Text(" "),
-          Text(
-            DateFormat.y().format(
-              DateTime.now(),
-            ),
-            style: titleBiggerHeadingStyle,
+          Text("  "),
+          AnimatedTextKit(
+            animatedTexts: [
+              TyperAnimatedText(
+                DateFormat.y().format(
+                  DateTime.now(),
+                ),
+                speed: Duration(milliseconds: 800),
+                textStyle: titleBiggerHeadingStyle,
+              ),
+              TyperAnimatedText(
+                haridantanggal,
+                speed: Duration(milliseconds: 200),
+                textStyle: titleBiggerHeadingStyle2,
+              ),
+            ],
+            pause: Duration(milliseconds: 3000),
+            repeatForever: true,
           ),
         ],
       ),
@@ -502,21 +536,21 @@ class _HomePageState extends State<HomePage> {
           //         : Colors.grey.shade700,
           selectedTextColor: Colors.white,
           monthTextStyle: GoogleFonts.lato(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w700,
               color: Colors.grey,
             ),
           ),
           dateTextStyle: GoogleFonts.lato(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
               color: Colors.grey,
             ),
           ),
           dayTextStyle: GoogleFonts.lato(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w700,
               color: Colors.grey,
@@ -550,7 +584,7 @@ class _HomePageState extends State<HomePage> {
           // ),
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.house_rounded,
             ),
             color: primaryClr,
@@ -558,7 +592,7 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.abc,
             ),
             iconSize: 0,
@@ -569,7 +603,7 @@ class _HomePageState extends State<HomePage> {
                 MapPage(),
               );
             },
-            icon: Icon(Icons.map_outlined),
+            icon: const Icon(Icons.map_outlined),
             iconSize: 30,
           ),
           // IconButton(

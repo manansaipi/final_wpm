@@ -32,15 +32,14 @@ class TaskTile extends StatelessWidget {
     String firstNumberET = task!.endTime.toString().split(":")[0];
 
     String secondSplitForPMET = splitForPMET.split(" ")[0];
-    late var fixStartNumber;
-    late var fixEndNumber;
+    late String fixStartNumber;
+    late String fixEndNumber;
 
     if (startTime == "PM") {
       if (firstStartNumber == "12") {
-        fixStartNumber = firstStartNumber + "." + secondSplitForPMST;
+        fixStartNumber = "$firstStartNumber.$secondSplitForPMST";
       } else {
-        fixStartNumber =
-            additionStartTime.toString() + "." + secondSplitForPMST;
+        fixStartNumber = "$additionStartTime.$secondSplitForPMST";
       }
     } else {
       String split0 = task!.startTime.toString().split(":")[0];
@@ -61,7 +60,7 @@ class TaskTile extends StatelessWidget {
     } else {
       String split0 = task!.endTime.toString().split(":")[0];
       if (split0 == "12") {
-        fixEndNumber = "0" + "." + secondSplitForPMET;
+        fixEndNumber = "24" + "." + secondSplitForPMET;
       } else {
         fixEndNumber = firstNumberET + "." + secondSplitForPMET;
       }
@@ -102,28 +101,17 @@ class TaskTile extends StatelessWidget {
         int addHour = int.parse(splitTimeDistanceHour) + 1;
         int substractionMinute = int.parse(splitTimeDistanceMinute) - 60;
 
-        timeDistance = " ( " +
-            addHour.toString() +
-            " hr, " +
-            substractionMinute.toString() +
-            " min ) ";
+        timeDistance = " ( $addHour hr, $substractionMinute min ) ";
       } else {
         if (splitTimeDistanceMinute == "00") {
           timeDistance = " ( " + splitTimeDistanceHour + " hr ) ";
         } else {
           if (int.parse(splitTimeDistanceMinute) < 10) {
             int minute = int.parse(splitTimeDistanceMinute);
-            timeDistance = " ( " +
-                splitTimeDistanceHour +
-                " hr, " +
-                minute.toString() +
-                " min ) ";
+            timeDistance = " ( $splitTimeDistanceHour hr, $minute min ) ";
           } else {
-            timeDistance = " ( " +
-                splitTimeDistanceHour +
-                " hr, " +
-                splitTimeDistanceMinute +
-                " min ) ";
+            timeDistance =
+                " ( $splitTimeDistanceHour hr, $splitTimeDistanceMinute min ) ";
           }
         }
       }

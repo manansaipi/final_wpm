@@ -20,8 +20,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
 // ignore: const_set_element_type_implements_equals
   String a = "AIzaSyD7SZ5An6Lek2z1IiWwIziKqGw_RIdKLm4";
-  static const _initialCameraPosition = CameraPosition(
-      target: LatLng(-6.28497565689798, 107.17053839620769), zoom: 15.5);
+  // static const _initialCameraPosition =;
 // ignore: const_set_element_type_implements_equals
   static const LatLng presidentUniversity =
       LatLng(-6.28497565689798, 107.17053839620769);
@@ -120,44 +119,45 @@ class _MapPageState extends State<MapPage> {
     double latitude1 = double.parse(splitLatLngFI.split("(")[1]);
     double longtitude1 = double.parse(splitLatLngSI.split(")")[0]);
     return Marker(
-        markerId: MarkerId(task.id.toString()),
-        position: LatLng(latitude1, longtitude1),
-        infoWindow: InfoWindow(title: task.title));
+      markerId: MarkerId(task.id.toString()),
+      position: LatLng(latitude1, longtitude1),
+      infoWindow: InfoWindow(title: task.title),
+    );
   }
 
   final _taskController = Get.put(TaskController());
   @override
   Widget build(BuildContext context) {
-    BitmapDescriptor? userLiveLocation;
-    createMarker(context) {
-      ImageConfiguration configuration = createLocalImageConfiguration(context);
-      BitmapDescriptor.fromAssetImage(configuration, 'assets/a.png')
-          .then((icon) {
-        setState(() {
-          userLiveLocation = icon;
-        });
-      });
-    }
+    // BitmapDescriptor? userLiveLocation;
+    // createMarker(context) {
+    //   ImageConfiguration configuration = createLocalImageConfiguration(context);
+    //   BitmapDescriptor.fromAssetImage(configuration, 'assets/a.png')
+    //       .then((icon) {
+    //     setState(() {
+    //       userLiveLocation = icon;
+    //     });
+    //   });
+    // }
 
-    createMarker(context);
+    // createMarker(context);
     List<Marker> markers = [];
     Task? task;
     int index = _taskController.taskList.length - 1;
     for (int i = 0; i <= index; i++) {
       task = _taskController.taskList[i];
       markers.add(_buildMarker(task));
-      markers.add(
-        Marker(
-            markerId: MarkerId('myLocation'),
-            position: LatLng(HomePage.latitude, HomePage.longtitude),
-            infoWindow: InfoWindow(title: "You"),
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueBlue)),
-      );
+
       // print(task.toJson());
       // print(i);
     }
-
+    markers.add(
+      Marker(
+          markerId: MarkerId('myLocation'),
+          position: LatLng(HomePage.latitude, HomePage.longtitude),
+          infoWindow: InfoWindow(title: "You"),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)),
+    );
     return Center(
       child:
           //     Row(
@@ -175,6 +175,9 @@ class _MapPageState extends State<MapPage> {
               onCameraMoveStarted: (() {
                 setState(() {});
               }),
+              onCameraIdle: () {
+                setState(() {});
+              },
 
               // onTap: (LatLng latLng) {
               //   Marker newMarker = Marker(
@@ -209,7 +212,10 @@ class _MapPageState extends State<MapPage> {
               // },
               // myLocationEnabled: true,
               // trafficEnabled: true,
-              initialCameraPosition: _initialCameraPosition,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(HomePage.latitude, HomePage.longtitude),
+                zoom: 15.5,
+              ),
               myLocationButtonEnabled: true,
               zoomControlsEnabled: true,
               markers: markers.map((e) => e).toSet(),

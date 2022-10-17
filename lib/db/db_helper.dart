@@ -1,12 +1,10 @@
-import 'package:final_wpm/ui/widgets/task_tile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/task.dart';
 
 class DBHelper {
   static Database? _db;
-  static final int _version = 1;
+  static const int _version = 1;
   static const String _tableName = "tasks";
   static const String _sortTime = "sortTime";
 

@@ -1,19 +1,11 @@
-import 'package:date_picker_timeline/date_picker_timeline.dart';
-
 import 'package:final_wpm/ui/add_task_bar.dart';
-import 'package:final_wpm/ui/home_page.dart';
-import 'package:final_wpm/ui/map_page.dart';
 import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/notification_servieces.dart';
-import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:final_wpm/ui/widgets/button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -24,7 +16,6 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  DateTime _selectedDate = DateTime.now();
   var notifyHelper;
 
   final PageStorageBucket bucket = PageStorageBucket();
