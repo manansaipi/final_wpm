@@ -68,8 +68,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     },
   ];
 
-  static const _initialCameraPosition = CameraPosition(
-      target: LatLng(-6.28497565689798, 107.17053839620769), zoom: 15.5);
 // ignore: const_set_element_type_implements_equals
   static const LatLng presidentUniversity =
       LatLng(-6.28497565689798, 107.17053839620769);
@@ -92,8 +90,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
   );
 
   _showBottomSheet(BuildContext context) {
-    const _initialCameraPosition = CameraPosition(
-        target: LatLng(-6.28497565689798, 107.17053839620769), zoom: 15.5);
     Get.bottomSheet(
       // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       Container(
@@ -119,9 +115,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
           child: Column(
             children: [
               Container(
-                // margin: EdgeInsets.only(left: 10),
-                height: 455,
+                // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                // margin: EdgeInsets.only(top: 20),
                 child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
                   child: GoogleMap(
                     onTap: (LatLng latLng) {
                       Marker newMarker = Marker(
@@ -174,7 +171,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     // trafficEnabled: true,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(HomePage.latitude, HomePage.longtitude),
-                      zoom: 15.5,
+                      zoom: 17.5,
                     ),
 
                     markers: {
@@ -182,12 +179,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         markerId: MarkerId('myLocation'),
                         position:
                             LatLng(HomePage.latitude, HomePage.longtitude),
-                        infoWindow: InfoWindow(title: "You"),
+                        infoWindow: const InfoWindow(title: "You"),
                         icon: BitmapDescriptor.defaultMarkerWithHue(
                             BitmapDescriptor.hueBlue),
                       ),
                       AddTaskPage.userMarker ??
-                          Marker(markerId: MarkerId('value')),
+                          const Marker(markerId: MarkerId('value')),
                       // _presUnivMarker,
                     },
                   ),
@@ -228,6 +225,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ),
         ),
       ),
+
+      enableDrag: false,
     );
   }
 
@@ -266,7 +265,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   },
                 ),
               ),
-
               Container(
                 margin: EdgeInsets.only(top: 5),
                 child: MyInputField(
@@ -327,6 +325,68 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   )
                 ],
               ),
+
+              // GestureDetector(
+              //   onTap: () {},
+              //   child: SizedBox(
+              //     height: 100,
+              //     width: 100,
+              //     child: Container(
+              //       child: GoogleMap(
+              //         zoomControlsEnabled: false,
+              //         zoomGesturesEnabled: false,
+              //         scrollGesturesEnabled: false,
+              //         rotateGesturesEnabled: false,
+              //         mapToolbarEnabled: false,
+              //         liteModeEnabled: true,
+              //         onTap: (LatLng latLng) {
+              //           _showBottomSheet(
+              //             context,
+              //           );
+              //         },
+              //         // polylines: {
+              //         //   Polyline(polylineId: PolylineId('route'), points: [
+              //         //     LatLng(HomePage.latitude, HomePage.longtitude),
+              //         //     myLocation
+              //         //   ])
+              //         // },
+              //         // polygons: {
+              //         //   Polygon(
+              //         //     polygonId: PolygonId('_polygonId'),
+              //         //     points: [
+              //         //       LatLng(HomePage.latitude, HomePage.longtitude),
+              //         //       myLocation,
+              //         //       LatLng(-6.28497565689798, 107.17053839620769),
+              //         //       LatLng(-6.284975656, 107.1705383962)
+              //         //     ],
+              //         //     strokeWidth: 5,
+              //         //     fillColor: Colors.transparent,
+              //         //   )
+              //         // },
+              //         // myLocationEnabled: true,
+              //         // trafficEnabled: true,
+              //         initialCameraPosition: CameraPosition(
+              //           target: LatLng(HomePage.latitude, HomePage.longtitude),
+              //           zoom: 17.5,
+              //         ),
+              //         // markers: {
+              //         //   Marker(
+              //         //     markerId: MarkerId('myLocation'),
+              //         //     position: LatLng(
+              //         //         HomePage.latitude, HomePage.longtitude),
+              //         //     infoWindow: InfoWindow(title: "You"),
+              //         //     icon: BitmapDescriptor.defaultMarkerWithHue(
+              //         //         BitmapDescriptor.hueBlue),
+              //         //   ),
+              //         //   AddTaskPage.userMarker ??
+              //         //       Marker(markerId: MarkerId('value')),
+              //         //   // _presUnivMarker,
+              //         // },
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
               Container(
                 margin: EdgeInsets.only(top: 17),
                 child: Row(
@@ -666,6 +726,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       setState(
         () {
           _selectedDate = _pickerDate;
+          print(_selectedDate);
         },
       );
     } else {}

@@ -5,6 +5,7 @@ import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../controllers/task_controller.dart';
@@ -86,6 +87,16 @@ class _MapPageState extends State<MapPage> {
   var notifyHelper;
 
   final PageStorageBucket bucket = PageStorageBucket();
+  BitmapDescriptor? userLiveLocation =
+      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+  void createMarker() {
+    BitmapDescriptor.fromAssetImage(ImageConfiguration.empty, 'assets/user.png')
+        .then((icon) {
+      setState(() {
+        userLiveLocation = icon;
+      });
+    });
+  }
 
   // @override
   void initState() {
@@ -93,6 +104,7 @@ class _MapPageState extends State<MapPage> {
 
     // getPolyPoints();
     super.initState();
+    createMarker();
 
     // HomePage.locationService.locationStream.listen((userLocation) {
     //   setState(() {
@@ -121,25 +133,14 @@ class _MapPageState extends State<MapPage> {
     return Marker(
       markerId: MarkerId(task.id.toString()),
       position: LatLng(latitude1, longtitude1),
-      infoWindow: InfoWindow(title: task.title),
+      infoWindow: InfoWindow(
+          title: task.title, snippet: task.note != "" ? task.note : "None"),
     );
   }
 
   final _taskController = Get.put(TaskController());
   @override
   Widget build(BuildContext context) {
-    // BitmapDescriptor? userLiveLocation;
-    // createMarker(context) {
-    //   ImageConfiguration configuration = createLocalImageConfiguration(context);
-    //   BitmapDescriptor.fromAssetImage(configuration, 'assets/a.png')
-    //       .then((icon) {
-    //     setState(() {
-    //       userLiveLocation = icon;
-    //     });
-    //   });
-    // }
-
-    // createMarker(context);
     List<Marker> markers = [];
     Task? task;
     int index = _taskController.taskList.length - 1;
@@ -155,123 +156,108 @@ class _MapPageState extends State<MapPage> {
           markerId: MarkerId('myLocation'),
           position: LatLng(HomePage.latitude, HomePage.longtitude),
           infoWindow: InfoWindow(title: "You"),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)),
+          icon: userLiveLocation!),
     );
-    return Center(
-      child:
-          //     Row(
-          //   children: [
-          //     Text('$latitude'),
-          //     Text('$longtitude'),
-          //   ],
-          // )
-          Column(
-        children: [
-          // Text(HomePage.latitude.toString()),
-          // Text(HomePage.longtitude.toString()),
-          Expanded(
-            child: GoogleMap(
-              onCameraMoveStarted: (() {
-                setState(() {});
-              }),
-              onCameraIdle: () {
-                setState(() {});
-              },
-
-              // onTap: (LatLng latLng) {
-              //   Marker newMarker = Marker(
-              //     markerId: MarkerId('userMarker'),
-              //     position: LatLng(latLng.latitude, latLng.longitude),
-              //     infoWindow: InfoWindow(title: "Your Marker"),
-              //     icon: BitmapDescriptor.defaultMarkerWithHue(
-              //         BitmapDescriptor.hueRed),
-              //   );
-              //   userMarker = newMarker;
-              //   setState(() {});
-              //   print(latLng);
-              // },
-              // polylines: {
-              //   Polyline(polylineId: PolylineId('route'), points: [
-              //     LatLng(HomePage.latitude, HomePage.longtitude),
-              //     myLocation
-              //   ])
-              // },
-              // polygons: {
-              //   Polygon(
-              //     polygonId: PolygonId('_polygonId'),
-              //     points: [
-              //       LatLng(HomePage.latitude, HomePage.longtitude),
-              //       myLocation,
-              //       LatLng(-6.28497565689798, 107.17053839620769),
-              //       LatLng(-6.284975656, 107.1705383962)
-              //     ],
-              //     strokeWidth: 5,
-              //     fillColor: Colors.transparent,
-              //   )
-              // },
-              // myLocationEnabled: true,
-              // trafficEnabled: true,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(HomePage.latitude, HomePage.longtitude),
-                zoom: 15.5,
+    return Scaffold(
+      appBar: _appBar(context),
+      body: Center(
+        child:
+            //     Row(
+            //   children: [
+            //     Text('$latitude'),
+            //     Text('$longtitude'),
+            //   ],
+            // )
+            Column(
+          children: [
+            // Text(HomePage.latitude.toString()),
+            // Text(HomePage.longtitude.toString()),
+            Expanded(
+              child: GoogleMap(
+                onCameraMoveStarted: (() {
+                  setState(() {});
+                }),
+                onCameraIdle: () {
+                  setState(() {});
+                },
+                // onTap: (LatLng latLng) {
+                //   Marker newMarker = Marker(
+                //     markerId: MarkerId('userMarker'),
+                //     position: LatLng(latLng.latitude, latLng.longitude),
+                //     infoWindow: InfoWindow(title: "Your Marker"),
+                //     icon: BitmapDescriptor.defaultMarkerWithHue(
+                //         BitmapDescriptor.hueRed),
+                //   );
+                //   userMarker = newMarker;
+                //   setState(() {});
+                //   print(latLng);
+                // },
+                // polylines: {
+                //   Polyline(polylineId: PolylineId('route'), points: [
+                //     LatLng(HomePage.latitude, HomePage.longtitude),
+                //     myLocation
+                //   ])
+                // },
+                // polygons: {
+                //   Polygon(
+                //     polygonId: PolygonId('_polygonId'),
+                //     points: [
+                //       LatLng(HomePage.latitude, HomePage.longtitude),
+                //       myLocation,
+                //       LatLng(-6.28497565689798, 107.17053839620769),
+                //       LatLng(-6.284975656, 107.1705383962)
+                //     ],
+                //     strokeWidth: 5,
+                //     fillColor: Colors.transparent,
+                //   )
+                // },
+                // myLocationEnabled: true,
+                // trafficEnabled: true,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(HomePage.latitude, HomePage.longtitude),
+                  zoom: 16.5,
+                ),
+                myLocationButtonEnabled: true,
+                zoomControlsEnabled: true,
+                markers: markers.map((e) => e).toSet(),
+                // {
+                //   // userMarker ?? _presUnivMarker,
+                //   // _presUnivMarker,
+                // },
               ),
-              myLocationButtonEnabled: true,
-              zoomControlsEnabled: true,
-              markers: markers.map((e) => e).toSet(),
-
-              // {
-
-              //   // userMarker ?? _presUnivMarker,
-              //   // _presUnivMarker,
-              // },
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
 
-      // body: Column(
-      //   children: [
-      //     _addTaskBar(),
-      //   ],
-      // ),
+        // body: Column(
+        //   children: [
+        //     _addTaskBar(),
+        //   ],
+        // ),
+      ),
     );
   }
 
-  _appBar() {
+  _appBar(BuildContext context) {
     return AppBar(
-      elevation: 0,
-      backgroundColor: context.theme.backgroundColor,
+      elevation: 3,
+      backgroundColor: Get.isDarkMode ? Colors.grey[800] : Colors.white,
       leading: GestureDetector(
         onTap: () {
-          ThemeService().switchTheme();
-          notifyHelper.displayNotification(
-              title: "Theme Changed",
-              body: Get.isDarkMode
-                  ? "Activated Light Theme"
-                  : "Activatd Dark Theme");
+          Get.back();
         },
         child: Icon(
-          Get.isDarkMode ? Icons.sunny : Icons.nightlight_round_outlined,
+          Icons.arrow_back_ios_new,
           size: 20,
           color: Get.isDarkMode ? Colors.white : Colors.black,
         ),
       ),
-      actions: [
-        IconButton(
-            onPressed: () {
-              print("settings");
-              Get.to(SettingPage());
-              //Move to another page using NAVIGATOR
-              // Navigator.push(context, MaterialPageRoute(builder: (context) {
-              //   return SettingPage();
-              // }));
-            },
-            icon: Icon(
-              Icons.settings,
-              color: Get.isDarkMode ? Colors.white : Colors.black,
-            )),
-      ],
+      title: Text(
+        "Maps",
+        style: GoogleFonts.lato(
+            textStyle: TextStyle(fontSize: 20),
+            color: Get.isDarkMode ? Colors.white : Colors.black),
+      ),
     );
   }
 }

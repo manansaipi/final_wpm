@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:final_wpm/controllers/task_controller.dart';
@@ -13,11 +15,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 import '../models/location_service.dart';
 import '../models/task.dart';
 import 'add_task_bar.dart';
-import 'favorite_page.dart';
 
 class HomePage extends StatefulWidget {
   final Task? task;
@@ -46,12 +46,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final List<Widget> screens = [
-    HomePage(),
-    MapPage(),
-    FavoritePage(),
-  ];
-
   final PageStorageBucket bucket = PageStorageBucket();
 
   @override
@@ -79,33 +73,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _taskController.getTask();
-
     return Scaffold(
-      appBar: _selectedIndex == 1 || _selectedIndex == 2
-          ? _appBar()
-          : AppBar(
-              toolbarHeight: 0,
-              elevation: 0,
-            ),
-
-      floatingActionButton: _selectedIndex == 0
-          ? MyCircleButton(
-              label: "+",
-              onTap: () {
-                Get.to(AddTaskPage());
-              },
-            )
-          : Container(),
+      floatingActionButton: MyCircleButton(
+        label: "+",
+        onTap: () {
+          _showBottomSheetToTaskPage(
+            context,
+          );
+          // Get.to(AddTaskPage());
+        },
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: _selectedIndex == 0
-          ? _buildCustomScrollView(context)
-          : _selectedIndex == 1
-              ? screens[_selectedIndex]
-              : _selectedIndex == 2
-                  ? screens[_selectedIndex]
-                  : Container(),
-
+      body: _buildCustomScrollView(context),
       //     ? Column(
       //         children: <Widget>[
       //           // _addTaskBar(),
@@ -142,40 +121,7 @@ class _HomePageState extends State<HomePage> {
       //                   ),
       //                   screens[_selectedIndex],
       //                 ],
-      //               ),
-      bottomNavigationBar: Container(
-        color: Get.isDarkMode ? darkBGColor : Colors.grey.shade200,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15.0,
-            vertical: 2,
-          ),
-          child: GNav(
-            padding: EdgeInsets.all(16),
-            tabBackgroundColor: primaryClr,
-            color: Colors.grey,
-            activeColor: Colors.white,
-            backgroundColor:
-                Get.isDarkMode ? darkBGColor : Colors.grey.shade200,
-            gap: 8,
-            onTabChange: _navigateBottomBar,
-            tabs: const [
-              GButton(
-                icon: Icons.home,
-                text: "Home",
-              ),
-              GButton(
-                icon: Icons.map_sharp,
-                text: "Maps",
-              ),
-              GButton(
-                icon: Icons.favorite_border,
-                text: "Favorites",
-              ),
-            ],
-          ),
-        ),
-      ),
+      //               )
     );
   }
 
@@ -183,7 +129,6 @@ class _HomePageState extends State<HomePage> {
     return CustomScrollView(
       slivers: [
         _buildAppBar(),
-
         SliverToBoxAdapter(
           child: _addDateBar(),
         ),
@@ -193,7 +138,7 @@ class _HomePageState extends State<HomePage> {
             decoration: BoxDecoration(
               color:
                   Get.isDarkMode ? context.theme.backgroundColor : Colors.white,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
@@ -239,8 +184,8 @@ class _HomePageState extends State<HomePage> {
         HomePage.s = index;
         // print(HomePage.s);
         Task task = _taskController.taskList[HomePage.s];
-
-        // print(_taskController.taskList[].toJson());
+        String dateSplit = task.date.toString().split(" ")[0];
+        // print(_taskController.taskList[0].toJson());
 
         // print(_taskController.taskList.length);
         // var json = task.toJson();
@@ -272,6 +217,16 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else if (task.date == DateFormat.yMd().format(_selectedDate)) {
+          // if (dateSplit.split("/")[1] == dateNow.split("-")[2]) {
+          DateTime date = DateFormat.jm().parse(task.startTime.toString());
+          var myTime = DateFormat("HH:mm").format(date);
+          // print(myTime);
+          notifyHelper.scheduledNotification(
+            int.parse(myTime.toString().split(":")[0]),
+            int.parse(myTime.toString().split(":")[1]),
+            task,
+          );
+          // }
           return GestureDetector(
             onTap: () {
               _showBottomSheet(
@@ -292,108 +247,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _appBar() {
-    String haridantanggal = DateFormat.d().format(
-          DateTime.now(),
-        ) +
-        ",  " +
-        DateFormat.EEEE().format(
-          DateTime.now(),
-        );
-    return AppBar(
-      title: Row(
-        children: [
-          Text(
-            DateFormat.MMMM().format(
-              DateTime.now(),
-            ),
-            style: titleHeadingStyle,
-          ),
-          Text("  "),
-          AnimatedTextKit(
-            animatedTexts: [
-              TyperAnimatedText(
-                DateFormat.y().format(
-                  DateTime.now(),
-                ),
-                speed: Duration(milliseconds: 800),
-                textStyle: titleBiggerHeadingStyle,
-              ),
-              TyperAnimatedText(
-                haridantanggal,
-                speed: Duration(milliseconds: 200),
-                textStyle: titleBiggerHeadingStyle2,
-              ),
-            ],
-            pause: Duration(milliseconds: 3000),
-            repeatForever: true,
-          ),
-        ],
-      ),
-      elevation: 0,
-      backgroundColor: Get.isDarkMode ? darkBGColor : Colors.grey.shade200,
-      // leading: GestureDetector(
-      //   onTap: () {
-      //     ThemeService().switchTheme();
-      //     notifyHelper.displayNotification(
-      //       title: "Theme Changed",
-      //       body: Get.isDarkMode
-      //           ? "Activated Light Theme"
-      //           : "Activatd Dark Theme",
-      //     );
-      //   },
-      // ),
-
-      //     // notifyHelper.scheduledNotification();
-      //   },
-      //   child: Icon(
-      //     Get.isDarkMode ? Icons.sunny : Icons.nightlight_round_outlined,
-      //     size: 20,
-      //     color: Get.isDarkMode ? Colors.white : Colors.black,
-      //   ),
-      // ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            print("calender");
-
-            //Move to another page using NAVIGATOR
-            // Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //   return SettingPage();
-            // }));
-          },
-          icon: Icon(
-            Icons.calendar_month,
-            color: primaryClr,
-            size: 27,
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            print("settings");
-            Get.to(
-              SettingPage(),
-            );
-            //Move to another page using NAVIGATOR
-            // Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //   return SettingPage();
-            // }));
-          },
-          icon: Icon(
-            Icons.settings,
-            color: primaryClr,
-            size: 27,
-          ),
-        ),
-      ],
-    );
-  }
-
   _buildAppBar() {
     String haridantanggal = DateFormat.d().format(
           DateTime.now(),
         ) +
-        ",  " +
+        ", " +
         DateFormat.EEEE().format(
           DateTime.now(),
         );
@@ -409,7 +267,7 @@ class _HomePageState extends State<HomePage> {
             ),
             style: titleHeadingStyle,
           ),
-          Text("  "),
+          Text(" "),
           AnimatedTextKit(
             animatedTexts: [
               TyperAnimatedText(
@@ -433,15 +291,16 @@ class _HomePageState extends State<HomePage> {
       actions: [
         IconButton(
           onPressed: () {
-            print("calender");
+            Get.to(const MapPage());
 
             //Move to another page using NAVIGATOR
             // Navigator.push(context, MaterialPageRoute(builder: (context) {
             //   return SettingPage();
             // }));
           },
+          // ignore: prefer_const_constructors
           icon: Icon(
-            Icons.calendar_month,
+            Icons.map,
             color: primaryClr,
             size: 27,
           ),
@@ -570,52 +429,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _addBottomNavBar() {
-    return BottomAppBar(
-      color: Get.isDarkMode ? Colors.grey[900] : Colors.white70,
-      elevation: 100,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: Icon(Icons.abc),
-          //   iconSize: 0,
-          // ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.house_rounded,
-            ),
-            color: primaryClr,
-            iconSize: 30,
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.abc,
-            ),
-            iconSize: 0,
-          ),
-          IconButton(
-            onPressed: () {
-              Get.to(
-                MapPage(),
-              );
-            },
-            icon: const Icon(Icons.map_outlined),
-            iconSize: 30,
-          ),
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: Icon(Icons.abc),
-          //   iconSize: 0,
-          // ),
-        ],
-      ),
-    );
-  }
-
   _showTasks() {
     return Expanded(
       child: Container(
@@ -632,8 +445,9 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (_, index) {
                   // print(_taskController.taskList.length);
                   Task task = _taskController.taskList[index];
-                  // print(task.toJson());
-                  // print(dateNow);
+
+                  print(task.toJson());
+                  print(dateNow);
                   // print(datePick);
                   // print(dateNow == datePick);
                   if (task.repeat == 'Daily') {
@@ -646,6 +460,7 @@ class _HomePageState extends State<HomePage> {
                       int.parse(myTime.toString().split(":")[1]),
                       task,
                     );
+
                     return AnimationConfiguration.staggeredList(
                       position: index,
                       child: SlideAnimation(
@@ -709,41 +524,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  Widget _buildTimeLine(Color color) {
-    return Container(
-      child: TimelineTile(
-        alignment: TimelineAlign.manual,
-        lineXY: 0,
-        isFirst: true,
-        indicatorStyle: IndicatorStyle(
-          indicatorXY: 0,
-          width: 15,
-          indicator: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.all(width: 5, color: color),
-            ),
-          ),
-        ),
-        afterLineStyle: LineStyle(thickness: 2, color: color),
-      ),
-    );
-  }
-
-  _getBGClr(int no) {
-    switch (no) {
-      case 0:
-        return primaryClr;
-      case 1:
-        return Colors.yellow.shade900;
-      case 2:
-        return Colors.pink;
-      default:
-        return primaryClr;
-    }
   }
 
   _showBottomSheet(BuildContext context, Task task) {
@@ -1039,5 +819,236 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  _showBottomSheetToTaskPage(BuildContext context) {
+    Get.bottomSheet(
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+      Container(
+        height: MediaQuery.of(context).size.height * 0.2,
+        color: Colors.transparent,
+        child: Container(
+          // padding: EdgeInsets.symmetric(horizontal: 10),
+          // padding: const EdgeInsets.only(top: 4),
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 1,
+              color:
+                  Get.isDarkMode ? Colors.grey.shade500 : Colors.grey.shade800,
+            ),
+            color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+          ),
+          // height: task.isCompleted == 1
+          //     ? MediaQuery.of(context).size.width * 0.24
+          //     : MediaQuery.of(context).size.width * 0.32,
+          // color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 20, top: 15),
+                    child: Text(
+                      "Saved Task",
+                      style: titleStyle2,
+                    ), // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    // margin: EdgeInsets.only(top: 20),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                      Get.to(const AddTaskPage());
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                          color: Get.isDarkMode
+                              ? Colors.grey.shade700
+                              : Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(20)),
+                      margin: EdgeInsets.only(right: 20, top: 15),
+                      child: const Icon(
+                        Icons.arrow_forward,
+                        size: 20,
+                        color: primaryClr,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.12,
+                    width: MediaQuery.of(context).size.height * 0.5,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 5),
+                              child: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.12,
+                                width: MediaQuery.of(context).size.width *
+                                    0.175 *
+                                    _taskController.taskList.length,
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: _taskController.taskList.length,
+                                  itemBuilder: (_, index) {
+                                    Task task = _taskController.taskList[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Get.back();
+
+                                        Get.to(const AddTaskPage());
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 55,
+                                            width: 55,
+                                            decoration: BoxDecoration(
+                                                color: Get.isDarkMode
+                                                    ? Colors.grey.shade700
+                                                    : Colors.grey.shade200,
+                                                borderRadius:
+                                                    BorderRadius.circular(100)),
+                                            margin: const EdgeInsets.only(
+                                                left: 20, top: 15),
+                                            child: Icon(
+                                              task.title == "Wake Up"
+                                                  ? Icons.alarm
+                                                  : task.title == "Sleep"
+                                                      ? Icons
+                                                          .nightlight_round_outlined
+                                                      : Icons
+                                                          .mail_lock_outlined,
+                                              size: 25,
+                                              color: primaryClr,
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 20, top: 10),
+                                            child: Text(
+                                              task.title!,
+                                              style: taskTileTime,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Get.back();
+                                Get.to(const AddTaskPage());
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 55,
+                                    width: 55,
+                                    decoration: BoxDecoration(
+                                        color: Get.isDarkMode
+                                            ? Colors.grey.shade700
+                                            : Colors.grey.shade200,
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    margin: EdgeInsets.only(top: 15),
+                                    child: const Icon(
+                                      Icons.add,
+                                      size: 25,
+                                      color: primaryClr,
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      "New",
+                                      style: taskTileTime,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              // Container(
+              //   height: 6,
+              //   width: 120,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(12),
+              //     color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300],
+              //   ),
+              // ),
+              // Spacer(),
+
+              // task.isCompleted == 1
+              //     ? Container()
+              //     : bottomSheetButton(
+              //         label: "Task Completed",
+              //         onTap: () {
+              //           _taskController.markTaskCompleted(task.id!);
+              //           Get.back();
+              //         },
+              //         clr: primaryClr,
+              //         context: context),
+              // bottomSheetButton(
+              //   label: "Delete Task",
+              //   onTap: () {
+              // _taskController.delete(task);
+
+              //     Get.back();
+              //   },
+              //   clr: Colors.red,
+              //   context: context,
+              // ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+_getBGClr(int no) {
+  switch (no) {
+    case 0:
+      return primaryClr;
+    case 1:
+      return Colors.yellow.shade900;
+    case 2:
+      return Colors.pink;
+    default:
+      return primaryClr;
   }
 }

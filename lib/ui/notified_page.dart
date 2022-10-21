@@ -126,7 +126,11 @@ class _NotifiedPageState extends State<NotifiedPage> {
                   markerId: MarkerId('userMarker'),
                   position: LatLng(latitude1!, longtitude1!),
                   infoWindow: InfoWindow(
-                      title: this.widget.label.toString().split("|")[0]),
+                    title: this.widget.label.toString().split("|")[0],
+                    snippet: this.widget.label.toString().split("|")[2] == ""
+                        ? "None"
+                        : this.widget.label.toString().split("|")[2],
+                  ),
                 )
 
                 //   // _presUnivMarker,

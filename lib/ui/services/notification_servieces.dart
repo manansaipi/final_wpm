@@ -59,7 +59,7 @@ class NotifyHelper {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
-        payload: "${task.title}|" + "${task.mapCoor}|");
+        payload: "${task.title}|" + "${task.mapCoor}|" + "${task.note}|");
   }
 
   tz.TZDateTime _convertTime(int hour, int minute) {
