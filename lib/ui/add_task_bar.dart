@@ -17,7 +17,7 @@ import 'home_page.dart';
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});
   static Marker? userMarker;
-  static var latlng = "";
+  static String latlng = "kosong";
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
 }
@@ -57,6 +57,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
     "Monthly",
   ];
   int _selectedColor = 0;
+  int savedTask = 0;
+  bool statusSwitch = false;
 
   Icon? _icon;
   List<Map<String, IconData>> icon = [
@@ -232,6 +234,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    _sortTime = split.split(":")[0] + "." + split.split(":")[1];
+
     return Scaffold(
       backgroundColor: context.theme.backgroundColor,
       appBar: _appBar(context),
@@ -436,6 +440,20 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               Icons.task_alt_outlined,
                               color: Colors.green,
                             ),
+                    ),
+                    Container(
+                      child: Switch(
+                        // activeTrackColor: Colors.red,
+                        activeColor: _getBGClr(_selectedColor),
+                        value: statusSwitch,
+                        onChanged: (value) {
+                          setState(() {
+                            statusSwitch = !statusSwitch;
+                            savedTask = statusSwitch ? 1 : 0;
+                            print(savedTask);
+                          });
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -630,13 +648,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _appBar(BuildContext context) {
     return AppBar(
       toolbarHeight: 65,
-
       elevation: 2,
       // backgroundColor: context.theme.backgroundColor,
       backgroundColor: Get.isDarkMode ? Colors.grey[800] : Colors.white,
       leading: GestureDetector(
         onTap: () {
-          AddTaskPage.latlng = "";
+          AddTaskPage.latlng = "kosong";
           AddTaskPage.userMarker = null;
           Get.back();
         },
@@ -835,7 +852,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _validateDate() {
-    if (_titleController.text.isNotEmpty || AddTaskPage.latlng != "") {
+    if (_titleController.text.isNotEmpty && AddTaskPage.latlng != "kosong") {
       _addTaskToDb();
       AddTaskPage.latlng = "";
       _taskController.getTask();
@@ -855,7 +872,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ),
         ),
       );
-    } else if (_titleController.text.isEmpty || AddTaskPage.latlng == "") {
+    } else if (_titleController.text.isEmpty ||
+        AddTaskPage.latlng == "kosong") {
+      print(AddTaskPage.latlng);
       Get.snackbar(
         "Required",
         "All fields are required !",
@@ -887,6 +906,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         color: _selectedColor,
         mapCoor: AddTaskPage.latlng,
         isCompleted: 0,
+        savedTask: savedTask,
       ),
     );
     print("button is working and My id is " + "$value");

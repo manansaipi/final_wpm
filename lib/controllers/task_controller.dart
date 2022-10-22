@@ -7,10 +7,12 @@ class TaskController extends GetxController {
   @override
   void onReady() {
     getTask();
+    getTask2();
     super.onReady();
   }
 
   var taskList = <Task>[].obs;
+  var savedTaskList = <Task>[].obs;
 
   Future<int> addTask({Task? task}) async {
     return await DBHelper.insert(task);
@@ -22,6 +24,14 @@ class TaskController extends GetxController {
     print("getTask");
 
     taskList.assignAll(tasks.map((data) => Task.fromJson(data)).toList());
+  }
+
+  void getTask2() async {
+    List<Map<String, dynamic>> tasks = await DBHelper.findSavedTask();
+    // taskList.sort((a, b) => a.startTime!.compareTo(b.startTime));
+    print("getTask2");
+
+    savedTaskList.assignAll(tasks.map((data) => Task.fromJson(data)).toList());
   }
 
   void delete(Task task) {

@@ -153,9 +153,9 @@ class _MapPageState extends State<MapPage> {
     }
     markers.add(
       Marker(
-          markerId: MarkerId('myLocation'),
+          markerId: const MarkerId('myLocation'),
           position: LatLng(HomePage.latitude, HomePage.longtitude),
-          infoWindow: InfoWindow(title: "You"),
+          infoWindow: const InfoWindow(title: "You"),
           icon: userLiveLocation!),
     );
     return Scaffold(
@@ -255,7 +255,7 @@ class _MapPageState extends State<MapPage> {
       title: Text(
         "Maps",
         style: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 20),
+            textStyle: const TextStyle(fontSize: 20),
             color: Get.isDarkMode ? Colors.white : Colors.black),
       ),
     );

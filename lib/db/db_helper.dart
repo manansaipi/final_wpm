@@ -25,7 +25,7 @@ class DBHelper {
           "startTime STRING, endTime STRING, $_sortTime STRING,"
           "remind INTEGER, repeat STRING, "
           "color INTEGER, mapCoor STRING,"
-          "isCompleted INTEGER) ",
+          "isCompleted INTEGER, savedTask INTEGER) ",
         );
       });
     } catch (e) {
@@ -61,5 +61,9 @@ class DBHelper {
     SET isCompleted = ?
     WHERE id =?
 ''', [0, id]);
+  }
+
+  static Future<List<Map<String, dynamic>>> findSavedTask() async {
+    return await _db!.query(_tableName, where: 'savedTask=?', whereArgs: [1]);
   }
 }

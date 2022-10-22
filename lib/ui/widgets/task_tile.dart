@@ -444,8 +444,12 @@ class TaskTile extends StatelessWidget {
                                     textStyle: TextStyle(
                                       fontSize: 18,
                                       color: Get.isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
+                                          ? task?.isCompleted == 1
+                                              ? Colors.grey.shade400
+                                              : Colors.white
+                                          : task?.isCompleted == 1
+                                              ? Colors.grey.shade500
+                                              : Colors.black,
                                       fontWeight: FontWeight.bold,
                                       decoration: task?.isCompleted == 1
                                           ? TextDecoration.lineThrough

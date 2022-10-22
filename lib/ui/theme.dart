@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,7 +41,7 @@ TextStyle get titleStyle {
 
 TextStyle get deleteTitleStyle {
   return GoogleFonts.lato(
-    textStyle: TextStyle(
+    textStyle: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Color.fromARGB(255, 255, 0, 0)),
@@ -70,7 +69,7 @@ TextStyle get headingStyle {
 
 TextStyle get biggerHeadingStyle {
   return GoogleFonts.lato(
-    textStyle: TextStyle(
+    textStyle: const TextStyle(
       fontSize: 25,
       fontWeight: FontWeight.bold,
       color: primaryClr,
@@ -120,7 +119,7 @@ TextStyle get inputFieldStyle {
 
 TextStyle get titleBiggerHeadingStyle {
   return GoogleFonts.lato(
-    textStyle: TextStyle(
+    textStyle: const TextStyle(
       fontSize: 30,
       fontWeight: FontWeight.bold,
       color: primaryClr,
@@ -130,7 +129,7 @@ TextStyle get titleBiggerHeadingStyle {
 
 TextStyle get titleBiggerHeadingStyle2 {
   return GoogleFonts.lato(
-    textStyle: TextStyle(
+    textStyle: const TextStyle(
       fontSize: 28,
       fontWeight: FontWeight.bold,
       color: primaryClr,

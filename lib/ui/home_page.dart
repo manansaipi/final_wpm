@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:final_wpm/controllers/task_controller.dart';
@@ -13,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 import '../models/location_service.dart';
 import '../models/task.dart';
@@ -77,10 +74,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: MyCircleButton(
         label: "+",
         onTap: () {
-          _showBottomSheetToTaskPage(
-            context,
-          );
-          // Get.to(AddTaskPage());
+          Get.to(const AddTaskPage());
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -251,8 +245,8 @@ class _HomePageState extends State<HomePage> {
     String haridantanggal = DateFormat.d().format(
           DateTime.now(),
         ) +
-        ", " +
-        DateFormat.EEEE().format(
+        ",  " +
+        DateFormat.y().format(
           DateTime.now(),
         );
     return SliverAppBar(
@@ -267,23 +261,23 @@ class _HomePageState extends State<HomePage> {
             ),
             style: titleHeadingStyle,
           ),
-          Text(" "),
+          const Text("  "),
           AnimatedTextKit(
             animatedTexts: [
               TyperAnimatedText(
-                DateFormat.y().format(
-                  DateTime.now(),
-                ),
-                speed: Duration(milliseconds: 800),
+                haridantanggal,
+                speed: const Duration(milliseconds: 200),
                 textStyle: titleBiggerHeadingStyle,
               ),
               TyperAnimatedText(
-                haridantanggal,
-                speed: Duration(milliseconds: 200),
+                DateFormat.EEEE().format(
+                  DateTime.now(),
+                ),
+                speed: const Duration(milliseconds: 500),
                 textStyle: titleBiggerHeadingStyle2,
               ),
             ],
-            pause: Duration(milliseconds: 3000),
+            pause: const Duration(milliseconds: 3000),
             repeatForever: true,
           ),
         ],
@@ -307,16 +301,31 @@ class _HomePageState extends State<HomePage> {
         ),
         IconButton(
           onPressed: () {
+            _taskController.getTask2();
+            setState(() {});
+            _showBottomSheetToTaskPage(
+              context,
+            );
+          },
+          // ignore: prefer_const_constructors
+          icon: Icon(
+            Icons.save_as_outlined,
+            color: primaryClr,
+            size: 27,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
             print("settings");
             Get.to(
-              SettingPage(),
+              const SettingPage(),
             );
             //Move to another page using NAVIGATOR
             // Navigator.push(context, MaterialPageRoute(builder: (context) {
             //   return SettingPage();
             // }));
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.settings,
             color: primaryClr,
             size: 27,
@@ -332,47 +341,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _addTaskBar() {
-    return Container(
-      margin: const EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 5,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  DateFormat.yMEd().format(
-                    DateTime.now(),
-                  ),
-                  style: subHeadingStyle,
-                ),
-                Text(
-                  "Today",
-                  style: headingStyle,
-                ),
-              ],
-            ),
-          ),
-          MyButton(
-            label: "Add Task",
-            onTap: () async {
-              await Get.to(
-                AddTaskPage(),
-              );
-              _taskController.getTask();
-            },
-          )
-        ],
-      ),
-    );
-  }
-
   _addDateBar() {
     return Container(
       decoration: BoxDecoration(
@@ -380,7 +348,7 @@ class _HomePageState extends State<HomePage> {
       ),
       // margin: const EdgeInsets.only(left: 15),
       child: Container(
-        margin: EdgeInsets.only(left: 10, right: 15, bottom: 10),
+        margin: const EdgeInsets.only(left: 10, right: 15, bottom: 10),
         child: DatePicker(
           DateTime.now(),
           height: 80,
@@ -433,13 +401,13 @@ class _HomePageState extends State<HomePage> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             color: context.theme.backgroundColor),
         child: Obx(
           () {
             return Container(
-              margin: EdgeInsets.only(top: 15),
+              margin: const EdgeInsets.only(top: 15),
               child: ListView.builder(
                 itemCount: _taskController.taskList.length,
                 itemBuilder: (_, index) {
@@ -533,8 +501,8 @@ class _HomePageState extends State<HomePage> {
         height: 280,
         color: Colors.transparent,
         child: Container(
-          margin: EdgeInsets.all(20),
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          margin: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           // padding: const EdgeInsets.only(top: 4),
           decoration: BoxDecoration(
             border: Border.all(
@@ -543,7 +511,7 @@ class _HomePageState extends State<HomePage> {
                   Get.isDarkMode ? Colors.grey.shade500 : Colors.grey.shade800,
             ),
             color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(30),
             ),
           ),
@@ -554,7 +522,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(left: 10),
+                margin: const EdgeInsets.only(left: 10),
                 height: 80,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -563,7 +531,7 @@ class _HomePageState extends State<HomePage> {
                         ? Icon(Icons.alarm, color: _getBGClr(task.color ?? 0))
                         : Icon(Icons.mail_outline,
                             color: _getBGClr(task.color ?? 0)),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     Column(
@@ -576,14 +544,14 @@ class _HomePageState extends State<HomePage> {
                               task.date ?? "",
                               style: taskTileTime,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Text(
                               "${task.startTime} - ${task.endTime}",
                               style: taskTileTime,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 7,
                             ),
                             Icon(
@@ -652,7 +620,7 @@ class _HomePageState extends State<HomePage> {
                           snackPosition: SnackPosition.BOTTOM,
                           backgroundColor: Colors.red,
                           icon: Container(
-                            margin: EdgeInsets.only(left: 7),
+                            margin: const EdgeInsets.only(left: 7),
                             child: const Icon(
                               Icons.delete_forever_outlined,
                               color: Colors.white,
@@ -691,14 +659,14 @@ class _HomePageState extends State<HomePage> {
                                     ? Colors.green
                                     : Colors.grey,
                                 icon: Container(
-                                  margin: EdgeInsets.only(left: 7),
+                                  margin: const EdgeInsets.only(left: 7),
                                   child: const Icon(
                                     Icons.task_alt_sharp,
                                     color: Colors.white,
                                   ),
                                 ),
                               )
-                            : SizedBox();
+                            : const SizedBox();
                         task.isCompleted == 0
                             ? _taskController.markTaskCompleted(task.id!)
                             : _taskController.markTaskUnCompleted(task.id!);
@@ -727,7 +695,7 @@ class _HomePageState extends State<HomePage> {
               //   clr: Colors.red,
               //   context: context,
               // ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               bottomSheetButton(
@@ -739,7 +707,7 @@ class _HomePageState extends State<HomePage> {
                 isClose: true,
                 context: context,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
             ],
@@ -759,7 +727,7 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
         height: 40,
         width: MediaQuery.of(context).size.width * 0.9,
         decoration: BoxDecoration(
@@ -797,7 +765,7 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
         height: 70,
         width: 105,
         decoration: BoxDecoration(
@@ -827,212 +795,220 @@ class _HomePageState extends State<HomePage> {
       Container(
         height: MediaQuery.of(context).size.height * 0.2,
         color: Colors.transparent,
-        child: Container(
-          // padding: EdgeInsets.symmetric(horizontal: 10),
-          // padding: const EdgeInsets.only(top: 4),
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color:
-                  Get.isDarkMode ? Colors.grey.shade500 : Colors.grey.shade800,
-            ),
-            color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          ),
-          // height: task.isCompleted == 1
-          //     ? MediaQuery.of(context).size.width * 0.24
-          //     : MediaQuery.of(context).size.width * 0.32,
-          // color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 20, top: 15),
-                    child: Text(
-                      "Saved Task",
-                      style: titleStyle2,
-                    ), // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    // margin: EdgeInsets.only(top: 20),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.back();
-                      Get.to(const AddTaskPage());
-                    },
-                    child: Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                          color: Get.isDarkMode
-                              ? Colors.grey.shade700
-                              : Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(20)),
-                      margin: EdgeInsets.only(right: 20, top: 15),
-                      child: const Icon(
-                        Icons.arrow_forward,
-                        size: 20,
-                        color: primaryClr,
-                      ),
-                    ),
-                  )
-                ],
+        child: Obx(
+          () => Container(
+            // padding: EdgeInsets.symmetric(horizontal: 10),
+            // padding: const EdgeInsets.only(top: 4),
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 1,
+                color: Get.isDarkMode
+                    ? Colors.grey.shade500
+                    : Colors.grey.shade800,
               ),
-              Row(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.12,
-                    width: MediaQuery.of(context).size.height * 0.5,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 5),
-                              child: SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.12,
-                                width: MediaQuery.of(context).size.width *
-                                    0.175 *
-                                    _taskController.taskList.length,
-                                child: ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: _taskController.taskList.length,
-                                  itemBuilder: (_, index) {
-                                    Task task = _taskController.taskList[index];
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Get.back();
+              color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            ),
+            // height: task.isCompleted == 1
+            //     ? MediaQuery.of(context).size.width * 0.24
+            //     : MediaQuery.of(context).size.width * 0.32,
+            // color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, top: 15),
+                      child: Text(
+                        "Saved Task",
+                        style: titleStyle2,
+                      ), // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      // margin: EdgeInsets.only(top: 20),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.back();
+                        Get.to(const AddTaskPage());
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                            color: Get.isDarkMode
+                                ? Colors.grey.shade700
+                                : Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(20)),
+                        margin: const EdgeInsets.only(right: 20, top: 15),
+                        child: const Icon(
+                          Icons.arrow_forward,
+                          size: 20,
+                          color: primaryClr,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.12,
+                      width: MediaQuery.of(context).size.height * 0.5,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(left: 5),
+                                child: SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.12,
+                                  width: MediaQuery.of(context).size.width *
+                                      0.175 *
+                                      _taskController.savedTaskList.length,
+                                  child: ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount:
+                                        _taskController.savedTaskList.length,
+                                    itemBuilder: (_, index) {
+                                      Task task =
+                                          _taskController.savedTaskList[index];
 
-                                        Get.to(const AddTaskPage());
-                                      },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            height: 55,
-                                            width: 55,
-                                            decoration: BoxDecoration(
-                                                color: Get.isDarkMode
-                                                    ? Colors.grey.shade700
-                                                    : Colors.grey.shade200,
-                                                borderRadius:
-                                                    BorderRadius.circular(100)),
-                                            margin: const EdgeInsets.only(
-                                                left: 20, top: 15),
-                                            child: Icon(
-                                              task.title == "Wake Up"
-                                                  ? Icons.alarm
-                                                  : task.title == "Sleep"
-                                                      ? Icons
-                                                          .nightlight_round_outlined
-                                                      : Icons
-                                                          .mail_lock_outlined,
-                                              size: 25,
-                                              color: primaryClr,
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Get.back();
+
+                                          Get.to(const AddTaskPage());
+                                        },
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              height: 55,
+                                              width: 55,
+                                              decoration: BoxDecoration(
+                                                  color: Get.isDarkMode
+                                                      ? Colors.grey.shade700
+                                                      : Colors.grey.shade200,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100)),
+                                              margin: const EdgeInsets.only(
+                                                  left: 20, top: 15),
+                                              child: Icon(
+                                                task.title == "Wake Up"
+                                                    ? Icons.alarm
+                                                    : task.title == "Sleep"
+                                                        ? Icons
+                                                            .nightlight_round_outlined
+                                                        : Icons
+                                                            .mail_lock_outlined,
+                                                size: 25,
+                                                color: primaryClr,
+                                              ),
                                             ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                left: 20, top: 10),
-                                            child: Text(
-                                              task.title!,
-                                              style: taskTileTime,
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  left: 20, top: 10),
+                                              child: Text(
+                                                task.title!,
+                                                style: taskTileTime,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Get.back();
-                                Get.to(const AddTaskPage());
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 55,
-                                    width: 55,
-                                    decoration: BoxDecoration(
-                                        color: Get.isDarkMode
-                                            ? Colors.grey.shade700
-                                            : Colors.grey.shade200,
-                                        borderRadius:
-                                            BorderRadius.circular(50)),
-                                    margin: EdgeInsets.only(top: 15),
-                                    child: const Icon(
-                                      Icons.add,
-                                      size: 25,
-                                      color: primaryClr,
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      "New",
-                                      style: taskTileTime,
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(
+                                width: 20,
                               ),
-                            )
-                          ],
-                        ),
-                      ],
+                              GestureDetector(
+                                onTap: () {
+                                  Get.back();
+                                  Get.to(const AddTaskPage());
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 55,
+                                      width: 55,
+                                      decoration: BoxDecoration(
+                                          color: Get.isDarkMode
+                                              ? Colors.grey.shade700
+                                              : Colors.grey.shade200,
+                                          borderRadius:
+                                              BorderRadius.circular(50)),
+                                      margin: const EdgeInsets.only(top: 15),
+                                      child: const Icon(
+                                        Icons.add,
+                                        size: 25,
+                                        color: primaryClr,
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        "New",
+                                        style: taskTileTime,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
-              // Container(
-              //   height: 6,
-              //   width: 120,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(12),
-              //     color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300],
-              //   ),
-              // ),
-              // Spacer(),
+                // Container(
+                //   height: 6,
+                //   width: 120,
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(12),
+                //     color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300],
+                //   ),
+                // ),
+                // Spacer(),
 
-              // task.isCompleted == 1
-              //     ? Container()
-              //     : bottomSheetButton(
-              //         label: "Task Completed",
-              //         onTap: () {
-              //           _taskController.markTaskCompleted(task.id!);
-              //           Get.back();
-              //         },
-              //         clr: primaryClr,
-              //         context: context),
-              // bottomSheetButton(
-              //   label: "Delete Task",
-              //   onTap: () {
-              // _taskController.delete(task);
+                // task.isCompleted == 1
+                //     ? Container()
+                //     : bottomSheetButton(
+                //         label: "Task Completed",
+                //         onTap: () {
+                //           _taskController.markTaskCompleted(task.id!);
+                //           Get.back();
+                //         },
+                //         clr: primaryClr,
+                //         context: context),
+                // bottomSheetButton(
+                //   label: "Delete Task",
+                //   onTap: () {
+                // _taskController.delete(task);
 
-              //     Get.back();
-              //   },
-              //   clr: Colors.red,
-              //   context: context,
-              // ),
-            ],
+                //     Get.back();
+                //   },
+                //   clr: Colors.red,
+                //   context: context,
+                // ),
+              ],
+            ),
           ),
         ),
       ),

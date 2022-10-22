@@ -1,20 +1,10 @@
-import 'package:date_picker_timeline/date_picker_timeline.dart';
-
-import 'package:final_wpm/ui/map_page.dart';
-import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/notification_servieces.dart';
-import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/theme.dart';
-import 'package:final_wpm/ui/widgets/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import '';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -50,23 +40,18 @@ class _SettingPageState extends State<SettingPage> {
           backgroundColor:
               Get.isDarkMode ? Colors.grey.shade300 : Colors.grey.shade700,
           icon: Container(
-            margin: EdgeInsets.only(left: 7),
+            margin: const EdgeInsets.only(left: 7),
             child: Get.isDarkMode
                 ? const Icon(
                     Icons.sunny,
                     color: Colors.black,
                   )
-                : Icon(
+                : const Icon(
                     Icons.nightlight_round_outlined,
                     color: Colors.white,
                   ),
           ),
         );
-        // notifyHelper.displayNotification(
-        //   title: "Theme Changed",
-        //   body:
-        //       Get.isDarkMode ? "Activated Light Theme" : "Activatd Dark Theme",
-        // );
       },
     );
   }
@@ -100,7 +85,7 @@ class _SettingPageState extends State<SettingPage> {
       title: Text(
         "Settings",
         style: GoogleFonts.lato(
-            textStyle: TextStyle(fontSize: 20),
+            textStyle: const TextStyle(fontSize: 20),
             color: val1 ? Colors.white : Colors.black),
       ),
     );
