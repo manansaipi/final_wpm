@@ -7,7 +7,7 @@ class TaskController extends GetxController {
   @override
   void onReady() {
     getTask();
-    getTask2();
+
     super.onReady();
   }
 
@@ -20,22 +20,22 @@ class TaskController extends GetxController {
 
   void getTask() async {
     List<Map<String, dynamic>> tasks = await DBHelper.query();
+    List<Map<String, dynamic>> savedTasks = await DBHelper.findSavedTask();
     // taskList.sort((a, b) => a.startTime!.compareTo(b.startTime));
     print("getTask");
 
     taskList.assignAll(tasks.map((data) => Task.fromJson(data)).toList());
-  }
-
-  void getTask2() async {
-    List<Map<String, dynamic>> tasks = await DBHelper.findSavedTask();
-    // taskList.sort((a, b) => a.startTime!.compareTo(b.startTime));
-    print("getTask2");
-
-    savedTaskList.assignAll(tasks.map((data) => Task.fromJson(data)).toList());
+    savedTaskList
+        .assignAll(savedTasks.map((data) => Task.fromJson(data)).toList());
   }
 
   void delete(Task task) {
     DBHelper.delete(task);
+    getTask();
+  }
+
+  void autoDelete(Task task, String date) {
+    DBHelper.autoDelete(task, date);
     getTask();
   }
 

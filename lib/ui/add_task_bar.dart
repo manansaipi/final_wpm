@@ -32,7 +32,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   var split = DateTime.now().toString().split(" ")[1];
   var _sortTime;
-  int _selectedRemind = 0;
   List<int> remindList = [
     0,
     5,
@@ -233,9 +232,15 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
     _sortTime = split.split(":")[0] + "." + split.split(":")[1];
 
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.theme.backgroundColor,
       appBar: _appBar(context),
@@ -429,7 +434,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       width: 15,
                     ),
                     SizedBox(
-                      child: AddTaskPage.latlng == ""
+                      child: AddTaskPage.latlng == "kosong"
                           ? Icon(
                               Icons.circle_outlined,
                               color: Get.isDarkMode
@@ -458,46 +463,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 5),
-                child: MyInputField(
-                  title: "When Notification?",
-                  hint: _selectedRemind != 0
-                      ? "$_selectedRemind minutes early"
-                      : "At that time ($_selectedRemind minutes )",
-                  widget: DropdownButton(
-                    icon: Container(
-                      margin: EdgeInsets.only(right: 5, top: 4),
-                      child: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: _getBGClr(_selectedColor),
-                        size: 30,
-                      ),
-                    ),
-                    // iconSize: 20,
-                    underline: Container(height: 0),
-                    elevation: 4,
-                    style: subTitleStyle,
-                    items: remindList.map<DropdownMenuItem<String>>(
-                      (int value) {
-                        return DropdownMenuItem<String>(
-                          value: value.toString(),
-                          child: Text(
-                            value.toString(),
-                          ),
-                        );
-                      },
-                    ).toList(),
-                    onChanged: (String? newValue) {
-                      setState(
-                        () {
-                          _selectedRemind = int.parse(newValue!);
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
+
               Container(
                 width: MediaQuery.of(context).size.width * 0.87,
                 height: 60,
@@ -854,7 +820,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _validateDate() {
     if (_titleController.text.isNotEmpty && AddTaskPage.latlng != "kosong") {
       _addTaskToDb();
-      AddTaskPage.latlng = "";
+      AddTaskPage.latlng = "kosong";
       _taskController.getTask();
       AddTaskPage.userMarker = null;
       Get.back();
@@ -901,7 +867,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
         startTime: _startTime,
         endTime: _endTime,
         sortTime: _sortTime,
-        remind: _selectedRemind,
         repeat: _fixSelectedRepeat,
         color: _selectedColor,
         mapCoor: AddTaskPage.latlng,

@@ -80,7 +80,7 @@ TextStyle get biggerHeadingStyle {
 TextStyle get titleHeadingStyle {
   return GoogleFonts.lato(
     textStyle: TextStyle(
-      fontSize: 27,
+      fontSize: 23,
       fontWeight: FontWeight.bold,
       color: Get.isDarkMode ? Colors.white : Colors.grey.shade700,
     ),
@@ -130,7 +130,7 @@ TextStyle get titleBiggerHeadingStyle {
 TextStyle get titleBiggerHeadingStyle2 {
   return GoogleFonts.lato(
     textStyle: const TextStyle(
-      fontSize: 28,
+      fontSize: 25,
       fontWeight: FontWeight.bold,
       color: primaryClr,
     ),

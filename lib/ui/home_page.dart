@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:final_wpm/controllers/task_controller.dart';
@@ -22,6 +24,8 @@ class HomePage extends StatefulWidget {
   static var s;
   static double latitude = 0;
   static double longtitude = 0;
+  static var add = 1;
+  static var add2 = 0;
   static LocationService locationService = LocationService();
   const HomePage({super.key, this.task});
 
@@ -50,6 +54,7 @@ class _HomePageState extends State<HomePage> {
     //TODO: implement initstate
 
     super.initState();
+
     HomePage.locationService.locationStream.listen((userLocation) {
       setState(() {
         HomePage.latitude = userLocation.latitude;
@@ -176,17 +181,44 @@ class _HomePageState extends State<HomePage> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((_, index) {
         HomePage.s = index;
+
         // print(HomePage.s);
         Task task = _taskController.taskList[HomePage.s];
         String dateSplit = task.date.toString().split(" ")[0];
-        // print(_taskController.taskList[0].toJson());
+        int takeDateFromDB = int.parse(task.date.toString().split("/")[1]);
+        int takeMonthFromDB = int.parse(task.date.toString().split("/")[0]);
+        int takeDateFromDateNow = int.parse(dateNow.toString().split("-")[2]);
+        int takeMonthFromDateNow = int.parse(dateNow.toString().split("-")[1]);
 
+        if (takeDateFromDB < takeDateFromDateNow &&
+                takeMonthFromDateNow >= takeMonthFromDB ||
+            takeDateFromDB > takeDateFromDateNow &&
+                takeMonthFromDateNow > takeMonthFromDB) {
+          _taskController.autoDelete(task, task.date.toString());
+          print("autoDelete");
+        }
+
+        var array = [];
+        // Timer(Duration(seconds: 2), () => print(HomePage.array[index]));
+        void addF() {
+          // array.add(HomePage.add);
+          HomePage.add += 1;
+
+          // print(array);
+          HomePage.add2 += 1;
+        }
+        // print(dateNow);
+        // print(takeDate);
+        // print(_taskController.taskList[index].toJson());
+        // print(task.date);
         // print(_taskController.taskList.length);
         // var json = task.toJson();
         // print(task.toJson());
         // print(_taskController.taskList);
 
         if (task.repeat == 'Daily') {
+          addF();
+
           DateTime date = DateFormat.jm().parse(task.startTime.toString());
           var myTime = DateFormat("HH:mm").format(date);
           // print(myTim\);
@@ -211,6 +243,8 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else if (task.date == DateFormat.yMd().format(_selectedDate)) {
+          addF();
+
           // if (dateSplit.split("/")[1] == dateNow.split("-")[2]) {
           DateTime date = DateFormat.jm().parse(task.startTime.toString());
           var myTime = DateFormat("HH:mm").format(date);
@@ -301,7 +335,7 @@ class _HomePageState extends State<HomePage> {
         ),
         IconButton(
           onPressed: () {
-            _taskController.getTask2();
+            _taskController.getTask();
             setState(() {});
             _showBottomSheetToTaskPage(
               context,

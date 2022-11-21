@@ -22,8 +22,8 @@ class DBHelper {
           "CREATE TABLE $_tableName("
           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
           "title STRING, note TEXT, date STRING,  "
-          "startTime STRING, endTime STRING, $_sortTime STRING,"
-          "remind INTEGER, repeat STRING, "
+          "startTime STRING, endTime STRING, $_sortTime INTEGER,"
+          "repeat STRING, "
           "color INTEGER, mapCoor STRING,"
           "isCompleted INTEGER, savedTask INTEGER) ",
         );
@@ -43,8 +43,16 @@ class DBHelper {
     return await _db!.query(_tableName, orderBy: _sortTime);
   }
 
+  static Future<List<Map<String, dynamic>>> findSavedTask() async {
+    return await _db!.query(_tableName, where: 'savedTask=?', whereArgs: [1]);
+  }
+
   static delete(Task task) async {
     return await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
+  }
+
+  static autoDelete(Task task, String date) async {
+    return await _db!.delete(_tableName, where: 'date=?', whereArgs: [date]);
   }
 
   static updateCompleted(int id) async {
@@ -61,9 +69,5 @@ class DBHelper {
     SET isCompleted = ?
     WHERE id =?
 ''', [0, id]);
-  }
-
-  static Future<List<Map<String, dynamic>>> findSavedTask() async {
-    return await _db!.query(_tableName, where: 'savedTask=?', whereArgs: [1]);
   }
 }

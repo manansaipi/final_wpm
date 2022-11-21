@@ -69,6 +69,10 @@ class TaskTile extends StatelessWidget {
         (double.parse(fixEndNumber) - double.parse(fixStartNumber));
     late var findHeight = (int.parse(fixEndNumber.split(".")[0]) -
         int.parse(fixStartNumber.split(".")[0]));
+    if (findHeight2 < 0.0) {
+      findHeight2 += 24;
+      findHeight += 24;
+    }
     late var hei = findHeight2 == 0
         ? 38
         : findHeight2 <= 1
@@ -76,9 +80,18 @@ class TaskTile extends StatelessWidget {
             : ((findHeight + 7) * 5) * 1.7;
     late var splitFixET = fixEndNumber.split(".")[0];
     late var splitFixST = fixStartNumber.split(".")[0];
-
     double findTimeDistance =
         double.parse(fixEndNumber) - double.parse(fixStartNumber);
+    String splitMinuteST = fixStartNumber.split(".")[1];
+    String splitMinuteET = fixEndNumber.split(".")[1];
+    if (int.parse(splitMinuteET) - int.parse(splitMinuteST) < 0) {
+      findTimeDistance -= 0.40;
+    }
+
+    if (findTimeDistance < 0.0) {
+      findTimeDistance = findTimeDistance + 24;
+    }
+
     String toPrecission = findTimeDistance.toStringAsFixed(2);
     String splitTimeDistanceHour = toPrecission.toString().split(".")[0];
 
@@ -100,7 +113,7 @@ class TaskTile extends StatelessWidget {
       if (int.parse(splitTimeDistanceMinute) > 60) {
         int addHour = int.parse(splitTimeDistanceHour) + 1;
         int substractionMinute = int.parse(splitTimeDistanceMinute) - 60;
-
+        // print("83");
         timeDistance = " ( $addHour hr, $substractionMinute min ) ";
       } else {
         if (splitTimeDistanceMinute == "00") {
@@ -150,7 +163,11 @@ class TaskTile extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            height: hei >= 200 ? 200 : hei.toDouble() + 140,
+            height: hei >= 230
+                ? 230
+                : hei.toDouble() + 140 >= 230
+                    ? 230
+                    : hei.toDouble() + 140,
 
             // height: (int.parse(fixEndNumber.split(".")[0]) -
             //         int.parse(fixStartNumber.split(".")[0])) *
