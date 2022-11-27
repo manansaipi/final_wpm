@@ -14,9 +14,8 @@ import 'map_page.dart';
 
 class NotifiedPage extends StatefulWidget {
   final String? label;
-  final Task? task;
 
-  const NotifiedPage({super.key, required this.label, this.task});
+  const NotifiedPage({super.key, required this.label});
 
   @override
   State<NotifiedPage> createState() => _NotifiedPageState();

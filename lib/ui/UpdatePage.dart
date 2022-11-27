@@ -12,25 +12,27 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
+import 'add_task_bar.dart';
 import 'home_page.dart';
 
-class AddTaskPage extends StatefulWidget {
-  const AddTaskPage({super.key});
+class UpdatePage extends StatefulWidget {
+  final Task task;
+  UpdatePage({super.key, required this.task});
   static Marker? userMarker;
   static String latlng = "kosong";
   @override
-  State<AddTaskPage> createState() => _AddTaskPageState();
+  State<UpdatePage> createState() => _UpdatePageState();
 }
 
-class _AddTaskPageState extends State<AddTaskPage> {
+class _UpdatePageState extends State<UpdatePage> {
   final TaskController _taskController = Get.put(TaskController());
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _noteController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   String _endTime = "9:30 PM";
 
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
-  var split = DateTime.now().toString().split(" ")[1];
+  var splitTime = DateTime.now().toString().split(" ")[1];
   var _sortTime;
   List<int> remindList = [
     0,
@@ -48,7 +50,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   String _fixSelectedRepeat = "None";
-  int _selectedRepeat = 0;
+  late int _selectedRepeat;
   List<String> repeatList = [
     "None",
     "Daily",
@@ -110,7 +112,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           ),
           // height: task.isCompleted == 1
-          //     ? MediaQuery.of(context).size.width * 0.24gest
+          //     ? MediaQuery.of(context).size.width * 0.24
           //     : MediaQuery.of(context).size.width * 0.32,
           // color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
           child: Column(
@@ -129,8 +131,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         icon: BitmapDescriptor.defaultMarkerWithHue(
                             BitmapDescriptor.hueRed),
                       );
-                      AddTaskPage.userMarker = newMarker;
-                      AddTaskPage.latlng = latLng.toString();
+                      UpdatePage.userMarker = newMarker;
+                      UpdatePage.latlng = latLng.toString();
                       print(latLng);
                       setState(() {});
                       Get.back();
@@ -184,7 +186,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         icon: BitmapDescriptor.defaultMarkerWithHue(
                             BitmapDescriptor.hueBlue),
                       ),
-                      AddTaskPage.userMarker ??
+                      UpdatePage.userMarker ??
                           const Marker(markerId: MarkerId('value')),
                       // _presUnivMarker,
                     },
@@ -244,9 +246,39 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    _sortTime = split.split(":")[0] + "." + split.split(":")[1];
     createMarker();
+    // TODO: implement initState
+    _sortTime = splitTime.split(":")[0] + "." + splitTime.split(":")[1];
+    _titleController.text = widget.task.title!;
+    _noteController.text = widget.task.note!;
+    print(DateTime.now());
+    String date1 = widget.task.date!.split('/')[0];
+    if (int.parse(date1) < 10) {
+      date1 = ('0' + date1);
+    }
+    String date2 = widget.task.date!.split('/')[1];
+    if (int.parse(date2) < 10) {
+      date2 = ('0' + date2);
+    }
+    String date3 = widget.task.date!.split('/')[2];
+    String fixDate = (date3 + "-" + date1 + "-" + date2);
+    DateTime date = DateTime.parse(fixDate);
+    String dateFormatted = DateFormat('yyyy-MM-dd').format(date);
+    _selectedDate = DateTime.parse(dateFormatted);
+    _endTime = widget.task.endTime!;
+    statusSwitch = widget.task.savedTask == 1 ? true : false;
+    _selectedRepeat = widget.task.repeat == "Once"
+        ? 0
+        : widget.task.repeat == "Daily"
+            ? 1
+            : widget.task.repeat == "Weekly"
+                ? 2
+                : 3;
+    _selectedColor = widget.task.color == 0
+        ? 0
+        : widget.task.color == 1
+            ? 1
+            : 2;
     super.initState();
   }
 
@@ -257,7 +289,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       appBar: _appBar(context),
       floatingActionButton: MyAddTaskButton(
         myColor: _getBGClr(_selectedColor),
-        label: "Create Task",
+        label: "Edit Task",
         onTap: () {
           _validateDate();
         },
@@ -309,7 +341,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       margin: EdgeInsets.only(top: 5),
                       child: MyInputField(
                         title: "Start Time",
-                        hint: _startTime,
+                        hint: widget.task.startTime!,
                         widget: IconButton(
                             onPressed: () {
                               print(_sortTime);
@@ -329,7 +361,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       margin: EdgeInsets.only(top: 5),
                       child: MyInputField(
                         title: "End Time",
-                        hint: _endTime,
+                        hint: widget.task.endTime!,
                         widget: IconButton(
                           onPressed: () {
                             _getTimeFromUsers(isStartTime: false);
@@ -398,7 +430,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
               //         //     icon: BitmapDescriptor.defaultMarkerWithHue(
               //         //         BitmapDescriptor.hueBlue),
               //         //   ),
-              //         //   AddTaskPage.userMarker ??
+              //         //   UpdatePage.userMarker ??
               //         //       Marker(markerId: MarkerId('value')),
               //         //   // _presUnivMarker,
               //         // },
@@ -464,7 +496,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                     ),
                     SizedBox(
-                      child: AddTaskPage.latlng == "kosong"
+                      width: 15,
+                    ),
+                    SizedBox(
+                      child: UpdatePage.latlng == "kosong"
                           ? Icon(
                               Icons.circle_outlined,
                               color: Get.isDarkMode
@@ -505,6 +540,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: GNav(
+                    selectedIndex: widget.task.repeat == "Once"
+                        ? 0
+                        : widget.task.repeat == "Daily"
+                            ? 1
+                            : widget.task.repeat == "Weekly"
+                                ? 2
+                                : 3,
                     tabBorderRadius: 20,
                     tabBackgroundColor: _getBGClr(_selectedColor),
                     color: Colors.grey,
@@ -649,8 +691,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
       backgroundColor: Get.isDarkMode ? Colors.grey[800] : Colors.white,
       leading: GestureDetector(
         onTap: () {
-          AddTaskPage.latlng = "kosong";
-          AddTaskPage.userMarker = null;
+          UpdatePage.latlng = "kosong";
+          UpdatePage.userMarker = null;
           Get.back();
         },
         child: Icon(
@@ -663,7 +705,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       title: Row(
         children: [
           Text(
-            "Create",
+            "Edit",
             style: headingStyle,
           ),
           Text(
@@ -731,7 +773,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _getDateFromUsers() async {
     DateTime? _pickerDate = await showDatePicker(
       context: (context),
-      initialDate: DateTime.now(),
+      initialDate: _selectedDate,
       firstDate: DateTime(2015),
       lastDate: DateTime(2030),
     );
@@ -797,8 +839,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
         initialEntryMode: TimePickerEntryMode.input,
         context: context,
         initialTime: TimeOfDay(
-          hour: int.parse(_startTime.split(":")[0]),
-          minute: int.parse(_startTime.split(":")[1].split(" ")[0]),
+          hour: int.parse(widget.task.startTime!.split(":")[0]),
+          minute: int.parse(widget.task.startTime!.split(":")[1].split(" ")[0]),
         ));
   }
 
@@ -848,11 +890,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _validateDate() {
-    if (_titleController.text.isNotEmpty && AddTaskPage.latlng != "kosong") {
+    if (_titleController.text.isNotEmpty && UpdatePage.latlng != "kosong") {
       _addTaskToDb();
-      AddTaskPage.latlng = "kosong";
+      UpdatePage.latlng = "kosong";
       _taskController.getTask();
-      AddTaskPage.userMarker = null;
+      UpdatePage.userMarker = null;
       Get.back();
       Get.snackbar(
         "Succeed !",
@@ -868,9 +910,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ),
         ),
       );
-    } else if (_titleController.text.isEmpty ||
-        AddTaskPage.latlng == "kosong") {
-      print(AddTaskPage.latlng);
+    } else if (_titleController.text.isEmpty || UpdatePage.latlng == "kosong") {
+      print(UpdatePage.latlng);
       Get.snackbar(
         "Required",
         "All fields are required !",
@@ -899,7 +940,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         sortTime: _sortTime,
         repeat: _fixSelectedRepeat,
         color: _selectedColor,
-        mapCoor: AddTaskPage.latlng,
+        mapCoor: UpdatePage.latlng,
         isCompleted: 0,
         savedTask: savedTask,
       ),

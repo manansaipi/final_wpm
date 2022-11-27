@@ -16,18 +16,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../models/location_service.dart';
 import '../models/task.dart';
+import 'UpdatePage.dart';
 import 'add_task_bar.dart';
 
 class HomePage extends StatefulWidget {
-  final Task? task;
-
   static var s;
   static double latitude = 0;
   static double longtitude = 0;
   static var add = 1;
   static var add2 = 0;
   static LocationService locationService = LocationService();
-  const HomePage({super.key, this.task});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -207,6 +206,7 @@ class _HomePageState extends State<HomePage> {
           // print(array);
           HomePage.add2 += 1;
         }
+
         // print(dateNow);
         // print(takeDate);
         // print(_taskController.taskList[index].toJson());
@@ -670,7 +670,13 @@ class _HomePageState extends State<HomePage> {
                       icon: Icons.edit,
                       color: _getBGClr(task.color ?? 0),
                       label: "Edit",
-                      onTap: () {},
+                      onTap: () {
+                        Get.back();
+                        // print(task.title);
+                        Get.to(UpdatePage(
+                          task: task,
+                        ));
+                      },
                       clr: Get.isDarkMode
                           ? Colors.grey.shade300
                           : Colors.grey.shade300,
