@@ -175,10 +175,8 @@ class TaskTile extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 1,
             child: TimelineTile(
               // hasIndicator: false,
-              isFirst: HomePage.s == 0 ? true : false,
-              isLast: HomePage.s == _taskController.taskList.length - 1
-                  ? true
-                  : false,
+              isFirst: true,
+              isLast: false,
               startChild: Container(
                 margin: EdgeInsets.only(bottom: 0),
                 child: Row(

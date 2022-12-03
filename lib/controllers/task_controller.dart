@@ -18,6 +18,10 @@ class TaskController extends GetxController {
     return await DBHelper.insert(task);
   }
 
+  Future<int?> updateData({Task? task, int? id}) async {
+    return await DBHelper.update(task!, id!);
+  }
+
   void getTask() async {
     List<Map<String, dynamic>> tasks = await DBHelper.query();
     List<Map<String, dynamic>> savedTasks = await DBHelper.findSavedTask();
@@ -31,6 +35,11 @@ class TaskController extends GetxController {
 
   void delete(Task task) {
     DBHelper.delete(task);
+    getTask();
+  }
+
+  void deleteAll(Task task) {
+    DBHelper.deleteAll(task);
     getTask();
   }
 

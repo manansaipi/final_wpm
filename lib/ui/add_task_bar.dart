@@ -125,7 +125,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       Marker newMarker = Marker(
                         markerId: MarkerId('userMarker'),
                         position: LatLng(latLng.latitude, latLng.longitude),
-                        infoWindow: InfoWindow(title: "Your Marker"),
+                        infoWindow: InfoWindow(title: _titleController.text),
                         icon: BitmapDescriptor.defaultMarkerWithHue(
                             BitmapDescriptor.hueRed),
                       );
@@ -889,21 +889,72 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _addTaskToDb() async {
-    int value = await _taskController.addTask(
-      task: Task(
-        note: _noteController.text,
-        title: _titleController.text,
-        date: DateFormat.yMd().format(_selectedDate),
-        startTime: _startTime,
-        endTime: _endTime,
-        sortTime: _sortTime,
-        repeat: _fixSelectedRepeat,
-        color: _selectedColor,
-        mapCoor: AddTaskPage.latlng,
-        isCompleted: 0,
-        savedTask: savedTask,
-      ),
-    );
-    print("button is working and My id is " + "$value");
+    if (_fixSelectedRepeat == "Daily") {
+      int i = 0;
+      String indexDate;
+      String indexMonth;
+      DateTime dateNow = DateTime.now();
+      String splitDateNow = dateNow.toString().split(" ")[0];
+      String takeYear = splitDateNow.split("-")[0];
+      String takeDate = splitDateNow.split("-")[2];
+      String takeMonth = splitDateNow.split("-")[1];
+      int dateToInt = int.parse(takeDate);
+      int monthToInt = int.parse(takeMonth);
+      print(dateNow);
+      while (i < 100 && dateToInt < 100) {
+        if (dateToInt < 10) {
+          indexDate = ("0" + dateToInt.toString());
+        } else {
+          indexDate = (dateToInt.toString());
+        }
+        if (monthToInt < 10) {
+          indexMonth = ("0" + monthToInt.toString());
+        } else {
+          indexMonth = (monthToInt.toString());
+        }
+        String combine = (takeYear + "-" + indexMonth + '-' + indexDate);
+        // print(combine);
+
+        DateTime fixDate = DateTime.parse(combine);
+
+        int value = await _taskController.addTask(
+          task: Task(
+            note: _noteController.text,
+            title: _titleController.text,
+            date: DateFormat.yMd().format(fixDate),
+            startTime: _startTime,
+            endTime: _endTime,
+            sortTime: _sortTime,
+            repeat: _fixSelectedRepeat,
+            color: _selectedColor,
+            mapCoor: AddTaskPage.latlng,
+            isCompleted: 0,
+            savedTask: savedTask,
+            taskCreated: DateTime.now().toString().split(":")[0],
+          ),
+        );
+        dateToInt++;
+        i++;
+        print(dateToInt);
+      }
+    } else {
+      int value = await _taskController.addTask(
+        task: Task(
+          note: _noteController.text,
+          title: _titleController.text,
+          date: DateFormat.yMd().format(_selectedDate),
+          startTime: _startTime,
+          endTime: _endTime,
+          sortTime: _sortTime,
+          repeat: _fixSelectedRepeat,
+          color: _selectedColor,
+          mapCoor: AddTaskPage.latlng,
+          isCompleted: 0,
+          savedTask: savedTask,
+          taskCreated: DateTime.now().toString().split(":")[0],
+        ),
+      );
+      print("button is working and My id is " + "$value");
+    }
   }
 }

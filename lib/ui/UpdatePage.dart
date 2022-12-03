@@ -124,10 +124,10 @@ class _UpdatePageState extends State<UpdatePage> {
                   height: MediaQuery.of(context).size.height * 0.5,
                   child: GoogleMap(
                     onTap: (LatLng latLng) {
-                      Marker newMarker = Marker(
+                      newMarker = Marker(
                         markerId: MarkerId('userMarker'),
                         position: LatLng(latLng.latitude, latLng.longitude),
-                        infoWindow: InfoWindow(title: "Your Marker"),
+                        infoWindow: InfoWindow(title: _titleController.text),
                         icon: BitmapDescriptor.defaultMarkerWithHue(
                             BitmapDescriptor.hueRed),
                       );
@@ -186,6 +186,7 @@ class _UpdatePageState extends State<UpdatePage> {
                         icon: BitmapDescriptor.defaultMarkerWithHue(
                             BitmapDescriptor.hueBlue),
                       ),
+                      newMarker,
                       UpdatePage.userMarker ??
                           const Marker(markerId: MarkerId('value')),
                       // _presUnivMarker,
@@ -244,6 +245,7 @@ class _UpdatePageState extends State<UpdatePage> {
     });
   }
 
+  late Marker newMarker;
   @override
   void initState() {
     createMarker();
@@ -279,7 +281,20 @@ class _UpdatePageState extends State<UpdatePage> {
         : widget.task.color == 1
             ? 1
             : 2;
+    print(widget.task.mapCoor);
+    String takeCoor1 = widget.task.mapCoor.toString().split(" ")[0];
+    String takeCoor2 = widget.task.mapCoor.toString().split(" ")[1];
+    String removeKoma1 = takeCoor1.split(",")[0];
+    String fixCoor1 = removeKoma1.split("(")[1];
+    String fixCoor2 = takeCoor2.split(")")[0];
+    newMarker = Marker(
+      markerId: MarkerId('userMarker'),
+      position: LatLng(double.parse(fixCoor1), double.parse(fixCoor2)),
+      infoWindow: InfoWindow(title: widget.task.title),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+    );
     super.initState();
+    UpdatePage.latlng = widget.task.mapCoor;
   }
 
   @override
@@ -490,6 +505,7 @@ class _UpdatePageState extends State<UpdatePage> {
                             ),
                             AddTaskPage.userMarker ??
                                 const Marker(markerId: MarkerId('value')),
+                            newMarker
                             // _presUnivMarker,
                           },
                         ),
@@ -788,7 +804,7 @@ class _UpdatePageState extends State<UpdatePage> {
   }
 
   _getTimeFromUsers({required bool isStartTime}) async {
-    var pickedTime = await _showTimePicker();
+    var pickedTime = await _showTimePicker(isStartTime);
     if (pickedTime != null) {
       String _formatedTime = pickedTime.format(context);
       String _checkAMorPM = _formatedTime.split(" ")[1];
@@ -834,14 +850,21 @@ class _UpdatePageState extends State<UpdatePage> {
     }
   }
 
-  _showTimePicker() {
+  _showTimePicker(bool isStartTime) {
     return showTimePicker(
         initialEntryMode: TimePickerEntryMode.input,
         context: context,
-        initialTime: TimeOfDay(
-          hour: int.parse(widget.task.startTime!.split(":")[0]),
-          minute: int.parse(widget.task.startTime!.split(":")[1].split(" ")[0]),
-        ));
+        initialTime: isStartTime == true
+            ? TimeOfDay(
+                hour: int.parse(widget.task.startTime!.split(":")[0]),
+                minute: int.parse(
+                    widget.task.startTime!.split(":")[1].split(" ")[0]),
+              )
+            : TimeOfDay(
+                hour: int.parse(widget.task.endTime!.split(":")[0]),
+                minute:
+                    int.parse(widget.task.endTime!.split(":")[1].split(" ")[0]),
+              ));
   }
 
   _colorPallet() {
@@ -898,7 +921,7 @@ class _UpdatePageState extends State<UpdatePage> {
       Get.back();
       Get.snackbar(
         "Succeed !",
-        "Task Added",
+        "Task Updated",
         colorText: Colors.white,
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.green,
@@ -930,21 +953,21 @@ class _UpdatePageState extends State<UpdatePage> {
   }
 
   _addTaskToDb() async {
-    int value = await _taskController.addTask(
-      task: Task(
-        note: _noteController.text,
-        title: _titleController.text,
-        date: DateFormat.yMd().format(_selectedDate),
-        startTime: _startTime,
-        endTime: _endTime,
-        sortTime: _sortTime,
-        repeat: _fixSelectedRepeat,
-        color: _selectedColor,
-        mapCoor: UpdatePage.latlng,
-        isCompleted: 0,
-        savedTask: savedTask,
-      ),
-    );
+    int? value = await _taskController.updateData(
+        task: Task(
+          note: _noteController.text,
+          title: _titleController.text,
+          date: DateFormat.yMd().format(_selectedDate),
+          startTime: _startTime,
+          endTime: _endTime,
+          sortTime: _sortTime,
+          repeat: _fixSelectedRepeat,
+          color: _selectedColor,
+          mapCoor: UpdatePage.latlng,
+          isCompleted: widget.task.isCompleted,
+          savedTask: savedTask,
+        ),
+        id: widget.task.id);
     print("button is working and My id is " + "$value");
   }
 }

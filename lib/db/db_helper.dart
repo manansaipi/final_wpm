@@ -25,7 +25,7 @@ class DBHelper {
           "startTime STRING, endTime STRING, $_sortTime INTEGER,"
           "repeat STRING, "
           "color INTEGER, mapCoor STRING,"
-          "isCompleted INTEGER, savedTask INTEGER) ",
+          "isCompleted INTEGER, savedTask INTEGER, taskCreated STRING) ",
         );
       });
     } catch (e) {
@@ -36,6 +36,28 @@ class DBHelper {
   static Future<int> insert(Task? task) async {
     print("insert function called");
     return await _db?.insert(_tableName, task!.toJson()) ?? 1;
+  }
+
+  static update(
+    Task task,
+    int id,
+  ) async {
+    return await _db!.rawUpdate('''
+    UPDATE tasks
+    SET title = ?,note = ?,date = ?,startTime = ?,endTime = ?,repeat = ?,color = ?,mapCoor = ? ,savedTask = ?
+    WHERE id =?
+''', [
+      task.title,
+      task.note,
+      task.date,
+      task.startTime,
+      task.endTime,
+      task.repeat,
+      task.color,
+      task.mapCoor,
+      task.savedTask,
+      id
+    ]);
   }
 
   static Future<List<Map<String, dynamic>>> query() async {
@@ -49,6 +71,12 @@ class DBHelper {
 
   static delete(Task task) async {
     return await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
+  }
+
+  static deleteAll(Task task) async {
+    return await _db!.delete(_tableName,
+        where: 'title=? and taskCreated=?',
+        whereArgs: [task.title, task.taskCreated]);
   }
 
   static autoDelete(Task task, String date) async {

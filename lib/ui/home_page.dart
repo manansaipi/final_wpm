@@ -20,7 +20,6 @@ import 'UpdatePage.dart';
 import 'add_task_bar.dart';
 
 class HomePage extends StatefulWidget {
-  static var s;
   static double latitude = 0;
   static double longtitude = 0;
   static var add = 1;
@@ -179,20 +178,21 @@ class _HomePageState extends State<HomePage> {
   SliverList _buildSliverList(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((_, index) {
-        HomePage.s = index;
-
-        // print(HomePage.s);
-        Task task = _taskController.taskList[HomePage.s];
+        Task task = _taskController.taskList[index];
         String dateSplit = task.date.toString().split(" ")[0];
         int takeDateFromDB = int.parse(task.date.toString().split("/")[1]);
+        int takeYearFromDB = int.parse(task.date.toString().split("/")[2]);
         int takeMonthFromDB = int.parse(task.date.toString().split("/")[0]);
         int takeDateFromDateNow = int.parse(dateNow.toString().split("-")[2]);
+        int takeYearFromDateNow = int.parse(dateNow.toString().split("-")[0]);
         int takeMonthFromDateNow = int.parse(dateNow.toString().split("-")[1]);
 
         if (takeDateFromDB < takeDateFromDateNow &&
-                takeMonthFromDateNow >= takeMonthFromDB ||
+                takeMonthFromDateNow >= takeMonthFromDB &&
+                takeYearFromDB <= takeYearFromDateNow ||
             takeDateFromDB > takeDateFromDateNow &&
-                takeMonthFromDateNow > takeMonthFromDB) {
+                takeMonthFromDateNow > takeMonthFromDB &&
+                takeYearFromDB <= takeYearFromDateNow) {
           _taskController.autoDelete(task, task.date.toString());
           print("autoDelete");
         }
@@ -207,7 +207,7 @@ class _HomePageState extends State<HomePage> {
           HomePage.add2 += 1;
         }
 
-        // print(dateNow);
+        // print(DateTime.now());
         // print(takeDate);
         // print(_taskController.taskList[index].toJson());
         // print(task.date);
@@ -216,7 +216,7 @@ class _HomePageState extends State<HomePage> {
         // print(task.toJson());
         // print(_taskController.taskList);
 
-        if (task.repeat == 'Daily') {
+        if (task.date == DateFormat.yMd().format(_selectedDate)) {
           addF();
 
           DateTime date = DateFormat.jm().parse(task.startTime.toString());
@@ -241,32 +241,6 @@ class _HomePageState extends State<HomePage> {
                   Get.isDarkMode ? context.theme.backgroundColor : Colors.white,
               child: TaskTile(task),
             ),
-          );
-        } else if (task.date == DateFormat.yMd().format(_selectedDate)) {
-          addF();
-
-          // if (dateSplit.split("/")[1] == dateNow.split("-")[2]) {
-          DateTime date = DateFormat.jm().parse(task.startTime.toString());
-          var myTime = DateFormat("HH:mm").format(date);
-          // print(myTime);
-          notifyHelper.scheduledNotification(
-            int.parse(myTime.toString().split(":")[0]),
-            int.parse(myTime.toString().split(":")[1]),
-            task,
-          );
-          // }
-          return GestureDetector(
-            onTap: () {
-              _showBottomSheet(
-                context,
-                task,
-              );
-            },
-            child: Container(
-                color: Get.isDarkMode
-                    ? context.theme.backgroundColor
-                    : Colors.white,
-                child: TaskTile(task)),
           );
         } else {
           return Container();
@@ -645,22 +619,205 @@ class _HomePageState extends State<HomePage> {
                       label: "Delete",
                       isDelete: true,
                       onTap: () {
-                        _taskController.delete(task);
-                        Get.back();
-                        Get.snackbar(
-                          "Deleted !",
-                          "Task Deleted",
-                          colorText: Colors.white,
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.red,
-                          icon: Container(
-                            margin: const EdgeInsets.only(left: 7),
-                            child: const Icon(
-                              Icons.delete_forever_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-                        );
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: task.repeat == "Daily"
+                                    ? const Text(
+                                        "Are you sure want to delete this task? This is a repeating task.",
+                                        textAlign: TextAlign.center,
+                                      )
+                                    : const Text(
+                                        "Are you sure want to delete this task?",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                titleTextStyle: taskTileNote,
+                                actionsAlignment: MainAxisAlignment.center,
+                                actions: [
+                                  task.repeat == "Daily"
+                                      ? Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                _taskController.delete(task);
+                                                Get.back();
+                                                Get.back();
+                                                Get.snackbar(
+                                                  "Deleted !",
+                                                  "Task Deleted",
+                                                  colorText: Colors.white,
+                                                  snackPosition:
+                                                      SnackPosition.BOTTOM,
+                                                  backgroundColor: Colors.red,
+                                                  icon: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 7),
+                                                    child: const Icon(
+                                                      Icons
+                                                          .delete_forever_outlined,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    1,
+                                                margin:
+                                                    EdgeInsets.only(bottom: 10),
+                                                decoration: BoxDecoration(
+                                                    border: Border(
+                                                        top: BorderSide(
+                                                  width: 1,
+                                                  color: Get.isDarkMode
+                                                      ? Colors.grey.shade300
+                                                      : Colors.grey.shade600,
+                                                ))),
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Center(
+                                                      child: Text(
+                                                        "Delete this task only",
+                                                        style: GoogleFonts.lato(
+                                                          color: Colors.red,
+                                                          fontSize: 20,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                _taskController.deleteAll(task);
+                                                Get.back();
+                                                Get.back();
+                                                Get.snackbar(
+                                                  "Deleted !",
+                                                  "Task Deleted",
+                                                  colorText: Colors.white,
+                                                  snackPosition:
+                                                      SnackPosition.BOTTOM,
+                                                  backgroundColor: Colors.red,
+                                                  icon: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 7),
+                                                    child: const Icon(
+                                                      Icons
+                                                          .delete_forever_outlined,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    1,
+                                                margin:
+                                                    EdgeInsets.only(bottom: 10),
+                                                decoration: BoxDecoration(
+                                                    border: Border(
+                                                        top: BorderSide(
+                                                  width: 1,
+                                                  color: Get.isDarkMode
+                                                      ? Colors.grey.shade300
+                                                      : Colors.grey.shade600,
+                                                ))),
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Center(
+                                                      child: Text(
+                                                        "Delete all tasks",
+                                                        style: GoogleFonts.lato(
+                                                          color: Colors.red,
+                                                          fontSize: 20,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                _taskController.delete(task);
+                                                Get.back();
+                                                Get.back();
+                                                Get.snackbar(
+                                                  "Deleted !",
+                                                  "Task Deleted",
+                                                  colorText: Colors.white,
+                                                  snackPosition:
+                                                      SnackPosition.BOTTOM,
+                                                  backgroundColor: Colors.red,
+                                                  icon: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 7),
+                                                    child: const Icon(
+                                                      Icons
+                                                          .delete_forever_outlined,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    1,
+                                                margin:
+                                                    EdgeInsets.only(bottom: 10),
+                                                decoration: BoxDecoration(
+                                                    border: Border(
+                                                        top: BorderSide(
+                                                  width: 1,
+                                                  color: Get.isDarkMode
+                                                      ? Colors.grey.shade300
+                                                      : Colors.grey.shade600,
+                                                ))),
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Center(
+                                                      child: Text(
+                                                        "Delete task",
+                                                        style: GoogleFonts.lato(
+                                                          color: Colors.red,
+                                                          fontSize: 20,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                ],
+                              );
+                            });
                       },
                       clr: Get.isDarkMode
                           ? Colors.grey.shade300
