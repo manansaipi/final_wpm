@@ -2,6 +2,7 @@ import 'package:final_wpm/ui/home_page.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
 import 'package:get/get.dart';
@@ -14,8 +15,11 @@ import '../../models/task.dart';
 
 class TaskTile extends StatelessWidget {
   final Task? task;
+  final int index;
+  final List array;
+  final String dateNow;
   static var timeDistance;
-  TaskTile(this.task);
+  TaskTile(this.task, this.index, this.array, this.dateNow);
   @override
   Widget build(BuildContext context) {
     final _taskController = Get.put(TaskController());
@@ -157,7 +161,8 @@ class TaskTile extends StatelessWidget {
             double.parse(splitFixST);
     late String scndClock8 = clock8.toString().split(".")[0];
     late String fixClock8 = scndClock8 + "." + "00";
-
+    // print(index == array.first);
+    // print(index == index);
     return Container(
       color: Get.isDarkMode ? context.theme.backgroundColor : Colors.white,
       child: Row(
@@ -175,8 +180,11 @@ class TaskTile extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 1,
             child: TimelineTile(
               // hasIndicator: false,
-              isFirst: true,
-              isLast: false,
+              isFirst: index == 0 ? true : false,
+              isLast: _taskController.taskListByDate.length - 1 == array.last
+                  ? true
+                  : false,
+
               startChild: Container(
                 margin: EdgeInsets.only(bottom: 0),
                 child: Row(

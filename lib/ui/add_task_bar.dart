@@ -56,7 +56,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     "Monthly",
   ];
   int _selectedColor = 0;
-  int savedTask = 0;
   bool statusSwitch = false;
 
   Icon? _icon;
@@ -476,20 +475,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               color: Colors.green,
                             ),
                     ),
-                    Container(
-                      child: Switch(
-                        // activeTrackColor: Colors.red,
-                        activeColor: _getBGClr(_selectedColor),
-                        value: statusSwitch,
-                        onChanged: (value) {
-                          setState(() {
-                            statusSwitch = !statusSwitch;
-                            savedTask = statusSwitch ? 1 : 0;
-                            print(savedTask);
-                          });
-                        },
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -850,7 +835,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _validateDate() {
     if (_titleController.text.isNotEmpty && AddTaskPage.latlng != "kosong") {
       _addTaskToDb();
-      AddTaskPage.latlng = "kosong";
+
       _taskController.getTask();
       AddTaskPage.userMarker = null;
       Get.back();
@@ -929,7 +914,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
             color: _selectedColor,
             mapCoor: AddTaskPage.latlng,
             isCompleted: 0,
-            savedTask: savedTask,
             taskCreated: DateTime.now().toString().split(":")[0],
           ),
         );
@@ -950,11 +934,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
           color: _selectedColor,
           mapCoor: AddTaskPage.latlng,
           isCompleted: 0,
-          savedTask: savedTask,
           taskCreated: DateTime.now().toString().split(":")[0],
         ),
       );
       print("button is working and My id is " + "$value");
     }
+    AddTaskPage.latlng = "kosong";
   }
 }

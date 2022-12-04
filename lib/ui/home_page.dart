@@ -1,4 +1,4 @@
-import 'dart:async';
+// ignore_for_file: deprecated_member_use, unused_local_variable
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
@@ -10,7 +10,6 @@ import 'package:final_wpm/ui/theme.dart';
 import 'package:final_wpm/ui/widgets/button.dart';
 import 'package:final_wpm/ui/widgets/task_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -22,9 +21,12 @@ import 'add_task_bar.dart';
 class HomePage extends StatefulWidget {
   static double latitude = 0;
   static double longtitude = 0;
-  static var add = 1;
-  static var add2 = 0;
+  static var add = 0;
+  static int firstIndex = 0;
+  static int secondIndex = 0;
+
   static LocationService locationService = LocationService();
+
   const HomePage({super.key});
 
   @override
@@ -50,6 +52,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     //TODO: implement initstate
+    _taskController.getTask2(DateFormat.yMd()
+        .format(DateTime.parse(DateTime.now().toString().split(" ")[0])));
 
     super.initState();
 
@@ -175,10 +179,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void add() {
+    HomePage.add++;
+  }
+
   SliverList _buildSliverList(BuildContext context) {
+    int a = 0;
+    var array = [];
+
     return SliverList(
       delegate: SliverChildBuilderDelegate((_, index) {
-        Task task = _taskController.taskList[index];
+        int stop = 999;
+        Task task = _taskController.taskListByDate[index];
         String dateSplit = task.date.toString().split(" ")[0];
         int takeDateFromDB = int.parse(task.date.toString().split("/")[1]);
         int takeYearFromDB = int.parse(task.date.toString().split("/")[2]);
@@ -186,7 +198,8 @@ class _HomePageState extends State<HomePage> {
         int takeDateFromDateNow = int.parse(dateNow.toString().split("-")[2]);
         int takeYearFromDateNow = int.parse(dateNow.toString().split("-")[0]);
         int takeMonthFromDateNow = int.parse(dateNow.toString().split("-")[1]);
-
+        // print(HomePage.add);
+        // print(index);
         if (takeDateFromDB < takeDateFromDateNow &&
                 takeMonthFromDateNow >= takeMonthFromDB &&
                 takeYearFromDB <= takeYearFromDateNow ||
@@ -197,15 +210,7 @@ class _HomePageState extends State<HomePage> {
           print("autoDelete");
         }
 
-        var array = [];
         // Timer(Duration(seconds: 2), () => print(HomePage.array[index]));
-        void addF() {
-          // array.add(HomePage.add);
-          HomePage.add += 1;
-
-          // print(array);
-          HomePage.add2 += 1;
-        }
 
         // print(DateTime.now());
         // print(takeDate);
@@ -215,10 +220,16 @@ class _HomePageState extends State<HomePage> {
         // var json = task.toJson();
         // print(task.toJson());
         // print(_taskController.taskList);
+        int i = 0;
 
         if (task.date == DateFormat.yMd().format(_selectedDate)) {
-          addF();
+          array.add(index);
+          print(array);
 
+          String dateNow = DateFormat.yMd().format(_selectedDate);
+          // print(index);
+          // while (i )
+          // print(index);
           DateTime date = DateFormat.jm().parse(task.startTime.toString());
           var myTime = DateFormat("HH:mm").format(date);
           // print(myTim\);
@@ -228,7 +239,6 @@ class _HomePageState extends State<HomePage> {
             task,
           );
           // print(myTime);
-
           return GestureDetector(
             onTap: () {
               _showBottomSheet(
@@ -239,13 +249,18 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               color:
                   Get.isDarkMode ? context.theme.backgroundColor : Colors.white,
-              child: TaskTile(task),
+              child: TaskTile(
+                task,
+                index,
+                array,
+                dateNow,
+              ),
             ),
           );
         } else {
           return Container();
         }
-      }, childCount: _taskController.taskList.length),
+      }, childCount: _taskController.taskListByDate.length),
     );
   }
 
@@ -303,21 +318,6 @@ class _HomePageState extends State<HomePage> {
           // ignore: prefer_const_constructors
           icon: Icon(
             Icons.map,
-            color: primaryClr,
-            size: 27,
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            _taskController.getTask();
-            setState(() {});
-            _showBottomSheetToTaskPage(
-              context,
-            );
-          },
-          // ignore: prefer_const_constructors
-          icon: Icon(
-            Icons.save_as_outlined,
             color: primaryClr,
             size: 27,
           ),
@@ -395,108 +395,11 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               _selectedDate = date;
               datePick = _selectedDate.toString().split(" ")[0];
-              _taskController.getTask();
-              print(_taskController.taskList.length);
+              _taskController.getTask2(DateFormat.yMd().format(date));
+              print(_taskController.taskListByDate.length);
             });
           },
           daysCount: 30,
-        ),
-      ),
-    );
-  }
-
-  _showTasks() {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            color: context.theme.backgroundColor),
-        child: Obx(
-          () {
-            return Container(
-              margin: const EdgeInsets.only(top: 15),
-              child: ListView.builder(
-                itemCount: _taskController.taskList.length,
-                itemBuilder: (_, index) {
-                  // print(_taskController.taskList.length);
-                  Task task = _taskController.taskList[index];
-
-                  print(task.toJson());
-                  print(dateNow);
-                  // print(datePick);
-                  // print(dateNow == datePick);
-                  if (task.repeat == 'Daily') {
-                    DateTime date =
-                        DateFormat.jm().parse(task.startTime.toString());
-                    var myTime = DateFormat("HH:mm").format(date);
-                    // print(myTime);
-                    notifyHelper.scheduledNotification(
-                      int.parse(myTime.toString().split(":")[0]),
-                      int.parse(myTime.toString().split(":")[1]),
-                      task,
-                    );
-
-                    return AnimationConfiguration.staggeredList(
-                      position: index,
-                      child: SlideAnimation(
-                        child: FadeInAnimation(
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  _showBottomSheet(
-                                    context,
-                                    task,
-                                  );
-                                },
-                                child: Row(
-                                  children: [
-                                    // _buildTimeLine(
-                                    //   _getBGClr(task.color ?? 0),
-                                    // ),
-                                    TaskTile(
-                                      task,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  } else if (task.date ==
-                      DateFormat.yMd().format(_selectedDate)) {
-                    return AnimationConfiguration.staggeredList(
-                      position: index,
-                      child: SlideAnimation(
-                        child: FadeInAnimation(
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  _showBottomSheet(
-                                    context,
-                                    task,
-                                  );
-                                },
-                                child: TaskTile(
-                                  task,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            );
-          },
         ),
       ),
     );
@@ -980,232 +883,6 @@ class _HomePageState extends State<HomePage> {
                       ? deleteTitleStyle
                       : deleteTitleStyle.copyWith(color: color)),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  _showBottomSheetToTaskPage(BuildContext context) {
-    Get.bottomSheet(
-      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-      Container(
-        height: MediaQuery.of(context).size.height * 0.2,
-        color: Colors.transparent,
-        child: Obx(
-          () => Container(
-            // padding: EdgeInsets.symmetric(horizontal: 10),
-            // padding: const EdgeInsets.only(top: 4),
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Get.isDarkMode
-                    ? Colors.grey.shade500
-                    : Colors.grey.shade800,
-              ),
-              color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            ),
-            // height: task.isCompleted == 1
-            //     ? MediaQuery.of(context).size.width * 0.24
-            //     : MediaQuery.of(context).size.width * 0.32,
-            // color: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 20, top: 15),
-                      child: Text(
-                        "Saved Task",
-                        style: titleStyle2,
-                      ), // padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      // margin: EdgeInsets.only(top: 20),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.back();
-                        Get.to(const AddTaskPage());
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                            color: Get.isDarkMode
-                                ? Colors.grey.shade700
-                                : Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(20)),
-                        margin: const EdgeInsets.only(right: 20, top: 15),
-                        child: const Icon(
-                          Icons.arrow_forward,
-                          size: 20,
-                          color: primaryClr,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.12,
-                      width: MediaQuery.of(context).size.height * 0.5,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(left: 5),
-                                child: SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.12,
-                                  width: MediaQuery.of(context).size.width *
-                                      0.175 *
-                                      _taskController.savedTaskList.length,
-                                  child: ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount:
-                                        _taskController.savedTaskList.length,
-                                    itemBuilder: (_, index) {
-                                      Task task =
-                                          _taskController.savedTaskList[index];
-
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Get.back();
-
-                                          Get.to(const AddTaskPage());
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 55,
-                                              width: 55,
-                                              decoration: BoxDecoration(
-                                                  color: Get.isDarkMode
-                                                      ? Colors.grey.shade700
-                                                      : Colors.grey.shade200,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100)),
-                                              margin: const EdgeInsets.only(
-                                                  left: 20, top: 15),
-                                              child: Icon(
-                                                task.title == "Wake Up"
-                                                    ? Icons.alarm
-                                                    : task.title == "Sleep"
-                                                        ? Icons
-                                                            .nightlight_round_outlined
-                                                        : Icons
-                                                            .mail_lock_outlined,
-                                                size: 25,
-                                                color: primaryClr,
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: const EdgeInsets.only(
-                                                  left: 20, top: 10),
-                                              child: Text(
-                                                task.title!,
-                                                style: taskTileTime,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Get.back();
-                                  Get.to(const AddTaskPage());
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 55,
-                                      width: 55,
-                                      decoration: BoxDecoration(
-                                          color: Get.isDarkMode
-                                              ? Colors.grey.shade700
-                                              : Colors.grey.shade200,
-                                          borderRadius:
-                                              BorderRadius.circular(50)),
-                                      margin: const EdgeInsets.only(top: 15),
-                                      child: const Icon(
-                                        Icons.add,
-                                        size: 25,
-                                        color: primaryClr,
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        "New",
-                                        style: taskTileTime,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Container(
-                //   height: 6,
-                //   width: 120,
-                //   decoration: BoxDecoration(
-                //     borderRadius: BorderRadius.circular(12),
-                //     color: Get.isDarkMode ? Colors.grey[600] : Colors.grey[300],
-                //   ),
-                // ),
-                // Spacer(),
-
-                // task.isCompleted == 1
-                //     ? Container()
-                //     : bottomSheetButton(
-                //         label: "Task Completed",
-                //         onTap: () {
-                //           _taskController.markTaskCompleted(task.id!);
-                //           Get.back();
-                //         },
-                //         clr: primaryClr,
-                //         context: context),
-                // bottomSheetButton(
-                //   label: "Delete Task",
-                //   onTap: () {
-                // _taskController.delete(task);
-
-                //     Get.back();
-                //   },
-                //   clr: Colors.red,
-                //   context: context,
-                // ),
-              ],
-            ),
           ),
         ),
       ),

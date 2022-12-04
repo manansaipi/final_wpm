@@ -12,7 +12,6 @@ class Task {
   int? color;
   String? repeat;
   var mapCoor;
-  int? savedTask;
   var taskCreated;
 
   Task({
@@ -27,7 +26,6 @@ class Task {
     this.color,
     this.repeat,
     this.mapCoor,
-    this.savedTask,
     this.taskCreated,
   });
 
@@ -43,7 +41,6 @@ class Task {
     color = json['color'];
     repeat = json['repeat'];
     mapCoor = json['mapCoor'];
-    savedTask = json['savedTask'];
     taskCreated = json['taskCreated'];
   }
 
@@ -60,7 +57,6 @@ class Task {
     data['color'] = this.color;
     data['repeat'] = this.repeat;
     data['mapCoor'] = this.mapCoor;
-    data['savedTask'] = this.savedTask;
     data['taskCreated'] = this.taskCreated;
     return data;
   }

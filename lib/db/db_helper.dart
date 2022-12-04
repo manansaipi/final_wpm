@@ -25,7 +25,7 @@ class DBHelper {
           "startTime STRING, endTime STRING, $_sortTime INTEGER,"
           "repeat STRING, "
           "color INTEGER, mapCoor STRING,"
-          "isCompleted INTEGER, savedTask INTEGER, taskCreated STRING) ",
+          "isCompleted INTEGER, taskCreated STRING, isFirst INTEGER, isLast INTEGER) ",
         );
       });
     } catch (e) {
@@ -44,7 +44,7 @@ class DBHelper {
   ) async {
     return await _db!.rawUpdate('''
     UPDATE tasks
-    SET title = ?,note = ?,date = ?,startTime = ?,endTime = ?,repeat = ?,color = ?,mapCoor = ? ,savedTask = ?
+    SET title = ?,note = ?,date = ?,startTime = ?,endTime = ?,repeat = ?,color = ?,mapCoor = ? 
     WHERE id =?
 ''', [
       task.title,
@@ -55,18 +55,19 @@ class DBHelper {
       task.repeat,
       task.color,
       task.mapCoor,
-      task.savedTask,
       id
     ]);
   }
 
   static Future<List<Map<String, dynamic>>> query() async {
-    print("query function called");
+    // print("query function called");
     return await _db!.query(_tableName, orderBy: _sortTime);
   }
 
-  static Future<List<Map<String, dynamic>>> findSavedTask() async {
-    return await _db!.query(_tableName, where: 'savedTask=?', whereArgs: [1]);
+  static Future<List<Map<String, dynamic>>> query2(String date) async {
+    // print("query function called");
+    return await _db!.query(_tableName,
+        orderBy: _sortTime, where: 'date=?', whereArgs: [date]);
   }
 
   static delete(Task task) async {

@@ -45,7 +45,6 @@ dependencies:
   sqflite:
   google_nav_bar:
   flutter_staggered_animations:
-  timeline_tile: ^2.0.0
   flutter_iconpicker:
   geo:
   flutter_polyline_points:
@@ -53,6 +52,7 @@ dependencies:
   flutter_svg:
   location:
   animated_text_kit:
+  timeline_tile: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

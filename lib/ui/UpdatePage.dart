@@ -58,7 +58,6 @@ class _UpdatePageState extends State<UpdatePage> {
     "Monthly",
   ];
   int _selectedColor = 0;
-  int savedTask = 0;
   bool statusSwitch = false;
 
   Icon? _icon;
@@ -268,7 +267,6 @@ class _UpdatePageState extends State<UpdatePage> {
     String dateFormatted = DateFormat('yyyy-MM-dd').format(date);
     _selectedDate = DateTime.parse(dateFormatted);
     _endTime = widget.task.endTime!;
-    statusSwitch = widget.task.savedTask == 1 ? true : false;
     _selectedRepeat = widget.task.repeat == "Once"
         ? 0
         : widget.task.repeat == "Daily"
@@ -282,6 +280,7 @@ class _UpdatePageState extends State<UpdatePage> {
             ? 1
             : 2;
     print(widget.task.mapCoor);
+
     String takeCoor1 = widget.task.mapCoor.toString().split(" ")[0];
     String takeCoor2 = widget.task.mapCoor.toString().split(" ")[1];
     String removeKoma1 = takeCoor1.split(",")[0];
@@ -527,20 +526,6 @@ class _UpdatePageState extends State<UpdatePage> {
                               color: Colors.green,
                             ),
                     ),
-                    Container(
-                      child: Switch(
-                        // activeTrackColor: Colors.red,
-                        activeColor: _getBGClr(_selectedColor),
-                        value: statusSwitch,
-                        onChanged: (value) {
-                          setState(() {
-                            statusSwitch = !statusSwitch;
-                            savedTask = statusSwitch ? 1 : 0;
-                            print(savedTask);
-                          });
-                        },
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -915,7 +900,10 @@ class _UpdatePageState extends State<UpdatePage> {
   _validateDate() {
     if (_titleController.text.isNotEmpty && UpdatePage.latlng != "kosong") {
       _addTaskToDb();
-      UpdatePage.latlng = "kosong";
+      String date = (DateFormat.yMd()
+          .format(DateTime.parse(DateTime.now().toString().split(" ")[0])));
+      _taskController.getTask2(date);
+
       _taskController.getTask();
       UpdatePage.userMarker = null;
       Get.back();
@@ -965,9 +953,9 @@ class _UpdatePageState extends State<UpdatePage> {
           color: _selectedColor,
           mapCoor: UpdatePage.latlng,
           isCompleted: widget.task.isCompleted,
-          savedTask: savedTask,
         ),
         id: widget.task.id);
     print("button is working and My id is " + "$value");
+    UpdatePage.latlng = "kosong";
   }
 }
