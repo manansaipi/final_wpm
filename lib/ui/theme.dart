@@ -80,7 +80,7 @@ TextStyle get biggerHeadingStyle {
 TextStyle get titleHeadingStyle {
   return GoogleFonts.lato(
     textStyle: TextStyle(
-      fontSize: 23,
+      fontSize: 25,
       fontWeight: FontWeight.bold,
       color: Get.isDarkMode ? Colors.white : Colors.grey.shade700,
     ),
@@ -130,7 +130,7 @@ TextStyle get titleBiggerHeadingStyle {
 TextStyle get titleBiggerHeadingStyle2 {
   return GoogleFonts.lato(
     textStyle: const TextStyle(
-      fontSize: 25,
+      fontSize: 27,
       fontWeight: FontWeight.bold,
       color: primaryClr,
     ),
@@ -151,6 +151,65 @@ TextStyle get taskTileTime {
     textStyle: TextStyle(
       fontSize: 13,
       color: Get.isDarkMode ? Colors.grey.shade300 : Colors.grey.shade600,
+    ),
+  );
+}
+
+TextStyle get titleIntroductionScreen {
+  return GoogleFonts.lato(
+    textStyle: const TextStyle(
+      fontSize: 40,
+      fontWeight: FontWeight.bold,
+      color: Color.fromARGB(255, 70, 65, 65),
+    ),
+  );
+}
+
+TextStyle get titleIntroductionScreen2 {
+  return GoogleFonts.lato(
+    textStyle: const TextStyle(
+      fontSize: 35,
+      fontWeight: FontWeight.bold,
+      color: Color.fromARGB(255, 70, 65, 65),
+    ),
+  );
+}
+
+TextStyle get titleIntroductionScreenColor1 {
+  return GoogleFonts.lato(
+    textStyle: const TextStyle(
+      fontSize: 40,
+      fontWeight: FontWeight.bold,
+      color: primaryClr,
+    ),
+  );
+}
+
+TextStyle get titleIntroductionScreenColor2 {
+  return GoogleFonts.lato(
+    textStyle: const TextStyle(
+      fontSize: 40,
+      fontWeight: FontWeight.bold,
+      color: Colors.pink,
+    ),
+  );
+}
+
+TextStyle get titleIntroductionScreenColor3 {
+  return GoogleFonts.lato(
+    textStyle: const TextStyle(
+      fontSize: 40,
+      fontWeight: FontWeight.bold,
+      color: Colors.yellow,
+    ),
+  );
+}
+
+TextStyle get noteIntroScreen {
+  return GoogleFonts.lato(
+    textStyle: TextStyle(
+      fontSize: 17,
+      color: Colors.grey.shade700,
     ),
   );
 }

@@ -302,6 +302,7 @@ class _UpdatePageState extends State<UpdatePage> {
       backgroundColor: context.theme.backgroundColor,
       appBar: _appBar(context),
       floatingActionButton: MyAddTaskButton(
+        textColor: Colors.white,
         myColor: _getBGClr(_selectedColor),
         label: "Edit Task",
         onTap: () {

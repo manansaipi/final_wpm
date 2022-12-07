@@ -256,6 +256,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       appBar: _appBar(context),
       floatingActionButton: MyAddTaskButton(
         myColor: _getBGClr(_selectedColor),
+        textColor: Colors.white,
         label: "Create Task",
         onTap: () {
           _validateDate();

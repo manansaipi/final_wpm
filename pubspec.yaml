@@ -53,6 +53,8 @@ dependencies:
   location:
   animated_text_kit:
   timeline_tile: ^2.0.0
+  introduction_screen: ^3.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -76,8 +78,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/a.png
-    - assets/user.png
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

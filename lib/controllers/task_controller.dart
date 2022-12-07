@@ -1,6 +1,7 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:final_wpm/db/db_helper.dart';
+import 'package:final_wpm/ui/home_page.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -8,8 +9,9 @@ import '../models/task.dart';
 
 class TaskController extends GetxController {
   @override
-  String date = (DateFormat.yMd()
-      .format(DateTime.parse(DateTime.now().toString().split(" ")[0])));
+  // String date = (DateFormat.yMd()
+  //     .format(DateTime.parse(DateTime.now().toString().split(" ")[0])));
+  String date = "";
   void onReady() {
     String date = (DateFormat.yMd()
         .format(DateTime.parse(DateTime.now().toString().split(" ")[0])));
@@ -45,6 +47,8 @@ class TaskController extends GetxController {
   }
 
   void getTask2(String date) async {
+    print(date);
+
     List<Map<String, dynamic>> tasksListByDate = await DBHelper.query2(date);
     taskListByDate
         .assignAll(tasksListByDate.map((data) => Task.fromJson(data)).toList());

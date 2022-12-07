@@ -4,6 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:final_wpm/controllers/task_controller.dart';
 import 'package:final_wpm/ui/map_page.dart';
+import 'package:final_wpm/ui/onboarding_page.dart';
 import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/notification_servieces.dart';
 import 'package:final_wpm/ui/theme.dart';
@@ -81,7 +82,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: MyCircleButton(
         label: "+",
         onTap: () {
-          Get.to(const AddTaskPage());
+          Get.to(OnBoardingPage());
+          // Get.to(const AddTaskPage());
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -394,8 +396,9 @@ class _HomePageState extends State<HomePage> {
           onDateChange: (date) {
             setState(() {
               _selectedDate = date;
+              _taskController.date = DateFormat.yMd().format(_selectedDate);
               datePick = _selectedDate.toString().split(" ")[0];
-              _taskController.getTask2(DateFormat.yMd().format(date));
+              _taskController.getTask2(DateFormat.yMd().format(_selectedDate));
               print(_taskController.taskListByDate.length);
             });
           },
@@ -525,6 +528,10 @@ class _HomePageState extends State<HomePage> {
                         showDialog(
                             context: context,
                             builder: (context) {
+                              String date = (DateFormat.yMd().format(
+                                  DateTime.parse(DateTime.now()
+                                      .toString()
+                                      .split(" ")[0])));
                               return AlertDialog(
                                 title: task.repeat == "Daily"
                                     ? const Text(
@@ -546,6 +553,8 @@ class _HomePageState extends State<HomePage> {
                                                 _taskController.delete(task);
                                                 Get.back();
                                                 Get.back();
+                                                _taskController.getTask2(date);
+
                                                 Get.snackbar(
                                                   "Deleted !",
                                                   "Task Deleted",
@@ -603,6 +612,8 @@ class _HomePageState extends State<HomePage> {
                                                 _taskController.deleteAll(task);
                                                 Get.back();
                                                 Get.back();
+                                                _taskController.getTask2(date);
+
                                                 Get.snackbar(
                                                   "Deleted !",
                                                   "Task Deleted",
@@ -664,6 +675,8 @@ class _HomePageState extends State<HomePage> {
                                                 _taskController.delete(task);
                                                 Get.back();
                                                 Get.back();
+                                                _taskController.getTask2(date);
+
                                                 Get.snackbar(
                                                   "Deleted !",
                                                   "Task Deleted",

@@ -40,12 +40,14 @@ class MyAddTaskButton extends StatelessWidget {
   final Function()? onTap;
 
   final Color myColor;
+  final Color textColor;
 
   const MyAddTaskButton({
     super.key,
     required this.label,
     required this.onTap,
     required this.myColor,
+    required this.textColor,
   });
 
   @override
@@ -54,7 +56,7 @@ class MyAddTaskButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        height: 50,
+        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: myColor,
@@ -62,7 +64,7 @@ class MyAddTaskButton extends StatelessWidget {
         child: Center(
             child: Text(
           label,
-          style: TextStyle(color: Colors.white, fontSize: 25),
+          style: TextStyle(color: textColor, fontSize: 25),
         )),
         // child: Text(
         //   label,
