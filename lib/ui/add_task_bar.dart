@@ -245,6 +245,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   void initState() {
     // TODO: implement initState
     _sortTime = split.split(":")[0] + "." + split.split(":")[1];
+    // print(_sortTime);
     createMarker();
     super.initState();
   }

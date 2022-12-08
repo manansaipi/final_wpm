@@ -5,6 +5,7 @@ import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:final_wpm/controllers/task_controller.dart';
 import 'package:final_wpm/ui/map_page.dart';
 import 'package:final_wpm/ui/onboarding_page.dart';
+import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/setting_page.dart';
 import 'package:final_wpm/ui/services/notification_servieces.dart';
 import 'package:final_wpm/ui/theme.dart';
@@ -67,6 +68,7 @@ class _HomePageState extends State<HomePage> {
     notifyHelper = NotifyHelper();
     notifyHelper.initializeNotification();
 
+    _taskController.date = DateFormat.yMd().format(DateTime.now());
     // notifyHelper.requestIOSPermissions();
   }
 
@@ -82,8 +84,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: MyCircleButton(
         label: "+",
         onTap: () {
-          Get.to(OnBoardingPage());
-          // Get.to(const AddTaskPage());
+          Get.to(const AddTaskPage());
+          // Get.to(OnBoardingPage());
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -213,7 +215,8 @@ class _HomePageState extends State<HomePage> {
         }
 
         // Timer(Duration(seconds: 2), () => print(HomePage.array[index]));
-
+        print(task.sortTime);
+        print(task.startTime);
         // print(DateTime.now());
         // print(takeDate);
         // print(_taskController.taskList[index].toJson());
@@ -326,20 +329,48 @@ class _HomePageState extends State<HomePage> {
         ),
         IconButton(
           onPressed: () {
-            print("settings");
-            Get.to(
-              const SettingPage(),
+            // print("settings");
+            // Get.to(
+            // const SettingPage(),
+            ThemeService().switchTheme();
+            Get.snackbar(
+              "Theme Changed !",
+              Get.isDarkMode ? "Activated Light Theme" : "Activatd Dark Theme",
+              colorText: Get.isDarkMode ? Colors.grey.shade800 : Colors.white,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor:
+                  Get.isDarkMode ? Colors.grey.shade300 : Colors.grey.shade700,
+              icon: Container(
+                margin: const EdgeInsets.only(left: 7),
+                child: Get.isDarkMode
+                    ? const Icon(
+                        Icons.sunny,
+                        color: Colors.black,
+                      )
+                    : const Icon(
+                        Icons.nightlight_round_outlined,
+                        color: Colors.white,
+                      ),
+              ),
             );
+            // );
+            // Get.to(OnBoardingPage());
             //Move to another page using NAVIGATOR
             // Navigator.push(context, MaterialPageRoute(builder: (context) {
             //   return SettingPage();
             // }));
           },
-          icon: const Icon(
-            Icons.settings,
-            color: primaryClr,
-            size: 27,
-          ),
+          icon: Get.isDarkMode
+              ? const Icon(
+                  Icons.nightlight_round_outlined,
+                  color: primaryClr,
+                  size: 27,
+                )
+              : const Icon(
+                  Icons.sunny,
+                  color: primaryClr,
+                  size: 27,
+                ),
         ),
       ],
       expandedHeight: 65,
@@ -396,6 +427,7 @@ class _HomePageState extends State<HomePage> {
           onDateChange: (date) {
             setState(() {
               _selectedDate = date;
+              // print();
               _taskController.date = DateFormat.yMd().format(_selectedDate);
               datePick = _selectedDate.toString().split(" ")[0];
               _taskController.getTask2(DateFormat.yMd().format(_selectedDate));

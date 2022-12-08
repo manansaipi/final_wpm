@@ -1,5 +1,6 @@
 import 'package:final_wpm/db/db_helper.dart';
 import 'package:final_wpm/ui/home_page.dart';
+import 'package:final_wpm/ui/onboarding_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: Themes.light,
       darkTheme: Themes.dark,
       themeMode: ThemeService().theme,
-      home: const HomePage(),
+      home: OnBoardingPage(),
     );
   }
 }

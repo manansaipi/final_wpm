@@ -1,9 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:final_wpm/controllers/task_controller.dart';
+import 'package:final_wpm/ui/home_page.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:final_wpm/ui/widgets/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
+
+import '../models/task.dart';
 
 class OnBoardingPage extends StatefulWidget {
   @override
@@ -11,9 +18,13 @@ class OnBoardingPage extends StatefulWidget {
 }
 
 class _OnBoardingPageState extends State<OnBoardingPage> {
+  var _taskController = TaskController();
   DateTime dateTine = DateTime.now();
   var controller = PageController();
-
+  String startTimeW = "08:00 AM";
+  String startTimeS = "21:00 PM";
+  String sortTimeW = "08.00";
+  String sortTimeS = "21.00";
   get titleIntroductionScreenColor => null;
 
   @override
@@ -111,7 +122,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                 Row(
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.32,
+                      width: MediaQuery.of(context).size.width * 0.35,
+                      height: MediaQuery.of(context).size.height * 0.17,
                     ),
                     AnimatedTextKit(
                       pause: Duration(milliseconds: 0),
@@ -218,10 +230,22 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                   height: MediaQuery.of(context).size.width * 0.55,
                   child: Container(
                     child: CupertinoDatePicker(
-                      initialDateTime: DateTime.parse("08:00:00"),
+                      initialDateTime: DateTime.parse("2022-05-05 08:00:04Z"),
                       mode: CupertinoDatePickerMode.time,
-                      onDateTimeChanged: (dateTime) =>
-                          setState(() => this.dateTine = dateTime),
+                      onDateTimeChanged: (dateTime) {
+                        setState(() {
+                          this.dateTine = dateTime;
+                          String split = dateTine.toString().split(" ")[1];
+                          startTimeW = split.split(":")[0] +
+                              ':' +
+                              split.split(":")[1] +
+                              ' AM'; // have to dynamic AM or PM
+                          sortTimeW =
+                              split.split(":")[0] + '.' + split.split(":")[1];
+                          print(startTimeW);
+                        });
+                      },
+                      // use24hFormat: true,
                     ),
                   ),
                 ),
@@ -245,8 +269,10 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                     label: "Continue",
                     onTap: () {
                       controller.nextPage(
-                          duration: Duration(seconds: 1),
-                          curve: Curves.easeInOut);
+                        duration: Duration(seconds: 1),
+                        curve: Curves.easeInOut,
+                      );
+                      _addTaskToDBW();
                     },
                   ),
                 )
@@ -259,6 +285,56 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         ),
       ),
     );
+  }
+
+  _addTaskToDBW() async {
+    int i = 0;
+    String indexDate;
+    String indexMonth;
+    DateTime dateNow = DateTime.now();
+    String splitDateNow = dateNow.toString().split(" ")[0];
+    String takeYear = splitDateNow.split("-")[0];
+    String takeDate = splitDateNow.split("-")[2];
+    String takeMonth = splitDateNow.split("-")[1];
+    int dateToInt = int.parse(takeDate);
+    int monthToInt = int.parse(takeMonth);
+    print(dateNow);
+    while (i < 100 && dateToInt < 100) {
+      if (dateToInt < 10) {
+        indexDate = ("0" + dateToInt.toString());
+      } else {
+        indexDate = (dateToInt.toString());
+      }
+      if (monthToInt < 10) {
+        indexMonth = ("0" + monthToInt.toString());
+      } else {
+        indexMonth = (monthToInt.toString());
+      }
+      String combine = (takeYear + "-" + indexMonth + '-' + indexDate);
+      // print(combine);
+
+      DateTime fixDate = DateTime.parse(combine);
+
+      int value = await _taskController.addTask(
+        task: Task(
+          note: "",
+          title: "Wake Up",
+          date: DateFormat.yMd().format(fixDate),
+          startTime: startTimeW,
+          endTime: startTimeW,
+          sortTime: sortTimeW,
+          repeat: "Daily",
+          color: 0,
+          mapCoor:
+              "LatLng(-6.28497565689798, 107.17053839620769)", //set coordinate
+          isCompleted: 0,
+          taskCreated: DateTime.now().toString().split(":")[0],
+        ),
+      );
+      dateToInt++;
+      i++;
+      print(dateToInt);
+    }
   }
 
   Container sleepPage(BuildContext context) {
@@ -306,7 +382,32 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                   style: noteIntroScreen,
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.width * 0.75,
+                  height: MediaQuery.of(context).size.width * 0.10,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.width * 0.55,
+                  child: Container(
+                    child: CupertinoDatePicker(
+                      initialDateTime: DateTime.parse("2022-05-05 21:00:04Z"),
+                      mode: CupertinoDatePickerMode.time,
+                      onDateTimeChanged: (dateTime) {
+                        setState(() {
+                          this.dateTine = dateTime;
+                          String split = dateTine.toString().split(" ")[1];
+                          startTimeS = split.split(":")[0] +
+                              ':' +
+                              split.split(":")[1] +
+                              ' PM'; // have to dynamic AM or PM
+                          sortTimeS =
+                              split.split(":")[0] + '.' + split.split(":")[1];
+                          print(startTimeS);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.width * 0.10,
                 ),
                 Center(
                   child: Text(
@@ -324,9 +425,11 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                     myColor: primaryClr,
                     label: "Continue",
                     onTap: () {
-                      controller.nextPage(
-                          duration: Duration(seconds: 1),
-                          curve: Curves.easeInOut);
+                      _addTaskToDBS();
+
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
                     },
                   ),
                 )
@@ -339,6 +442,56 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         ),
       ),
     );
+  }
+
+  _addTaskToDBS() async {
+    int i = 0;
+    String indexDate;
+    String indexMonth;
+    DateTime dateNow = DateTime.now();
+    String splitDateNow = dateNow.toString().split(" ")[0];
+    String takeYear = splitDateNow.split("-")[0];
+    String takeDate = splitDateNow.split("-")[2];
+    String takeMonth = splitDateNow.split("-")[1];
+    int dateToInt = int.parse(takeDate);
+    int monthToInt = int.parse(takeMonth);
+    print(dateNow);
+    while (i < 100 && dateToInt < 100) {
+      if (dateToInt < 10) {
+        indexDate = ("0" + dateToInt.toString());
+      } else {
+        indexDate = (dateToInt.toString());
+      }
+      if (monthToInt < 10) {
+        indexMonth = ("0" + monthToInt.toString());
+      } else {
+        indexMonth = (monthToInt.toString());
+      }
+      String combine = (takeYear + "-" + indexMonth + '-' + indexDate);
+      // print(combine);
+
+      DateTime fixDate = DateTime.parse(combine);
+
+      int value = await _taskController.addTask(
+        task: Task(
+          note: "",
+          title: "Sleep",
+          date: DateFormat.yMd().format(fixDate),
+          startTime: startTimeS,
+          endTime: startTimeS,
+          sortTime: sortTimeS,
+          repeat: "Daily",
+          color: 0,
+          mapCoor:
+              "LatLng(-6.28497565689798, 107.17053839620769)", //set coordinate
+          isCompleted: 0,
+          taskCreated: DateTime.now().toString().split(":")[0],
+        ),
+      );
+      dateToInt++;
+      i++;
+      print(dateToInt);
+    }
   }
 
   Widget buildImage(String path) => Center(

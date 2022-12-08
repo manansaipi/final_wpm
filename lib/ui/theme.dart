@@ -178,7 +178,7 @@ TextStyle get titleIntroductionScreen2 {
 TextStyle get titleIntroductionScreenColor1 {
   return GoogleFonts.lato(
     textStyle: const TextStyle(
-      fontSize: 40,
+      fontSize: 35,
       fontWeight: FontWeight.bold,
       color: primaryClr,
     ),
@@ -188,7 +188,7 @@ TextStyle get titleIntroductionScreenColor1 {
 TextStyle get titleIntroductionScreenColor2 {
   return GoogleFonts.lato(
     textStyle: const TextStyle(
-      fontSize: 40,
+      fontSize: 35,
       fontWeight: FontWeight.bold,
       color: Colors.pink,
     ),
@@ -198,7 +198,7 @@ TextStyle get titleIntroductionScreenColor2 {
 TextStyle get titleIntroductionScreenColor3 {
   return GoogleFonts.lato(
     textStyle: const TextStyle(
-      fontSize: 40,
+      fontSize: 35,
       fontWeight: FontWeight.bold,
       color: Colors.yellow,
     ),

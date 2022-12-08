@@ -28,11 +28,21 @@ class _NotifiedPageState extends State<NotifiedPage> {
   double? latitude1;
   double? longtitude1;
   String? userMarker;
+  BitmapDescriptor? userLiveLocation =
+      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+  void createMarker() {
+    BitmapDescriptor.fromAssetImage(ImageConfiguration.empty, 'assets/user.png')
+        .then((icon) {
+      setState(() {
+        userLiveLocation = icon;
+      });
+    });
+  }
 
   @override
   void initState() {
     //TODO: implement initstate
-
+    createMarker();
     super.initState();
     setState(() {
       userMarker = this.widget.label.toString().split("|")[1];
@@ -118,8 +128,7 @@ class _NotifiedPageState extends State<NotifiedPage> {
                   markerId: MarkerId('myLocation'),
                   position: LatLng(HomePage.latitude, HomePage.longtitude),
                   infoWindow: InfoWindow(title: "You"),
-                  icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueBlue),
+                  icon: userLiveLocation!,
                 ),
                 Marker(
                   markerId: MarkerId('userMarker'),
@@ -131,7 +140,6 @@ class _NotifiedPageState extends State<NotifiedPage> {
                         : this.widget.label.toString().split("|")[2],
                   ),
                 )
-
                 //   // _presUnivMarker,
                 //   // _myPositionMarker,
               },
