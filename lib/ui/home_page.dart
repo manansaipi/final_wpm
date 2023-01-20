@@ -396,7 +396,6 @@ class _HomePageState extends State<HomePage> {
           width: 60,
           initialSelectedDate: DateTime.now(),
           selectionColor: primaryClr,
-
           // dateNow == datePick
           //     ? primaryClr
           //     : Get.isDarkMode

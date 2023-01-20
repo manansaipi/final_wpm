@@ -266,6 +266,7 @@ class _UpdatePageState extends State<UpdatePage> {
     DateTime date = DateTime.parse(fixDate);
     String dateFormatted = DateFormat('yyyy-MM-dd').format(date);
     _selectedDate = DateTime.parse(dateFormatted);
+    _startTime = widget.task.startTime!;
     _endTime = widget.task.endTime!;
     _selectedRepeat = widget.task.repeat == "Once"
         ? 0
@@ -901,8 +902,7 @@ class _UpdatePageState extends State<UpdatePage> {
   _validateDate() {
     if (_titleController.text.isNotEmpty && UpdatePage.latlng != "kosong") {
       _addTaskToDb();
-      String date = (DateFormat.yMd()
-          .format(DateTime.parse(DateTime.now().toString().split(" ")[0])));
+      String date = DateFormat.yMd().format(_selectedDate);
       _taskController.getTask2(date);
 
       _taskController.getTask();

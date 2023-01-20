@@ -326,7 +326,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           repeat: "Daily",
           color: 0,
           mapCoor:
-              "LatLng(-6.28497565689798, 107.17053839620769)", //set coordinate
+              "LatLng(-2.28497565689798, 187.17053839620769)", //set coordinate
           isCompleted: 0,
           taskCreated: DateTime.now().toString().split(":")[0],
         ),
@@ -483,7 +483,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           repeat: "Daily",
           color: 0,
           mapCoor:
-              "LatLng(-6.28497565689798, 107.17053839620769)", //set coordinate
+              "LatLng(-2.28497565689798, 187.17053839620769)", //set coordinate
           isCompleted: 0,
           taskCreated: DateTime.now().toString().split(":")[0],
         ),
