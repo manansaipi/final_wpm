@@ -16,18 +16,21 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
+    print(DBHelper.firstPage);
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Themes.light,
       darkTheme: Themes.dark,
       themeMode: ThemeService().theme,
-      home: OnBoardingPage(),
+      home: DBHelper.firstPage == 0 ? OnBoardingPage() : const HomePage(),
     );
   }
 }
+
+
 
 
 

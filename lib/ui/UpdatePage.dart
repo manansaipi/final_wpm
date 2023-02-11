@@ -340,12 +340,30 @@ class _UpdatePageState extends State<UpdatePage> {
                   hint: DateFormat.yMd().format(_selectedDate),
                   widget: IconButton(
                     onPressed: () {
-                      _getDateFromUsers();
+                      _selectedRepeat != 1
+                          ? _getDateFromUsers()
+                          : Get.snackbar(
+                              "Task Daily !",
+                              "Cannot change date",
+                              colorText: Colors.white,
+                              snackPosition: SnackPosition.TOP,
+                              backgroundColor: Colors.red,
+                              icon: Container(
+                                margin: EdgeInsets.only(left: 7),
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                      ;
                     },
                     icon: Icon(
                       Icons.calendar_today_outlined,
                       size: 20,
-                      color: _getBGClr(_selectedColor),
+                      color: _selectedRepeat == 1
+                          ? Colors.grey
+                          : _getBGClr(_selectedColor),
                     ),
                   ),
                 ),
@@ -942,20 +960,34 @@ class _UpdatePageState extends State<UpdatePage> {
   }
 
   _addTaskToDb() async {
-    int? value = await _taskController.updateData(
-        task: Task(
-          note: _noteController.text,
-          title: _titleController.text,
-          date: DateFormat.yMd().format(_selectedDate),
-          startTime: _startTime,
-          endTime: _endTime,
-          sortTime: _sortTime,
-          repeat: _fixSelectedRepeat,
-          color: _selectedColor,
-          mapCoor: UpdatePage.latlng,
-          isCompleted: widget.task.isCompleted,
-        ),
-        id: widget.task.id);
+    int? value = widget.task.repeat == "Daily"
+        ? await _taskController.updateAllData(
+            task: Task(
+              note: _noteController.text,
+              title: _titleController.text,
+              startTime: _startTime,
+              endTime: _endTime,
+              sortTime: _sortTime,
+              repeat: _fixSelectedRepeat,
+              color: _selectedColor,
+              mapCoor: UpdatePage.latlng,
+              isCompleted: widget.task.isCompleted,
+            ),
+            title: widget.task.title)
+        : await _taskController.updateData(
+            task: Task(
+              note: _noteController.text,
+              title: _titleController.text,
+              date: DateFormat.yMd().format(_selectedDate),
+              startTime: _startTime,
+              endTime: _endTime,
+              sortTime: _sortTime,
+              repeat: _fixSelectedRepeat,
+              color: _selectedColor,
+              mapCoor: UpdatePage.latlng,
+              isCompleted: widget.task.isCompleted,
+            ),
+            id: widget.task.id);
     print("button is working and My id is " + "$value");
     UpdatePage.latlng = "kosong";
   }

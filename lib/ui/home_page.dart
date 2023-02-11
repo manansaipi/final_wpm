@@ -230,7 +230,6 @@ class _HomePageState extends State<HomePage> {
         if (task.date == DateFormat.yMd().format(_selectedDate)) {
           array.add(index);
           print(array);
-
           String dateNow = DateFormat.yMd().format(_selectedDate);
           // print(index);
           // while (i )
@@ -430,7 +429,7 @@ class _HomePageState extends State<HomePage> {
               _taskController.date = DateFormat.yMd().format(_selectedDate);
               datePick = _selectedDate.toString().split(" ")[0];
               _taskController.getTask2(DateFormat.yMd().format(_selectedDate));
-              print(_taskController.taskListByDate.length);
+              // print(_taskController.taskListByDate.length);
             });
           },
           daysCount: 30,
@@ -584,7 +583,9 @@ class _HomePageState extends State<HomePage> {
                                                 _taskController.delete(task);
                                                 Get.back();
                                                 Get.back();
-                                                _taskController.getTask2(date);
+                                                _taskController.getTask2(
+                                                    DateFormat.yMd()
+                                                        .format(_selectedDate));
 
                                                 Get.snackbar(
                                                   "Deleted !",
@@ -643,7 +644,9 @@ class _HomePageState extends State<HomePage> {
                                                 _taskController.deleteAll(task);
                                                 Get.back();
                                                 Get.back();
-                                                _taskController.getTask2(date);
+                                                _taskController.getTask2(
+                                                    DateFormat.yMd()
+                                                        .format(_selectedDate));
 
                                                 Get.snackbar(
                                                   "Deleted !",

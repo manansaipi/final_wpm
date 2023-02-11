@@ -32,8 +32,12 @@ class TaskController extends GetxController {
 
   Future<int?> updateData({Task? task, int? id}) async {
     getTask2(date);
-
     return await DBHelper.update(task!, id!);
+  }
+
+  Future<int?> updateAllData({Task? task, String? title}) async {
+    getTask2(date);
+    return await DBHelper.updateAll(task!, title!);
   }
 
   void getTask() async {

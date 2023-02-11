@@ -4,20 +4,23 @@ import '../models/task.dart';
 
 class DBHelper {
   static Database? _db;
+  static int firstPage = 9;
   static const int _version = 1;
   static const String _tableName = "tasks";
   static const String _sortTime = "sortTime";
 
   static Future<void> initDb() async {
     if (_db != null) {
-      // "DROP TABLE $_tableName";
+      "DROP TABLE $_tableName";
       return;
     }
     try {
+      firstPage = 1;
       String _path = await getDatabasesPath() + 'tasks.db';
       _db =
           await openDatabase(_path, version: _version, onCreate: (db, version) {
         print("creating a new one");
+        firstPage = 0;
         return db.execute(
           "CREATE TABLE $_tableName("
           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -56,6 +59,23 @@ class DBHelper {
       task.color,
       task.mapCoor,
       id
+    ]);
+  }
+
+  static updateAll(Task task, String title) async {
+    return await _db!.rawUpdate('''
+    UPDATE tasks
+    SET title = ?,note = ?,startTime = ?,endTime = ?,repeat = ?,color = ?,mapCoor = ? 
+    WHERE title =?
+''', [
+      task.title,
+      task.note,
+      task.startTime,
+      task.endTime,
+      task.repeat,
+      task.color,
+      task.mapCoor,
+      title,
     ]);
   }
 
