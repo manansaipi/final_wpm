@@ -90,43 +90,6 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: _buildCustomScrollView(context),
-      //     ? Column(
-      //         children: <Widget>[
-      //           // _addTaskBar(),
-      //           _addDateBar(),
-      //           SizedBox(
-      //             height: 20,
-      //           ),
-      //           // screens[_selectedIndex],
-      //           _showTasks(),
-      //         ],
-      //       )
-      //     : _selectedIndex == 1
-      //         ? Column(
-      //             children: [
-      //               SizedBox(
-      //                 height: 10,
-      //               ),
-      //               screens[_selectedIndex],
-      //             ],
-      //           )
-      //         : _selectedIndex == 2
-      //             ? Column(
-      //                 children: [
-      //                   SizedBox(
-      //                     height: 10,
-      //                   ),
-      //                   screens[_selectedIndex],
-      //                 ],
-      //               )
-      //             : Column(
-      //                 children: [
-      //                   SizedBox(
-      //                     height: 10,
-      //                   ),
-      //                   screens[_selectedIndex],
-      //                 ],
-      //               )
     );
   }
 
@@ -425,7 +388,7 @@ class _HomePageState extends State<HomePage> {
           onDateChange: (date) {
             setState(() {
               _selectedDate = date;
-              // print();
+              // print(_taskController.taskList.length);
               _taskController.date = DateFormat.yMd().format(_selectedDate);
               datePick = _selectedDate.toString().split(" ")[0];
               _taskController.getTask2(DateFormat.yMd().format(_selectedDate));
@@ -822,26 +785,6 @@ class _HomePageState extends State<HomePage> {
                       context: context)
                 ],
               ),
-              // task.isCompleted == 1
-              //     ? Container()
-              //     : bottomSheetButton(
-              //         label: "Task Completed",
-              //         onTap: () {
-              //           _taskController.markTaskCompleted(task.id!);
-              //           Get.back();
-              //         },
-              //         clr: primaryClr,
-              //         context: context),
-              // bottomSheetButton(
-              //   label: "Delete Task",
-              //   onTap: () {
-              // _taskController.delete(task);
-
-              //     Get.back();
-              //   },
-              //   clr: Colors.red,
-              //   context: context,
-              // ),
               const SizedBox(
                 height: 15,
               ),

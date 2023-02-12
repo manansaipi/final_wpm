@@ -46,18 +46,18 @@ class Task {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['note'] = this.note;
-    data['isCompleted'] = this.isCompleted;
-    data['date'] = this.date;
-    data['startTime'] = this.startTime;
-    data['endTime'] = this.endTime;
-    data['sortTime'] = this.sortTime;
-    data['color'] = this.color;
-    data['repeat'] = this.repeat;
-    data['mapCoor'] = this.mapCoor;
-    data['taskCreated'] = this.taskCreated;
+    data['id'] = id;
+    data['title'] = title;
+    data['note'] = note;
+    data['isCompleted'] = isCompleted;
+    data['date'] = date;
+    data['startTime'] = startTime;
+    data['endTime'] = endTime;
+    data['sortTime'] = sortTime;
+    data['color'] = color;
+    data['repeat'] = repeat;
+    data['mapCoor'] = mapCoor;
+    data['taskCreated'] = taskCreated;
     return data;
   }
 }

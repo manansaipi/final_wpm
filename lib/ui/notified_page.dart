@@ -45,7 +45,7 @@ class _NotifiedPageState extends State<NotifiedPage> {
     createMarker();
     super.initState();
     setState(() {
-      userMarker = this.widget.label.toString().split("|")[1];
+      userMarker = widget.label.toString().split("|")[1];
     });
 
     // MapPage.locationService.locationStream.listen((userLocation) {
@@ -62,7 +62,7 @@ class _NotifiedPageState extends State<NotifiedPage> {
   Widget build(BuildContext context) {
     // const LatLng userLocation = LatLng(latitude, longitude);
     final _taskController = Get.put(TaskController());
-    String splitLatLng = this.widget.label.toString().split("|")[1];
+    String splitLatLng = widget.label.toString().split("|")[1];
     String splitLatLngFI = splitLatLng.split(",")[0];
     String splitLatLngSI = splitLatLng.split(",")[1];
     latitude1 = double.parse(splitLatLngFI.split("(")[1]);
@@ -92,8 +92,7 @@ class _NotifiedPageState extends State<NotifiedPage> {
             ),
           ],
         ),
-        title: Text(this.widget.label.toString().split("|")[0],
-            style: headingStyle),
+        title: Text(widget.label.toString().split("|")[0], style: headingStyle),
       ),
       body: Column(
         children: [
@@ -120,7 +119,10 @@ class _NotifiedPageState extends State<NotifiedPage> {
               onCameraIdle: () {
                 setState(() {});
               },
-              initialCameraPosition: _initialCameraPosition,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(HomePage.latitude, HomePage.longtitude),
+                zoom: 16.5,
+              ),
               myLocationButtonEnabled: true,
               zoomControlsEnabled: true,
               markers: {
@@ -134,10 +136,10 @@ class _NotifiedPageState extends State<NotifiedPage> {
                   markerId: MarkerId('userMarker'),
                   position: LatLng(latitude1!, longtitude1!),
                   infoWindow: InfoWindow(
-                    title: this.widget.label.toString().split("|")[0],
-                    snippet: this.widget.label.toString().split("|")[2] == ""
+                    title: widget.label.toString().split("|")[0],
+                    snippet: widget.label.toString().split("|")[2] == ""
                         ? "None"
-                        : this.widget.label.toString().split("|")[2],
+                        : widget.label.toString().split("|")[2],
                   ),
                 )
                 //   // _presUnivMarker,

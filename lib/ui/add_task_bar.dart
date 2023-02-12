@@ -125,8 +125,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         markerId: MarkerId('userMarker'),
                         position: LatLng(latLng.latitude, latLng.longitude),
                         infoWindow: InfoWindow(title: _titleController.text),
-                        icon: BitmapDescriptor.defaultMarkerWithHue(
-                            BitmapDescriptor.hueRed),
+                        icon: userLiveLocation!,
                       );
                       AddTaskPage.userMarker = newMarker;
                       AddTaskPage.latlng = latLng.toString();
@@ -293,12 +292,29 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   hint: DateFormat.yMd().format(_selectedDate),
                   widget: IconButton(
                     onPressed: () {
-                      _getDateFromUsers();
+                      _selectedRepeat != 1
+                          ? _getDateFromUsers()
+                          : Get.snackbar(
+                              "Task Daily !",
+                              "Cannot change date",
+                              colorText: Colors.white,
+                              snackPosition: SnackPosition.TOP,
+                              backgroundColor: Colors.red,
+                              icon: Container(
+                                margin: EdgeInsets.only(left: 7),
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
                     },
                     icon: Icon(
                       Icons.calendar_today_outlined,
                       size: 20,
-                      color: _getBGClr(_selectedColor),
+                      color: _selectedRepeat == 1
+                          ? Colors.grey
+                          : _getBGClr(_selectedColor),
                     ),
                   ),
                 ),

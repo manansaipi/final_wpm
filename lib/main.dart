@@ -4,8 +4,12 @@ import 'package:final_wpm/ui/onboarding_page.dart';
 import 'package:final_wpm/ui/services/theme_services.dart';
 import 'package:final_wpm/ui/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
+
+import 'controllers/task_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,16 +20,20 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     print(DBHelper.firstPage);
+    final _taskController = Get.put(TaskController());
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Themes.light,
       darkTheme: Themes.dark,
       themeMode: ThemeService().theme,
-      home: DBHelper.firstPage == 0 ? OnBoardingPage() : const HomePage(),
+      home: DBHelper.firstPage == 0 || _taskController.taskList.length == 0
+          ? OnBoardingPage()
+          : const HomePage(),
     );
   }
 }

@@ -281,6 +281,7 @@ class _UpdatePageState extends State<UpdatePage> {
             ? 1
             : 2;
     print(widget.task.mapCoor);
+    _fixSelectedRepeat = widget.task.repeat!;
 
     String takeCoor1 = widget.task.mapCoor.toString().split(" ")[0];
     String takeCoor2 = widget.task.mapCoor.toString().split(" ")[1];

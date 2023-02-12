@@ -272,7 +272,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                         duration: Duration(seconds: 1),
                         curve: Curves.easeInOut,
                       );
-                      _addTaskToDBW();
                     },
                   ),
                 )
@@ -425,6 +424,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                     myColor: primaryClr,
                     label: "Continue",
                     onTap: () {
+                      _addTaskToDBW();
                       _addTaskToDBS();
 
                       Navigator.of(context).pushReplacement(
