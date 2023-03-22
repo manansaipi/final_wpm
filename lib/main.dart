@@ -24,16 +24,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(DBHelper.firstPage);
-    final _taskController = Get.put(TaskController());
-
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Themes.light,
       darkTheme: Themes.dark,
       themeMode: ThemeService().theme,
-      home: DBHelper.firstPage == 0 || _taskController.taskList.length == 0
-          ? OnBoardingPage()
-          : const HomePage(),
+      home: DBHelper.firstPage == 0 ? OnBoardingPage() : const HomePage(),
     );
   }
 }

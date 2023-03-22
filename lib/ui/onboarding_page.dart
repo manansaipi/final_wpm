@@ -402,6 +402,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                           print(startTimeS);
                         });
                       },
+                      backgroundColor: Colors.white,
                     ),
                   ),
                 ),
