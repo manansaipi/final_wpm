@@ -1,6 +1,5 @@
 # To-do list Mobile Application
-
-
+I developed a to-do list application using Flutter and integrated SQFLite for efficient database management. The app incorporated the Google Maps API to enable location tracking and display maps within the application. Its features included task creation, notification reminders, and location tracking with the ability to associate specific locations to tasks. Users could view their tasks on a map, ensuring better organization and productivity. I worked independently on the design and implementation of the entire app, from start to finish.
 
 # Video Demo To-do list Mobile Application  : 
 
