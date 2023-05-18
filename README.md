@@ -1,16 +1,13 @@
-# final_wpm
+# Ticketing Web Application DEMO
 
-A new Flutter project.
+In this demo I log in using Super Admin role/CEO so I can do anything that normal user or Admin can't do. for example Super Admin can edit the Employee profile or delete them but other users can't doing it. Super Admin/CEO and Admin/IT Employee can solved ticket but Employee can't solved ticket. they can only cretae a ticket and wait for CEO or IT Employee to solved their ticket and then Employee can see feedback from CEO or IT Employee who solved their ticket.
 
-## Getting Started
+| Name    | Description                                | Preview                       |
+| ------- | ------------------------------------------ | ----------------------------- |
+| Introduction Page | When users open the application for the first time, they will see the introduction page | ![alt text](./doc/get-start.png) |
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+Video :
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/X61UqD_2ywQ/0.jpg)](https://www.youtube.com/watch?v=X61UqD_2ywQ)
