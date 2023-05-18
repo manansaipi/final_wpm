@@ -1,6 +1,12 @@
-# TTo-do list Mobile Application
+# To-do list Mobile Application
 
-In this demo 
+
+
+# Video Demo To-do list Mobile Application  : 
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/hubttbMuBt0/0.jpg)](https://drive.google.com/file/d/1s6V5Nzl7FXEbAWJ9MVQ39xdk62G8iuud/view?usp=sharing)
+
+Proggram Exmplanation : https://drive.google.com/file/d/19ppzoYAn9_uYdgVcR7VLD1gA7secSyTn/view?usp=sharing
 
 | Name    | Description                                | Preview                       |
 | ------- | ------------------------------------------ | ----------------------------- |
@@ -15,7 +21,6 @@ In this demo
 | See Task on Map | Users can see all their tasks on the Map Page | ![alt text](./doc/see-map.png) |
 | Update Task | Csers can update their task to mark as done by simply click the task and click complete | ![alt text](./doc/task-created.png) |
 | Update Task | Users can see thier task updated and marked as completed | ![alt text](./doc/complete.png) |
-| Dark Mode | Users can change thier theme to become dark mode by simply turn on dark mode in the setting page | ![alt text](./doc/dark-mode.png) |
 | Dark Mode | Users can change thier theme to become dark mode by simply turn on dark mode in the setting page | ![alt text](./doc/dark-mode.png) |
 | Test Notification | To test notification, i'm going to create a new task called Email and set the time 1 minute ahead of the current time which is 5.57. | ![alt text](./doc/set-time.png) |
 | Notification | When time showed at 5.57, the notification pop up on the notification bar. Users can click the notification to see the detail of the Tasj| ![alt text](./doc/notification.png) |
