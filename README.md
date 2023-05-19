@@ -18,7 +18,7 @@ Proggram Exmplanation : https://drive.google.com/file/d/19ppzoYAn9_uYdgVcR7VLD1g
 | Add location | Users can also add spesific location to the task | ![alt text](./doc/add-loc.png) |
 | Task Created | After successfully create task, user can see the heir created task on the timeline based on calendar | ![alt text](./doc/task-created.png) |
 | See Task on Map | Users can see all their tasks on the Map Page | ![alt text](./doc/see-map.png) |
-| Update Task | Csers can update their task to mark as done by simply click the task and click complete | ![alt text](./doc/task-created.png) |
+| Update Task | Csers can update their task to mark as done by simply click the task and click complete | ![alt text](./doc/update-task.png) |
 | Update Task | Users can see thier task updated and marked as completed | ![alt text](./doc/complete.png) |
 | Dark Mode | Users can change thier theme to become dark mode by simply turn on dark mode in the setting page | ![alt text](./doc/dark-mode.png) |
 | Test Notification | To test notification, i'm going to create a new task called Email and set the time 1 minute ahead of the current time which is 5.57. | ![alt text](./doc/set-time.png) |
